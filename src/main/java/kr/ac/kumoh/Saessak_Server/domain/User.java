@@ -25,7 +25,7 @@ public class User {
     @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
     private List<Notification> notificationList = new ArrayList<>();
 
-    private List<Plan> calendarList = new ArrayList<>();
-    private List<MyPlant> myPlantList = new ArrayList<>();
+//    private List<Plan> calendarList = new ArrayList<>();
+//    private List<MyPlant> myPlantList = new ArrayList<>();
 
 }

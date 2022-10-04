@@ -1,11 +1,13 @@
-package kr.ac.kumoh.Saessak_Server.domain;
+package kr.ac.kumoh.Saessak_Server.domain.Notification;
 
+import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@DiscriminatorValue("p")
 @Getter @Setter
 public class PlantMgmtNoti {
 
@@ -15,7 +17,7 @@ public class PlantMgmtNoti {
     private String plantNickName;
     private String plantImg;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private Notification notification_id;
 }

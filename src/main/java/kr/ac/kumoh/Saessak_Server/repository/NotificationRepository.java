@@ -1,7 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.repository;
 
-import kr.ac.kumoh.Saessak_Server.domain.Notification;
-import kr.ac.kumoh.Saessak_Server.domain.Question;
+import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

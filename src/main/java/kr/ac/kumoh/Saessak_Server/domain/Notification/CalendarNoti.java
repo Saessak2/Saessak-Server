@@ -1,11 +1,13 @@
-package kr.ac.kumoh.Saessak_Server.domain;
+package kr.ac.kumoh.Saessak_Server.domain.Notification;
 
+import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@DiscriminatorValue("a")
 @Getter @Setter
 public class CalendarNoti {
 

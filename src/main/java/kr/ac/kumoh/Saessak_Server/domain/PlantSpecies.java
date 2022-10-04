@@ -12,13 +12,11 @@ import javax.persistence.Id;
 @Setter
 public class PlantSpecies {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
-    private String imgPath;  //이미지 경로
-    private String plantEngName;  //식물영문명
-    private int plantDictRef;  //식물정보출처
-    private String plantName;  //식물명
+    private String plant_name;
+    private String img_path;
+    private int plant_dirt_ref;
 
 }

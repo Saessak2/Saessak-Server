@@ -1,11 +1,11 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
+import kr.ac.kumoh.Saessak_Server.domain.Notification.CommentNoti;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,9 @@ public class Question {
     private LocalDate create_date;
     private LocalDate update_date;
     private String img_path;
-    private String category;
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @OneToMany(mappedBy = "question_id", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();

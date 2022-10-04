@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.repository;
 
+import kr.ac.kumoh.Saessak_Server.domain.Category;
 import kr.ac.kumoh.Saessak_Server.domain.Question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -51,5 +52,10 @@ public class QuestionRepository {
     }
 
     //질문 검색
+//    public List<Question> searchQuestionByCategory(String category) {
+//        if(category == Category.전체.name()) {
+//        }
+//
+//    }
 
 }

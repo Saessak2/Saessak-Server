@@ -1,5 +1,6 @@
-package kr.ac.kumoh.Saessak_Server.domain;
+package kr.ac.kumoh.Saessak_Server.domain.Notification;
 
+import kr.ac.kumoh.Saessak_Server.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "dtype")
 @Getter @Setter
-public class Notification {
+public abstract class Notification {
 
     @Id @GeneratedValue
     private Long id;

@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
+import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
 import lombok.Getter;
 import lombok.Setter;
 

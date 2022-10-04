@@ -32,14 +32,10 @@ public class MyPlant {
     @JoinColumn(name = "id")
     private User user_id;
 
-    @OneToMany(mappedBy = "question_id", cascade = CascadeType.ALL)
-    private List<Comment> commentList = new ArrayList<>();
+    @OneToMany(mappedBy = "myPlant_id", cascade = CascadeType.ALL)
+    private List<Plan> planList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "notification_id", cascade = CascadeType.ALL)
-    private List<CommentNoti> commentNotiList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "notification_id", cascade = CascadeType.ALL)
-    private List<PlantMgmtNoti> plantMgmtNotiList = new ArrayList<>();
-
+    @OneToMany(mappedBy = "myPlant_id", cascade = CascadeType.ALL)
+    private List<Plan> diaryList = new ArrayList<>();
 
 }

@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
+import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,10 +23,14 @@ public class User {
     @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
-//    private List<Notification> notificationList = new ArrayList<>();
+    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+    private List<Notification> notificationList = new ArrayList<>();
 
-//    private List<Plan> calendarList = new ArrayList<>();
-//    private List<MyPlant> myPlantList = new ArrayList<>();
+    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+    private List<Plan> planList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+    private List<MyPlant> myPlantList = new ArrayList<>();
+
 
 }

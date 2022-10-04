@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain.Notification;
 
+import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,7 @@ public class CalendarNoti {
     @Id @GeneratedValue
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id")
-//    private Notification notification_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private Notification notification_id;
 }

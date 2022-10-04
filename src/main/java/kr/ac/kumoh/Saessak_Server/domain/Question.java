@@ -16,8 +16,8 @@ public class Question {
     @Id @GeneratedValue
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", columnDefinition = "User", insertable = false, updatable = false)
     private User user_id;
 
     private String content;
@@ -33,20 +33,6 @@ public class Question {
 
     @OneToMany(mappedBy = "notification_id", cascade = CascadeType.ALL)
     private List<CommentNoti> commentNotiList = new ArrayList<>();
-
-    //생성 메서드
-//    public static Question createQuestion(User user, Question q) {
-//        Question question = new Question();
-//
-//        question.setUser_id(user);
-//        question.setContent(q.getContent());
-//        question.setCreate_date(LocalDate.now());
-//        question.setUpdate_date(null);
-//        question.setImg_path(q.getImg_path());
-//        question.setCategory(q.getCategory());
-//
-//        return question;
-//    }
 
 }
 

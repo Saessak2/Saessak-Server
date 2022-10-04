@@ -8,8 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 public class PlantSpecies {
 
     @Id @GeneratedValue
@@ -18,5 +17,5 @@ public class PlantSpecies {
     private String plant_name;
     private String img_path;
     private int plant_dirt_ref;
-
+    private String plant_eng_name;
 }

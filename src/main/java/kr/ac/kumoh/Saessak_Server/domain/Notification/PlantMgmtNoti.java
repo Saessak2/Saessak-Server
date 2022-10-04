@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain.Notification;
 
+import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +17,7 @@ public class PlantMgmtNoti {
     private String plantNickName;
     private String plantImg;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id")
-//    private Notification notification_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private Notification notification_id;
 }

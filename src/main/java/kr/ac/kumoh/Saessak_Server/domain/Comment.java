@@ -14,11 +14,11 @@ public class Comment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id", columnDefinition = "Question", insertable = false, updatable = false)
     private Question question_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id", columnDefinition = "User", insertable = false, updatable = false)
     private User user_id;
 
     private String content;

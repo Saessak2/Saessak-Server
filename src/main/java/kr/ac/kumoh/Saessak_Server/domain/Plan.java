@@ -23,7 +23,7 @@ public class Plan {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
-    private MyPlant myPlant;
+    private MyPlant myPlant_id;
 
     private int planType;
     private LocalDate date;

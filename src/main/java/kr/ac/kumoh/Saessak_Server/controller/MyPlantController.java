@@ -1,11 +1,13 @@
 package kr.ac.kumoh.Saessak_Server.controller;
 
 import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
 public class MyPlantController {
 
+    @PostMapping
     public void createMyPlant(MyPlant plant){
 
     }

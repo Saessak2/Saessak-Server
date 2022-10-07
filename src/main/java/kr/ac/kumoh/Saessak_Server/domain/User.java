@@ -1,6 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
-import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
+//import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,22 +12,24 @@ import java.util.List;
 @Getter @Setter
 public class User {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, insertable = false, updatable = false)
     private Long id;
 
+    @Column(name = "user_name")
     private String userName;
 
-    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
-    private List<Question> questionList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
-    private List<Comment> commentList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
-    private List<Notification> notificationList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
-    private List<Plan> planList = new ArrayList<>();
+//    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+//    private List<Question> questionList = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+//    private List<Comment> commentList = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+//    private List<Notification> notificationList = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+//    private List<Plan> planList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
     private List<MyPlant> myPlantList = new ArrayList<>();

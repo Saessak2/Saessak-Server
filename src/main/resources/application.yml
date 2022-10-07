@@ -1,6 +1,26 @@
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://202.31.201.231:3306/test?serverTimezone=UTC&characterEncoding=UTF-8
+#    username: outer
+#    password: pw!12
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://202.31.201.231:3306/test?serverTimezone=UTC&characterEncoding=UTF-8
-    username: outer
-    password: 0000
+    url: jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC&characterEncoding=UTF-8
+    username: "root"
+    password: "!Spider0826"
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      format_sql: true
+      ddl-auto: update
+
+#logging:
+#  level:
+#    org.hibernate.SQL : debug
+#    org.hibernate.type : trace

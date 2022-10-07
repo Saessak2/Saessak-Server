@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface MyPlantRepository extends JpaRepository<MyPlant, Long> {
@@ -16,6 +15,6 @@ public interface MyPlantRepository extends JpaRepository<MyPlant, Long> {
     //findById() for findById(plantId): MyPlant
 
     //custom method
-    List<MyPlant> findByUserId(Long userId);  //readMyPlantList
+    List<MyPlant> findByuser_id(Long user_id);  //readMyPlantList
 
 }

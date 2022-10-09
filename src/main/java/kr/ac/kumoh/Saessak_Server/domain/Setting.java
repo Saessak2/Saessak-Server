@@ -4,14 +4,14 @@
 //import lombok.Setter;
 //
 //import javax.persistence.*;
-//import java.time.LocalDate;
 //
 //@Entity
-//@Getter @Setter
+//@Getter
+//@Setter
 //public class Setting { //외래키 다시
 //
-//    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false, insertable = false, updatable = false)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id;
 //
 //    private Boolean calendarNotiActivation;

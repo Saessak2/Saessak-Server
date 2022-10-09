@@ -5,18 +5,18 @@
 //import lombok.NoArgsConstructor;
 //import lombok.Setter;
 //
-//import javax.persistence.*;
+//import javax.persistence.Entity;
+//import javax.persistence.GeneratedValue;
+//import javax.persistence.GenerationType;
+//import javax.persistence.Id;
 //
 //@Entity
 //@Getter
 //@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
 //public class PlantDict2 {
 //
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false, insertable = false, updatable = false)
 //    private Long id;
 //
 //    private String plant_name;  //유통명(+식물명)

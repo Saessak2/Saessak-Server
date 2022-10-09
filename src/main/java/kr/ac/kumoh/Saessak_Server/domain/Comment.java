@@ -7,16 +7,17 @@
 //import java.time.LocalDate;
 //
 //@Entity
-//@Getter @Setter
+//@Getter
+//@Setter
 //public class Comment {
 //
-//    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false, insertable = false, updatable = false)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id;
 //
-////    @ManyToOne(fetch = FetchType.LAZY)
-////    @JoinColumn(name = "id", columnDefinition = "Question", insertable = false, updatable = false)
-////    private Question question_id;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "id", columnDefinition = "Question", insertable = false, updatable = false)
+//    private Question question_id;
 //
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "id", columnDefinition = "User", insertable = false, updatable = false)

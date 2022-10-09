@@ -12,16 +12,14 @@
 //@Getter @Setter
 //public class CommentNoti {
 //
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false, insertable = false, updatable = false)
+//    @Id @GeneratedValue
 //    private Long id;
 //
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "id")
 //    private Question question_id;
 //
-////    @ManyToOne(fetch = FetchType.LAZY)
-////    @JoinColumn(name = "id")
-////    private Notification notification_id;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "id")
+//    private Notification notification_id;
 //}

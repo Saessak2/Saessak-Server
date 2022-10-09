@@ -15,8 +15,7 @@
 //@Getter @Setter
 //public abstract class Notification {
 //
-//    @Id
-//    @GeneratedValue
+//    @Id @GeneratedValue
 //    private Long id;
 //
 //    private LocalDateTime datetime;
@@ -26,14 +25,14 @@
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "id")
 //    private User user_id;
-//    private String dtype;
-////    @OneToMany(mappedBy = "notification_id", cascade = CascadeType.ALL)
-////    private List<CalendarNoti> calendarNotiList = new ArrayList<>();
-////
-////    @OneToMany(mappedBy = "notification_id", cascade = CascadeType.ALL)
-////    private List<CommentNoti> commentNotiList = new ArrayList<>();
-////
-////    @OneToMany(mappedBy = "notification_id", cascade = CascadeType.ALL)
-////    private List<PlantMgmtNoti> plantMgmtNotiList = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "notification_id", cascade = CascadeType.ALL)
+//    private List<CalendarNoti> calendarNotiList = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "notification_id", cascade = CascadeType.ALL)
+//    private List<CommentNoti> commentNotiList = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "notification_id", cascade = CascadeType.ALL)
+//    private List<PlantMgmtNoti> plantMgmtNotiList = new ArrayList<>();
 //}
 //

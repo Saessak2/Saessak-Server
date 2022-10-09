@@ -14,7 +14,6 @@
 //
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false, insertable = false, updatable = false)
 //    private Long id;
 //
 //    @ManyToOne(fetch = FetchType.LAZY)

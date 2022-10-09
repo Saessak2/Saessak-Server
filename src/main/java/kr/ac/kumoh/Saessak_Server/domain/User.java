@@ -2,6 +2,7 @@ package kr.ac.kumoh.Saessak_Server.domain;
 
 //import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,11 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@NoArgsConstructor
+@Getter
+@Setter
+@Table(name = "user")
 public class User {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, insertable = false, updatable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "user_name")
@@ -34,5 +38,8 @@ public class User {
     @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
     private List<MyPlant> myPlantList = new ArrayList<>();
 
+    public User(Long id){
+        this.id = id;
+    }
 
 }

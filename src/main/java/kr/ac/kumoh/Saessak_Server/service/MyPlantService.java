@@ -14,7 +14,7 @@ public class MyPlantService {
     }
 
     public void create(MyPlant myPlant){
-        repository.save(myPlant);
+        repository.persist(myPlant);
     }
 
 }

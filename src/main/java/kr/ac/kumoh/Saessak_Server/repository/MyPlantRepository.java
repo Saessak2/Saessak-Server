@@ -1,7 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.repository;
 
 import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
-import kr.ac.kumoh.Saessak_Server.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 @Component
@@ -28,7 +26,7 @@ public class MyPlantRepository implements IMyPlantRepository {
     }
 
     @Override
-    public void save(MyPlant myPlant) {
+    public void persist(MyPlant myPlant) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("myplant").usingGeneratedKeyColumns("id");
 
@@ -47,32 +45,46 @@ public class MyPlantRepository implements IMyPlantRepository {
     }
 
     @Override
-    public void delete(Long myPlantId) {
-
+    public Optional<MyPlant> findById(Long plantId) {
+        MyPlant plant = jdbcTemplate.queryForObject(
+                "SELECT * FROM mydb.myplant WHERE id = ?",
+                myPlantRowMapper(), plantId);
+        return Optional.ofNullable(plant);
     }
 
     @Override
     public List<MyPlant> findByUserId(Long userId) {
-        List<MyPlant> tmpList = jdbcTemplate.query(
+        return jdbcTemplate.query(
                 "SELECT * FROM myplant WHERE user_id = ?",
-                myPlantRowMapper("user_id"));
-        return tmpList.stream()
-                .filter(myPlant -> myPlant.getId().equals(userId))
-                .collect(Collectors.toList());
+                myPlantRowMapper(),userId);
     }
 
     @Override
-    public Optional<MyPlant> findById(Long plantId) {
-        List<MyPlant> tmpList = jdbcTemplate.query("SELECT * FROM myplant WHERE id = ?", myPlantRowMapper("id"));
-        return tmpList.stream()
-                .filter(myPlant -> myPlant.getId().equals(plantId))
-                .findAny();
-    }
+    public void merge(MyPlant prevPlant, MyPlant nextPlant){
+        jdbcTemplate.update(
+                "UPDATE myplant SET nickname = ? WHERE nickname = ?",
+                nextPlant.getNickname(), prevPlant.getNickname());
+    }  //어떻게 쪼갈라야할지 참 ...
 
-    private RowMapper<MyPlant> myPlantRowMapper(String colName){
+    @Override
+    public void delete(Long myPlantId) {
+
+    }  //미구현
+
+    private RowMapper<MyPlant> myPlantRowMapper(){
         return (rs, rowNum) -> {
             MyPlant myPlant = new MyPlant();
-            myPlant.setId(rs.getLong(colName));
+            myPlant.setId(rs.getLong("id"));
+            myPlant.setUser_id(rs.getLong("user_id"));
+            myPlant.setNickname(rs.getString("nickname"));
+            myPlant.setSpecies(rs.getString("species"));
+            myPlant.setSunCondition(rs.getInt("sun_condition"));
+            myPlant.setWindCondition(rs.getInt("wind_condition"));
+            myPlant.setWaterCondition(rs.getInt("water_condition"));
+            myPlant.setLatestWaterDate(rs.getDate("latest_water_date"));
+            myPlant.setWaterCycle(rs.getInt("water_cycle"));
+            myPlant.setImgUrl(rs.getString("img_url"));
+            myPlant.setDisable(rs.getBoolean("disable"));
             return myPlant;
         };
     }

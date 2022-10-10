@@ -21,7 +21,7 @@ class MyPlantRepositoryTests {
     MyPlantRepository repository = new MyPlantRepository(dataSource);
 
     @Test
-    public void 생성(){
+    public void save(){
         //given
         MyPlant myPlant = new MyPlant(3L, "labyrinth", "testSpe", 1, 2, 3,
         LocalDate.of(2022,10,9), 7, "no-img", false);
@@ -31,7 +31,7 @@ class MyPlantRepositoryTests {
     }
 
     @Test
-    public void 조회1(){
+    public void find_id(){
         //given
         Long pid = 2L;
 
@@ -42,11 +42,10 @@ class MyPlantRepositoryTests {
         if(tmpPlant.isPresent()){
             System.out.println(tmpPlant);
         }
-
     }
 
     @Test
-    public void 조회2(){
+    public void find_uid(){
         //given
         Long uid = 3L;
 
@@ -71,7 +70,7 @@ class MyPlantRepositoryTests {
     }
 
     @Test
-    public void delete(){  //delete 미구현
+    public void delete(){
         //given
         Long pid = 3L;
 

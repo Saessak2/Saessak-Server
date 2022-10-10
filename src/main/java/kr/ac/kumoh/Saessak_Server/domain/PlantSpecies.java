@@ -13,7 +13,7 @@
 //public class PlantSpecies {
 //
 //    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue
 //    private Long id;
 //
 //    private String plant_name;

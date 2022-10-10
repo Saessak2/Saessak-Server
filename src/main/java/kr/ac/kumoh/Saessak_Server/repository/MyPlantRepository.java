@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +29,7 @@ public class MyPlantRepository implements IMyPlantRepository {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("myplant").usingGeneratedKeyColumns("id");
 
-        Map<String, Object> params = setMap(myPlant);
+        Map<String, Object> params = myPlant.getMyPlantMap();
         jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
@@ -66,7 +65,7 @@ public class MyPlantRepository implements IMyPlantRepository {
                     "UPDATE myplant SET disable = ? WHERE id = ?",
                     myPlant.getIsDisable(), myPlant.getId());
         }
-    }  //토글형식으로 구현
+    }
 
     @Override
     public void delete(Long myPlantId) {
@@ -75,38 +74,14 @@ public class MyPlantRepository implements IMyPlantRepository {
                 myPlantId);
     }
 
-    private Map<String, Object> setMap(MyPlant myPlant){
-        Map<String, Object> params = new HashMap<>();
-        params.put("user_id", myPlant.getUser_id());
-        params.put("nickname", myPlant.getNickname());
-        params.put("species", myPlant.getSpecies());
-        params.put("sun_condition", myPlant.getSunCondition());
-        params.put("wind_condition", myPlant.getWindCondition());
-        params.put("water_condition", myPlant.getWaterCondition());
-        params.put("latest_water_date", myPlant.getLatestWaterDate());
-        params.put("water_cycle", myPlant.getWaterCycle());
-        params.put("img_url", myPlant.getImgUrl());
-        params.put("disable", myPlant.getIsDisable());
-
-        return params;
-    }
-
     private RowMapper<MyPlant> myPlantRowMapper(){
-        return (rs, rowNum) -> {
-            MyPlant myPlant = new MyPlant();
-            myPlant.setId(rs.getLong("id"));
-            myPlant.setUser_id(rs.getLong("user_id"));
-            myPlant.setNickname(rs.getString("nickname"));
-            myPlant.setSpecies(rs.getString("species"));
-            myPlant.setSunCondition(rs.getInt("sun_condition"));
-            myPlant.setWindCondition(rs.getInt("wind_condition"));
-            myPlant.setWaterCondition(rs.getInt("water_condition"));
-            myPlant.setLatestWaterDate(rs.getDate("latest_water_date"));
-            myPlant.setWaterCycle(rs.getInt("water_cycle"));
-            myPlant.setImgUrl(rs.getString("img_url"));
-            myPlant.setDisable(rs.getBoolean("disable"));
-            return myPlant;
-        };
+        return (rs, rowNum) -> new MyPlant(
+                rs.getLong("id"), rs.getLong("user_id"),
+                rs.getString("nickname"), rs.getString("species"),
+                rs.getInt("sun_condition"), rs.getInt("wind_condition"),
+                rs.getInt("water_condition"), rs.getInt("water_cycle"),
+                rs.getString("img_url"), rs.getBoolean("disable"),
+                rs.getDate("latest_water_date").toString());
     }
 
 }

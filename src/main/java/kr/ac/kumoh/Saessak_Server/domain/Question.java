@@ -15,7 +15,7 @@
 //public class Question {
 //
 //    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue
 //    private Long id;
 //
 //    //    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

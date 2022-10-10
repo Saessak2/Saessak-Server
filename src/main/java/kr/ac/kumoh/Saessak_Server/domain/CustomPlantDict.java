@@ -14,7 +14,7 @@
 //public class CustomPlantDict {
 //
 //    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue
 //    private Long id;
 //
 //    private String plantName;  //식물이름

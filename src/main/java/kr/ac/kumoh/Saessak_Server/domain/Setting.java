@@ -11,7 +11,7 @@
 //public class Setting { //외래키 다시
 //
 //    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue
 //    private Long id;
 //
 //    private Boolean calendarNotiActivation;

@@ -1,44 +1,51 @@
 package kr.ac.kumoh.Saessak_Server.controller;
 
+import kr.ac.kumoh.Saessak_Server.ServerConfig;
 import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import kr.ac.kumoh.Saessak_Server.repository.MyPlantRepository;
+import kr.ac.kumoh.Saessak_Server.service.MyPlantService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@Controller
+@RestController
 public class MyPlantController {
 
-    @PostMapping
-    public void createMyPlant(MyPlant plant){
+    private final MyPlantService service = new MyPlantService(
+            new MyPlantRepository(ServerConfig.dataSource()));
 
+    @PostMapping("myPlant/create/{myPlant}")
+    public void createMyPlant(@PathVariable("myPlant") MyPlant myPlant){
+//        myPlant = new MyPlant(3L, "nn", "sp", 1, 2, 3, LocalDate.of(2022, 10, 10), 7,
+//                "no", false);
+        service.createMyPlant(myPlant);
     }
 
-    public void updateMyPlant(MyPlant plant){
-
+    @GetMapping("myPlant/read1/{userId}")
+    public List<MyPlant> readMyPlantList(@PathVariable("userId") Long userId){
+        return service.readMyPlantList(userId);
     }
 
-    public void deleteMyPlant(Long id){
-
+    @GetMapping("myPlant/read2/{plantId}")
+    public MyPlant readMyPlantOne(@PathVariable("plantId") Long plantId){
+        Optional<MyPlant> ret = service.readMyPlant(plantId);
+        return ret.get();
     }
 
-    public void updatePlantOrder(MyPlant plant){
-
+    @PutMapping("myPlant/update1/{myPlant}")
+    public void updateMyPlantDetails(@PathVariable("myPlant") MyPlant myPlant){
+        service.updateDetails(myPlant);
     }
 
-    public List<MyPlant> readMyPlantList(Long userId){
-
-        return null;
+    @PutMapping("myPlant/update2/{myPlant}")
+    public void updateMyPlantDisabled(@PathVariable("myPlant") MyPlant myPlant){
+        service.updateDisable(myPlant);
     }
 
-    public MyPlant readMyPlantOne(Long plantId){
-
-        return null;
-    }
-
-    public MyPlant readMyPlantDetail(Long plantId){
-
-        return null;
+    @DeleteMapping("myPlant/delete/{id}")
+    public void deleteMyPlant(@PathVariable("id") Long id){
+        service.delete(id);
     }
 
 }

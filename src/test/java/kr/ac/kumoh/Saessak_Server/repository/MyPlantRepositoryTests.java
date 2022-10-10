@@ -28,8 +28,6 @@ class MyPlantRepositoryTests {
 
         //when
         repository.persist(myPlant);
-
-        //then
     }
 
     @Test
@@ -59,32 +57,26 @@ class MyPlantRepositoryTests {
         if(!tmpPlant.isEmpty()){
             System.out.println(tmpPlant);
         }
-
     }
 
 
     @Test
     public void update(){
         //given
-        MyPlant prevPlant = new MyPlant();
-        prevPlant.setNickname("labyrinth");
-
-        MyPlant nextPlant = new MyPlant();
-        nextPlant.setNickname("Queen");
+        MyPlant myPlant = new MyPlant();
+        myPlant.setNickname("Queen");
 
         //when
-        repository.merge(prevPlant, nextPlant);
-
-        //then
+        repository.merge(myPlant, false);
     }
 
     @Test
     public void delete(){  //delete 미구현
         //given
+        Long pid = 3L;
 
         //when
-
-        //then
+        repository.delete(pid);
     }
 
 }

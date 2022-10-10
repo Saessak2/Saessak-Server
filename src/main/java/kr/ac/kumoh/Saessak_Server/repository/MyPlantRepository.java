@@ -30,17 +30,7 @@ public class MyPlantRepository implements IMyPlantRepository {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("myplant").usingGeneratedKeyColumns("id");
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("user_id", myPlant.getUser_id());
-        params.put("nickname", myPlant.getNickname());
-        params.put("species", myPlant.getSpecies());
-        params.put("sun_condition", myPlant.getSunCondition());
-        params.put("wind_condition", myPlant.getWindCondition());
-        params.put("water_condition", myPlant.getWaterCondition());
-        params.put("latest_water_date", myPlant.getLatestWaterDate());
-        params.put("water_cycle", myPlant.getWaterCycle());
-        params.put("img_url", myPlant.getImgUrl());
-        params.put("disable", myPlant.getIsDisable());
+        Map<String, Object> params = setMap(myPlant);
         jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
@@ -60,16 +50,46 @@ public class MyPlantRepository implements IMyPlantRepository {
     }
 
     @Override
-    public void merge(MyPlant prevPlant, MyPlant nextPlant){
-        jdbcTemplate.update(
-                "UPDATE myplant SET nickname = ? WHERE nickname = ?",
-                nextPlant.getNickname(), prevPlant.getNickname());
-    }  //어떻게 쪼갈라야할지 참 ...
+    public void merge(MyPlant myPlant, boolean forDisable){
+        if(!forDisable) {
+            jdbcTemplate.update(
+                    "UPDATE myplant SET id = ?, user_id = ?, nickname = ?, species = ?, " +
+                            "sun_condition = ?, wind_condition = ?, water_condition = ?, " +
+                            "latest_water_date = ?, water_cycle = ?, img_url = ?, disable = ? WHERE id = ?",
+                    myPlant.getId(), myPlant.getUser_id(), myPlant.getNickname(), myPlant.getSpecies(),
+                    myPlant.getSunCondition(), myPlant.getWindCondition(), myPlant.getWaterCondition(),
+                    myPlant.getLatestWaterDate(), myPlant.getWaterCycle(), myPlant.getImgUrl(),
+                    myPlant.getIsDisable(), myPlant.getId());
+        }
+        else{
+            jdbcTemplate.update(
+                    "UPDATE myplant SET disable = ? WHERE id = ?",
+                    myPlant.getIsDisable(), myPlant.getId());
+        }
+    }  //토글형식으로 구현
 
     @Override
     public void delete(Long myPlantId) {
+        jdbcTemplate.update(
+                "DELETE FROM myplant WHERE id = ?",
+                myPlantId);
+    }
 
-    }  //미구현
+    private Map<String, Object> setMap(MyPlant myPlant){
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", myPlant.getUser_id());
+        params.put("nickname", myPlant.getNickname());
+        params.put("species", myPlant.getSpecies());
+        params.put("sun_condition", myPlant.getSunCondition());
+        params.put("wind_condition", myPlant.getWindCondition());
+        params.put("water_condition", myPlant.getWaterCondition());
+        params.put("latest_water_date", myPlant.getLatestWaterDate());
+        params.put("water_cycle", myPlant.getWaterCycle());
+        params.put("img_url", myPlant.getImgUrl());
+        params.put("disable", myPlant.getIsDisable());
+
+        return params;
+    }
 
     private RowMapper<MyPlant> myPlantRowMapper(){
         return (rs, rowNum) -> {

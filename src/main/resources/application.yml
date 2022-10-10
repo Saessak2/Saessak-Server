@@ -18,6 +18,8 @@ spring:
       hibernate:
         format_sql: true
         ddl-auto: update
+  thymeleaf:
+    check-template-location: false
 
 logging.level:
   org.hibernate.SQL: DEBUG

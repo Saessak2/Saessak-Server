@@ -17,15 +17,15 @@ public class ServerConfig {
         this.dataSource = dataSource;
     }
 
-    @Bean
-    public MyPlantService myPlantService(){
-        return new MyPlantService(myPlantRepository());
-    }
-
-    @Bean
-    public MyPlantRepository myPlantRepository(){
-        return new MyPlantRepository(dataSource);
-    }
+//    @Bean
+//    public MyPlantService myPlantService(){
+//        return new MyPlantService(myPlantRepository());
+//    }
+//
+//    @Bean
+//    public MyPlantRepository myPlantRepository(){
+//        return new MyPlantRepository(dataSource);
+//    }
 
     @Bean
     public static DataSource dataSource(){

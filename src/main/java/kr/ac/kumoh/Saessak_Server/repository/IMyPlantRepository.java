@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface IMyPlantRepository {
 
     void persist(MyPlant myPlant);  //createMyPlant
-    void merge(MyPlant prevPlant, MyPlant nextPlant);  // updateMyPlant, updatePlantOrder
+    void merge(MyPlant myPlant, boolean forDisable);  // updateMyPlant
     void delete(Long myPlantId);  //deleteMyPlant
     List<MyPlant> findByUserId(Long userId);  //readMyPlantList
     Optional<MyPlant> findById(Long plantId);  //readMyPlantOne, readMyPlantDetail

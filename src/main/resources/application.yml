@@ -1,0 +1,27 @@
+spring:
+  ## JPQ Setting Info
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true  # sql 쿼리를 보여줌
+        format_sql: true # sql query formatting
+        use_sql_comments: true # sql 쿼리의 추가정보를 보여
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/jpa_study?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: 0881
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace # query의 ?에 어떤 값이 들어가는지 추적함
+
+server:
+  port: 8000

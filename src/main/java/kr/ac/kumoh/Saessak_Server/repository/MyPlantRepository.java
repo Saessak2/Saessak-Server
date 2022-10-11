@@ -25,12 +25,12 @@ public class MyPlantRepository implements IMyPlantRepository {
     }
 
     @Override
-    public void persist(MyPlant myPlant) {
+    public Long persist(MyPlant myPlant) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("myplant").usingGeneratedKeyColumns("id");
 
         Map<String, Object> params = myPlant.getMyPlantMap();
-        jdbcInsert.executeAndReturnKey(params).longValue();
+        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     @Override
@@ -49,27 +49,29 @@ public class MyPlantRepository implements IMyPlantRepository {
     }
 
     @Override
-    public void merge(MyPlant myPlant, boolean forDisable){
+    public int merge(MyPlant myPlant, boolean forDisable){
+        int ret;
         if(!forDisable) {
-            jdbcTemplate.update(
+            ret = jdbcTemplate.update(
                     "UPDATE myplant SET id = ?, user_id = ?, nickname = ?, species = ?, " +
                             "sun_condition = ?, wind_condition = ?, water_condition = ?, " +
                             "latest_water_date = ?, water_cycle = ?, img_url = ?, disable = ? WHERE id = ?",
-                    myPlant.getId(), myPlant.getUser_id(), myPlant.getNickname(), myPlant.getSpecies(),
-                    myPlant.getSunCondition(), myPlant.getWindCondition(), myPlant.getWaterCondition(),
-                    myPlant.getLatestWaterDate(), myPlant.getWaterCycle(), myPlant.getImgUrl(),
-                    myPlant.getIsDisable(), myPlant.getId());
+                        myPlant.getId(), myPlant.getUser_id(), myPlant.getNickname(), myPlant.getSpecies(),
+                        myPlant.getSunCondition(), myPlant.getWindCondition(), myPlant.getWaterCondition(),
+                        myPlant.getLatestWaterDate(), myPlant.getWaterCycle(), myPlant.getImgUrl(),
+                        myPlant.getIsDisable(), myPlant.getId());
         }
         else{
-            jdbcTemplate.update(
+            ret = jdbcTemplate.update(
                     "UPDATE myplant SET disable = ? WHERE id = ?",
-                    myPlant.getIsDisable(), myPlant.getId());
+                         myPlant.getIsDisable(), myPlant.getId());
         }
+        return ret;
     }
 
     @Override
-    public void delete(Long myPlantId) {
-        jdbcTemplate.update(
+    public int delete(Long myPlantId) {
+        return jdbcTemplate.update(
                 "DELETE FROM myplant WHERE id = ?",
                 myPlantId);
     }

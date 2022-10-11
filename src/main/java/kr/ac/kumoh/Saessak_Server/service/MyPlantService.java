@@ -16,8 +16,8 @@ public class MyPlantService {
         this.repository = repository;
     }
 
-    public void createMyPlant(MyPlant myPlant){
-        repository.persist(myPlant);
+    public Long createMyPlant(MyPlant myPlant){
+        return repository.persist(myPlant);
     }
 
     public List<MyPlant> readMyPlantList(Long userId){
@@ -25,19 +25,19 @@ public class MyPlantService {
     }
 
     public Optional<MyPlant> readMyPlant(Long plantId){
-        return repository.findById(plantId);
+        return Optional.of(repository.findById(plantId).get());
     }
 
-    public void updateDisable(MyPlant myPlant){
-        repository.merge(myPlant, true);
+    public int updateDisable(MyPlant myPlant){
+        return repository.merge(myPlant, true);
     }
 
-    public void updateDetails(MyPlant myPlant){
-        repository.merge(myPlant, false);
+    public int updateDetails(MyPlant myPlant){
+        return repository.merge(myPlant, false);
     }
 
-    public void delete(Long plantId){
-        repository.delete(plantId);
+    public int delete(Long plantId){
+        return repository.delete(plantId);
     }
 
 }

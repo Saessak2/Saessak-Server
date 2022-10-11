@@ -9,9 +9,9 @@ import java.util.Optional;
 @Repository
 public interface IMyPlantRepository {
 
-    void persist(MyPlant myPlant);  //createMyPlant
-    void merge(MyPlant myPlant, boolean forDisable);  // updateMyPlant
-    void delete(Long myPlantId);  //deleteMyPlant
+    Long persist(MyPlant myPlant);  //createMyPlant
+    int merge(MyPlant myPlant, boolean forDisable);  // updateMyPlant
+    int delete(Long myPlantId);  //deleteMyPlant
     List<MyPlant> findByUserId(Long userId);  //readMyPlantList
     Optional<MyPlant> findById(Long plantId);  //readMyPlantOne, readMyPlantDetail
 

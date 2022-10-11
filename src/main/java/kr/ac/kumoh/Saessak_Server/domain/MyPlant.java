@@ -1,10 +1,10 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +23,6 @@ public class MyPlant {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-
     private User user_id;
 
     private String nickname;
@@ -38,6 +37,7 @@ public class MyPlant {
     @Column(name = "water_condition")
     private int waterCondition;
 
+    @JsonIgnore
     @Column(name = "latest_water_date")
     private LocalDate latestWaterDate;
 
@@ -58,10 +58,6 @@ public class MyPlant {
 
 //    @OneToMany(mappedBy = "myPlant_id", cascade = CascadeType.ALL)
 //    private List<Diary> diaryList = new ArrayList<>();
-
-    public MyPlant(Long pid){
-        this.id = pid;
-    }
 
     public MyPlant(Long uid, String nn, String sp, int sunC, int windC, int waterC,
                    LocalDate lwd, int wCycle, String img, boolean isDisable){
@@ -97,18 +93,24 @@ public class MyPlant {
         return user_id.getId();
     }
 
-    public void setUser_id(Long uid){
-        this.user_id = new User(uid);
-    }
-
-    public void setLatestWaterDate(Date date){
-        this.latestWaterDate = getLDFromStr(date.toString());
-    }
-
     public boolean getIsDisable() {
         return isDisable;
     }
 
+    @JsonIgnore
+    public void setLatestWaterDate(){
+        latestWaterDate = getLDFromStr(tempDate);
+    }
+
+    @JsonIgnore
+    private LocalDate getLDFromStr(String inDate){
+        String[] tmpDateSplit = inDate.split("-");
+        return LocalDate.of(Integer.parseInt(tmpDateSplit[0]),
+                Integer.parseInt(tmpDateSplit[1]),
+                Integer.parseInt(tmpDateSplit[2]));
+    }
+
+    @JsonIgnore
     public Map<String, Object> getMyPlantMap(){
         Map<String, Object> retMap = new HashMap<>();
         retMap.put("user_id", user_id.getId());
@@ -125,15 +127,7 @@ public class MyPlant {
         if(!tempDate.isEmpty()){
             retMap.put("latest_water_date", getLDFromStr(tempDate));
         }
-
         return retMap;
-    }
-
-    private LocalDate getLDFromStr(String inDate){
-        String[] tmpDateSplit = inDate.split("-");
-        return LocalDate.of(Integer.parseInt(tmpDateSplit[0]),
-                            Integer.parseInt(tmpDateSplit[1]),
-                            Integer.parseInt(tmpDateSplit[2]));
     }
 
 }

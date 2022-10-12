@@ -1,6 +1,7 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -59,6 +60,20 @@ public class MyPlant {
 //    @OneToMany(mappedBy = "myPlant_id", cascade = CascadeType.ALL)
 //    private List<Diary> diaryList = new ArrayList<>();
 
+    public MyPlant(MyPlantDto myPlantDto){
+        this.id = myPlantDto.getId();
+        setUser_id(myPlantDto.getUser_id());
+        this.nickname = myPlantDto.getNickname();
+        this.species = myPlantDto.getSpecies();
+        this.sunCondition = myPlantDto.getSunCondition();
+        this.windCondition= myPlantDto.getWindCondition();
+        this.waterCondition = myPlantDto.getWaterCondition();
+        this.waterCycle = myPlantDto.getWaterCycle();
+        this.imgUrl = myPlantDto.getImgUrl();
+        this.isDisable = myPlantDto.isDisable();
+        this.tempDate = myPlantDto.getTempDate();
+    }
+
     public MyPlant(Long uid, String nn, String sp, int sunC, int windC, int waterC,
                    LocalDate lwd, int wCycle, String img, boolean isDisable){
         this.user_id = new User(uid);
@@ -89,12 +104,21 @@ public class MyPlant {
         this.tempDate = tempDate;
     }
 
+    public User getUser(){
+        return user_id;
+    }
+
     public Long getUser_id(){
         return user_id.getId();
     }
 
     public boolean getIsDisable() {
         return isDisable;
+    }
+
+    @JsonIgnore
+    public void setUser_id(Long userId){
+        this.user_id = new User(userId);
     }
 
     @JsonIgnore

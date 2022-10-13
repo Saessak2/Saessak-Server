@@ -3,7 +3,6 @@ package kr.ac.kumoh.Saessak_Server.service;
 import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
 import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantDto;
 import kr.ac.kumoh.Saessak_Server.repository.MyPlantRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,7 +27,6 @@ public class MyPlantService {
         List<MyPlantDto> retList = new ArrayList<>();
         List<MyPlant> tmpList = repository.findByUserId(userId);
         for(int i = 0; i < tmpList.size(); i++){
-//            retList.add(new ModelMapper().map(new MyPlantDto(), MyPlantDto.class));
             retList.add(new MyPlantDto(tmpList.get(i)));
         }
         return retList;
@@ -36,7 +34,6 @@ public class MyPlantService {
 
     public Optional<MyPlantDto> readMyPlant(Long plantId){
         return Optional.of(new MyPlantDto(repository.findById(plantId).get()));
-//        return Optional.of(repository.findById(plantId).get());
     }
 
     public int updateDisable(MyPlant myPlant){

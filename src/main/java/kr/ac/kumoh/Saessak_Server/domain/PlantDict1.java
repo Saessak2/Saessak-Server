@@ -1,37 +1,75 @@
-//package kr.ac.kumoh.Saessak_Server.domain;
-//
-//import lombok.Getter;
-//import lombok.Setter;
-//
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
-//
-//@Entity
-//@Getter
-//@Setter
-//public class PlantDict1 {
-//
-//    @Id
-//    @GeneratedValue
-//    private Long id;
-//
-//    private String plantEngName;  //식물영 명
-//    private String plantName;  //유통명(식물명)
-//    private String manageLevel;  //관리 수준
-//    private String winterMinTemp;  //겨울 최저 온도
-//    private String humidity;  //습도
-//    private String fertilizer;  //비료 정보
-//    private String soilInfo;  //토양 정보
-//    private String waterCycleSpring;  //물주기 봄
-//    private String waterCycleSummer;  //물주기 여름
-//    private String waterCycleAutumn;  //물주기 가을
-//    private String waterCycleWinter;  //물주기 겨울
-//    private String speclManageInfo;  //특별 관리 정보
-//    private String prpgtMth;  //번식방법
-//    private String lighthDemand;  //광요구도
-//    private String pest;  //병충해
-//    private String imgUrl;  //이미지
-//
-//}
+package kr.ac.kumoh.Saessak_Server.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "plantdict1")
+public class PlantDict1{
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(name = "contents_no")
+    private int contentsNo;
+
+    @Column(name = "plant_eng_name")
+    private String plantEngName;
+
+    @Column(name = "plant_name")
+    private String plantName;
+
+    @Column(name = "growth_hg")
+    private int growthHg;
+
+    @Column(name = "growth_ara")
+    private int growthAra;
+
+    @Column(name = "manage_level")
+    private String manageLevel;
+
+    @Column(name = "winter_min_temp")
+    private String winterMinTemp;
+
+    private String humidity;
+    private String fertilizer;
+
+    @Column(name = "soil_info")
+    private String soilInfo;
+
+    @Column(name = "watercycle_spring")
+    private String waterCycleSpring;
+
+    @Column(name = "watercycle_summer")
+    private String waterCycleSummer;
+
+    @Column(name = "watercycle_autumn")
+    private String waterCycleAutumn;
+
+    @Column(name = "watercycle_winter")
+    private String waterCycleWinter;
+
+    @Column(name = "specl_manage")
+    private String speclManageInfo;
+
+    @Column(name = "prpgt_mth")
+    private String prpgtMth;
+
+    @Column(name = "light_demand")
+    private String lightDemand;
+
+    private String pest;
+
+    @Column(name = "img_url")
+    private String imgUrl;
+
+}

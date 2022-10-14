@@ -1,7 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain.dto;
 
 import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
-import kr.ac.kumoh.Saessak_Server.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;

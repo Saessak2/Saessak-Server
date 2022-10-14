@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface PlantDict2Repository extends JpaRepository<PlantDict2, Long>{
 
-    @Query(value = "SELECT plantdict2 FROM PlantDict2 plantdict2 WHERE plantdict2.id = :id")
+    @Query(value = "SELECT pd2 FROM PlantDict2 pd2 WHERE pd2.id = :id")
     Optional<PlantDict2> findByIdFrom2(@Param("id") Long plantId);
 
 }

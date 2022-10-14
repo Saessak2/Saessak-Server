@@ -23,6 +23,9 @@ public class User {
     @Column(name = "user_name")
     private String userName;
 
+    @Column(name = "setting_id")
+    private Long settingId;
+
 //    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
 //    private List<Question> questionList = new ArrayList<>();
 //

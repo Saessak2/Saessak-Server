@@ -24,7 +24,7 @@ public class MyPlantDto {
 
     public MyPlantDto(MyPlant myPlant){
         id = myPlant.getId();
-        user_id = myPlant.getUser_id();
+        user_id = myPlant.getUser_id().getId();
         nickname = myPlant.getNickname();
         species = myPlant.getSpecies();
         sunCondition = myPlant.getSunCondition();
@@ -32,8 +32,8 @@ public class MyPlantDto {
         waterCondition = myPlant.getWaterCondition();
         waterCycle = myPlant.getWaterCycle();
         imgUrl = myPlant.getImgUrl();
-        isDisable = myPlant.getIsDisable();
-        tempDate = myPlant.getTempDate();
+        isDisable = myPlant.isDisable();
+        tempDate = myPlant.getLatestWaterDate().toString();
     }
 
 }

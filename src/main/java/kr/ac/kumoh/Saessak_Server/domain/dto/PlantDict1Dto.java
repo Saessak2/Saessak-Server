@@ -1,9 +1,10 @@
 package kr.ac.kumoh.Saessak_Server.domain.dto;
 
+
 import kr.ac.kumoh.Saessak_Server.domain.PlantDict1;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor

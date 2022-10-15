@@ -1,12 +1,16 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantDto;
-import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+//import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -49,8 +53,8 @@ public class MyPlant {
     @Column(name = "disable")
     private boolean isDisable;
 
-//    @OneToMany(mappedBy = "myPlant_id", cascade = CascadeType.ALL)
-//    private List<Plan> planList = new ArrayList<>();
+    @OneToMany(mappedBy = "myPlant_id", cascade = CascadeType.ALL)
+    private List<Plan> planList = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "myPlant_id", cascade = CascadeType.ALL)
 //    private List<Diary> diaryList = new ArrayList<>();

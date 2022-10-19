@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
+import kr.ac.kumoh.Saessak_Server.domain.dto.PlantDict3Dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import javax.persistence.*;
 public class PlantDict3{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "plant_name")
@@ -35,5 +36,10 @@ public class PlantDict3{
 
     @Column(name = "img_url")
     private String imgUrl;
+
+    public PlantDict3Dto toDto(){
+        return new PlantDict3Dto(id, plantName, sowingSeason,
+                hvtSeason, character, cultInfo, imgUrl);
+    }
 
 }

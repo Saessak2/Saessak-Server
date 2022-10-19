@@ -4,7 +4,6 @@ import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
 import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantDto;
 import kr.ac.kumoh.Saessak_Server.repository.MyPlantRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,44 +31,44 @@ public class MyPlantService {
     }
 
     public Optional<MyPlantDto> readMyPlant(Long plantId){
-        return Optional.of(new MyPlantDto(repository.findById(plantId).get()));
+        MyPlantDto ret = null;
+        Optional<MyPlant> data = repository.findById(plantId);
+        if(data.isPresent())
+            ret = data.get().toDto();
+        return Optional.ofNullable(ret);
     }
 
-//    public Optional<Long> updateMyPlant(MyPlantDto myPlantDto){
-//        Long ret = null;
-//        try{
-//            Optional<MyPlant> attribute = repository.findById(myPlantDto.getId());
-//            if(attribute.isPresent()){
-//                attribute.get().setId(null);
-//                ret = repository.save(attribute.get()).getId();
-//            }
-//        } catch(Exception ignored){ }
-//        return Optional.ofNullable(ret);
-//    }
+    public Optional<Long> updateMyPlant(Long id, MyPlantDto myPlantDto){
+        Long ret = null;
+        Optional<MyPlant> data = repository.findById(id);
+        if(data.isPresent()) {
+            MyPlant myPlant = data.get();
+            myPlant.update(myPlantDto);
+            ret = repository.save(myPlant).getId();
+        }
+        return Optional.ofNullable(ret);
+    }
 
-    @Transactional
-    public Optional<Long> updateMyPlant(MyPlantDto myPlantDto){
-        return repository.findById(myPlantDto.getId()).map(target -> {
-            if(myPlantDto.getNickname() != null)
-                target.setNickname(myPlantDto.getNickname());
-            if(myPlantDto.getSpecies() != null)
-                target.setSpecies(myPlantDto.getSpecies());
-            if(myPlantDto.getSunCondition() != 0)
-                target.setSunCondition(myPlantDto.getSunCondition());
-            if(myPlantDto.getWindCondition() != 0)
-                target.setWindCondition(myPlantDto.getWindCondition());
-            if(myPlantDto.getWaterCondition() != 0)
-                target.setWaterCondition(myPlantDto.getWaterCondition());
-            if(myPlantDto.getWaterCycle() != 0)
-                target.setWaterCycle(myPlantDto.getWaterCycle());
-            if(myPlantDto.getImgUrl() != null)
-                target.setImgUrl(myPlantDto.getImgUrl());
-            if(myPlantDto.isDisable() != target.isDisable())
-                target.setDisable(myPlantDto.isDisable());// error - always false
-            if(myPlantDto.getTempDate() != null)
-                target.setLatestWaterDateWithString(myPlantDto.getTempDate());
-            return target.getId();
-        });
+    public Optional<Long> updateLatestWaterDate(Long id){
+        Long ret = null;
+        Optional<MyPlant> data = repository.findById(id);
+        if(data.isPresent()){
+            MyPlant myPlant = data.get();
+            myPlant.updateLatestWaterDateOnly();
+            ret = repository.save(myPlant).getId();
+        }
+        return Optional.ofNullable(ret);
+    }
+
+    public Optional<Long> updateAbility(Long id){
+        Long ret = null;
+        Optional<MyPlant> data = repository.findById(id);
+        if(data.isPresent()){
+            MyPlant myPlant = data.get();
+            myPlant.updateAbilityOnly();
+            ret = repository.save(myPlant).getId();
+        }
+        return Optional.ofNullable(ret);
     }
 
     public void deleteMyPlant(Long plantId){
@@ -79,7 +78,7 @@ public class MyPlantService {
     private List<MyPlantDto> convContentType(List<MyPlant> inList){
         List<MyPlantDto> retList = new ArrayList<>();
         for (MyPlant myPlant : inList) {
-            retList.add(new MyPlantDto(myPlant));
+            retList.add(myPlant.toDto());
         }
         return retList;
     }

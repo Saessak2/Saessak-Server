@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface MyPlantRepository extends JpaRepository<MyPlant, Long> {
 
-    @Query(value = "SELECT p FROM MyPlant p WHERE p.user_id = :user_id")
-    List<MyPlant> findByUserId(@Param("user_id") Long userId);
+    @Query(value = "SELECT p FROM MyPlant p WHERE p.user.id = :userId")
+    List<MyPlant> findByUserId(@Param("userId") Long userId);
 
 }

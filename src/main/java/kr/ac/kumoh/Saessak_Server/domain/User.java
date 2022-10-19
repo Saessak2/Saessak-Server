@@ -16,7 +16,8 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "user_name")
@@ -25,14 +26,14 @@ public class User {
     @Column(name = "setting_id")
     private Long settingId;
 
-    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<MyPlant> myPlantList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Plan> planList = new ArrayList<>();
 
-    public User(Long id){
-        this.id = id;
+    public User(Long userId){
+        this.id = userId;
     }
 
 }

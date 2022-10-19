@@ -41,33 +41,24 @@ public class MyPlantController {
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PutMapping()
-    public ResponseEntity<Long> updateMyPlant(@RequestBody MyPlantDto myPlantDto){
-        Optional<Long> ret = service.updateMyPlant(myPlantDto);
+    @PutMapping("/{plant-id}/{type}")
+    public ResponseEntity<Long> updateMyPlant(@PathVariable("plant-id") Long id,
+            @PathVariable("type") String updateType, @RequestBody MyPlantDto myPlantDto){
+        Optional<Long> ret = Optional.empty();
+        switch(updateType){
+            case "all":
+                ret = service.updateMyPlant(id, myPlantDto);
+                break;
+            case "date":
+                ret = service.updateLatestWaterDate(id);
+                break;
+            case "ability":
+                ret = service.updateAbility(id);
+                break;
+        }
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
-
-//    @PutMapping("/updateDetail")
-//    public ResponseEntity<MyPlant> updateMyPlantDetails(@RequestBody MyPlant myPlant){
-//        myPlant.setLatestWaterDate();
-//        int ret = service.updateDetails(myPlant);
-//        if(ret == 1){
-//            return ResponseEntity.noContent().build();
-//        }
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//    }
-//
-//    @PutMapping("/updateDisable")
-//    public ResponseEntity<MyPlant> updateMyPlantDisabled(@RequestBody MyPlant myPlant){
-//        int ret = service.updateDisable(myPlant);
-//        if(ret == 1){
-//            return ResponseEntity.noContent().build();
-//        }
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//    }  //need test //need fix -> param: Long plantId
-//
-//    //need watering update method
 
     @DeleteMapping("/{plantId}")
     public ResponseEntity<MyPlant> deleteMyPlant(@PathVariable Long plantId){

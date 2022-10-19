@@ -1,6 +1,5 @@
 package kr.ac.kumoh.Saessak_Server.domain.dto;
 
-import kr.ac.kumoh.Saessak_Server.domain.PlantDict2;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,19 +24,4 @@ public class PlantDict2Dto {
     private String tip;    //팁
     private String imgUrl;  //대표이미지1
 
-    public PlantDict2Dto(PlantDict2 plantDict2){
-        this.id = plantDict2.getId();
-        this.plantName = plantDict2.getPlantName();
-        this.growthInfo = plantDict2.getGrowthInfo();
-        this.growthSpeed = plantDict2.getGrowthSpeed();
-        this.winterMinTemp = plantDict2.getWinterMinTemp();
-        this.character = plantDict2.getCharacter();
-        this.lightDemand = plantDict2.getLightDemand();
-        this.prpgtMth = plantDict2.getPrpgtMth();
-        this.pest = plantDict2.getPest();
-        this.manageLevel = plantDict2.getManageLevel();
-        this.batchPlace = plantDict2.getBatchPlace();
-        this.tip = plantDict2.getTip();
-        this.imgUrl = plantDict2.getImgUrl();
-    }
 }

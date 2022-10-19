@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
+import kr.ac.kumoh.Saessak_Server.domain.dto.PlantDictDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,9 @@ public class PlantDict {
 
     @Column(name = "dtype")
     private String dType;
+
+    public PlantDictDto toDto(){
+        return new PlantDictDto(id, plantName, dType);
+    }
 
 }

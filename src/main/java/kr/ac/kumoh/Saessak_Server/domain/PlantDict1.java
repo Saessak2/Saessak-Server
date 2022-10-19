@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
+import kr.ac.kumoh.Saessak_Server.domain.dto.PlantDict1Dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import javax.persistence.*;
 public class PlantDict1{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "contents_no")
@@ -71,5 +72,13 @@ public class PlantDict1{
 
     @Column(name = "img_url")
     private String imgUrl;
+
+    public PlantDict1Dto toDto(){
+        return new PlantDict1Dto(id, plantEngName, plantName,
+                manageLevel, winterMinTemp, humidity, fertilizer,
+                soilInfo, waterCycleSpring, waterCycleSummer,
+                waterCycleAutumn, waterCycleWinter, speclManageInfo,
+                prpgtMth, lightDemand, pest,imgUrl);
+    }
 
 }

@@ -18,11 +18,12 @@ public class Plan {
 
     @Id
     @GeneratedValue
+    @Column(name = "plan_id")
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user_id;
+    private User user;
 
     private LocalDate date;
 
@@ -30,8 +31,8 @@ public class Plan {
     private boolean planType;
 
     @ManyToOne
-    @JoinColumn(name = "myPlant_id")
-    private MyPlant myPlant_id;
+    @JoinColumn(name = "myplant_id")
+    private MyPlant myPlant;
 
     @Column(name = "done")
     private boolean isDone;

@@ -1,6 +1,9 @@
 package kr.ac.kumoh.Saessak_Server.service;
 
 import kr.ac.kumoh.Saessak_Server.domain.PlantDict;
+import kr.ac.kumoh.Saessak_Server.domain.PlantDict1;
+import kr.ac.kumoh.Saessak_Server.domain.PlantDict2;
+import kr.ac.kumoh.Saessak_Server.domain.PlantDict3;
 import kr.ac.kumoh.Saessak_Server.domain.dto.PlantDict1Dto;
 import kr.ac.kumoh.Saessak_Server.domain.dto.PlantDict2Dto;
 import kr.ac.kumoh.Saessak_Server.domain.dto.PlantDict3Dto;
@@ -38,16 +41,27 @@ public class PlantDictService {
     }
 
     public Optional<PlantDict1Dto> readOneFrom1(Long id){
-        return Optional.of(new PlantDict1Dto(dict1Repo.findByIdFrom1(id).get()));
+        PlantDict1Dto ret = null;
+        Optional<PlantDict1> data = dict1Repo.findByIdFrom1(id);
+        if(data.isPresent())
+            ret = data.get().toDto();
+        return Optional.ofNullable(ret);
     }
 
     public Optional<PlantDict2Dto> readOneFrom2(Long id){
-        PlantDict2Dto tmp = new PlantDict2Dto(dict2Repo.findByIdFrom2(id).get());
-        return Optional.of(tmp);
+        PlantDict2Dto ret = null;
+        Optional<PlantDict2> data = dict2Repo.findByIdFrom2(id);
+        if(data.isPresent())
+            ret = data.get().toDto();
+        return Optional.ofNullable(ret);
     }
 
     public Optional<PlantDict3Dto> readOneFrom3(Long id){
-        return Optional.of(new PlantDict3Dto(dict3Repo.findByIdFrom3(id).get()));
+        PlantDict3Dto ret = null;
+        Optional<PlantDict3> data = dict3Repo.findByIdFrom3(id);
+        if(data.isPresent())
+            ret = data.get().toDto();
+        return Optional.ofNullable(ret);
     }
 
     private List<PlantDictDto> convContentType(List<PlantDict> inList){
@@ -56,7 +70,7 @@ public class PlantDictService {
 //            retList.add(new PlantDictDto(plantDict));
 //        }
         for(int i = 0; i < 10; i++){  //use upper code when release
-            retList.add(new PlantDictDto(inList.get(i)));
+            retList.add(inList.get(i).toDto());
         }
         return retList;
     }

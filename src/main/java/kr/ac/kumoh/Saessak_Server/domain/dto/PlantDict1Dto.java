@@ -1,7 +1,5 @@
 package kr.ac.kumoh.Saessak_Server.domain.dto;
 
-
-import kr.ac.kumoh.Saessak_Server.domain.PlantDict1;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,25 +26,5 @@ public class PlantDict1Dto {
     private String lightDemand;  //광요구도
     private String pest;  //병충해
     private String imgUrl;  //이미지
-
-    public PlantDict1Dto(PlantDict1 plantDict1){
-        this.id = plantDict1.getId();
-        this.plantEngName = plantDict1.getPlantEngName();
-        this.plantName = plantDict1.getPlantName();
-        this.manageLevel = plantDict1.getManageLevel();
-        this.winterMinTemp = plantDict1.getWinterMinTemp();
-        this.humidity = plantDict1.getHumidity();
-        this.fertilizer = plantDict1.getFertilizer();
-        this.soilInfo = plantDict1.getSoilInfo();
-        this.waterCycleSpring = plantDict1.getWaterCycleSpring();
-        this.waterCycleSummer = plantDict1.getWaterCycleSummer();
-        this.waterCycleAutumn = plantDict1.getWaterCycleAutumn();
-        this.waterCycleWinter = plantDict1.getWaterCycleWinter();
-        this.speclManageInfo = plantDict1.getSpeclManageInfo();
-        this.prpgtMth = plantDict1.getPrpgtMth();
-        this.lightDemand = plantDict1.getLightDemand();
-        this.pest = plantDict1.getPest();
-        this.imgUrl = plantDict1.getImgUrl();
-    }
 
 }

@@ -30,6 +30,13 @@ public class MyPlantService {
         return convContentType(repository.findByUserId(userId));
     }
 
+    public Optional<MyPlantDto> readMyFirstPlant(Long userId){
+        List<MyPlantDto> myPlantDtoList = readMyPlantList(userId);
+        return myPlantDtoList.stream()
+                .filter(dto -> !dto.getIsDisable())
+                .findAny();
+    }
+
     public Optional<MyPlantDto> readMyPlant(Long plantId){
         MyPlantDto ret = null;
         Optional<MyPlant> data = repository.findById(plantId);

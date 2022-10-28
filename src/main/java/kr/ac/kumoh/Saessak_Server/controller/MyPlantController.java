@@ -33,6 +33,13 @@ public class MyPlantController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @GetMapping("/{user-id}/first-one")
+    public ResponseEntity<MyPlantDto> readMyFirstPlant(@PathVariable("user-id") Long userId){
+        Optional<MyPlantDto> ret = service.readMyFirstPlant(userId);
+        return ret.map(ResponseEntity::ok).orElseGet(()
+                -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
     @GetMapping("/{user-id}/{plant-id}")
     public ResponseEntity<MyPlantDto> readMyPlantOne(
             @PathVariable("user-id") Long userId, @PathVariable("plant-id") Long plantId){

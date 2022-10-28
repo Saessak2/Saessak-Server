@@ -12,5 +12,7 @@ public class PlantDictDto {
     private Long id;
     private String plantName;
     private String dType;
+    private Long idFromEachDict;
+    private String imgUrl;
 
 }

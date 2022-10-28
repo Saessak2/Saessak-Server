@@ -25,8 +25,14 @@ public class PlantDict {
     @Column(name = "dtype")
     private String dType;
 
+    @Column(name = "id_from_each_dict")
+    private Long idFromEachDict;
+
+    @Column(name = "img_url")
+    private String imgUrl;
+
     public PlantDictDto toDto(){
-        return new PlantDictDto(id, plantName, dType);
+        return new PlantDictDto(id, plantName, dType, idFromEachDict, imgUrl);
     }
 
 }

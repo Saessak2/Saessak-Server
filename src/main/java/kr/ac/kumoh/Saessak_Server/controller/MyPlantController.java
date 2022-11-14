@@ -17,6 +17,7 @@ public class MyPlantController {
 
     private final MyPlantService service;
 
+    //TODO: 물 주기 계획 자동 생성
     @PostMapping()
     public ResponseEntity<Long> createMyPlant(@RequestBody MyPlantDto myPlantDto){
         Optional<Long> ret = service.createMyPlant(myPlantDto);
@@ -27,32 +28,31 @@ public class MyPlantController {
     @GetMapping("/{user-id}")
     public ResponseEntity<List<MyPlantDto>> readMyPlantList(@PathVariable("user-id") Long userId){
         List<MyPlantDto> ret = service.readMyPlantList(userId);
-        if(!ret.isEmpty()){
-            return ResponseEntity.ok().body(ret);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
+        if(!ret.isEmpty())
+            return ResponseEntity.ok(ret);
 
-    @GetMapping("/{user-id}/first-one")
-    public ResponseEntity<MyPlantDto> readMyFirstPlant(@PathVariable("user-id") Long userId){
-        Optional<MyPlantDto> ret = service.readMyFirstPlant(userId);
-        return ret.map(ResponseEntity::ok).orElseGet(()
-                -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/{user-id}/{plant-id}")
     public ResponseEntity<MyPlantDto> readMyPlantOne(
             @PathVariable("user-id") Long userId, @PathVariable("plant-id") Long plantId){
-        Optional<MyPlantDto> ret = service.readMyPlant(plantId);
+        Optional<MyPlantDto> ret;
+        if(plantId == -1L)
+            ret = service.readMyFirstPlant(userId);
+        else
+            ret = service.readMyPlant(plantId);
+
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    //TODO: 물 주기 계획 자동 변경
     @PutMapping("/{plant-id}/{type}")
     public ResponseEntity<Long> updateMyPlant(@PathVariable("plant-id") Long id,
             @PathVariable("type") String updateType, @RequestBody MyPlantDto myPlantDto){
         Optional<Long> ret = Optional.empty();
-        switch(updateType){
+        switch (updateType){
             case "all":
                 ret = service.updateMyPlant(id, myPlantDto);
                 break;
@@ -67,8 +67,8 @@ public class MyPlantController {
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
-    @DeleteMapping("/{plantId}")
-    public ResponseEntity<MyPlant> deleteMyPlant(@PathVariable Long plantId){
+    @DeleteMapping("/{plant-id}")
+    public ResponseEntity<MyPlantDto> deleteMyPlant(@PathVariable("plant-id") Long plantId){
         service.deleteMyPlant(plantId);
         return ResponseEntity.noContent().build();
     }

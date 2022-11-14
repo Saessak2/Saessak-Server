@@ -13,9 +13,9 @@ public class MyPlantDto {
     private Long userId;
     private String nickname;
     private String species;
-    private int sunCondition;
-    private int windCondition;
-    private int waterCondition;
+    private float sunCondition;
+    private float windCondition;
+    private float waterCondition;
     private int waterCycle;
     private String imgUrl;
     private Boolean isDisable;

@@ -33,13 +33,13 @@ public class MyPlantService {
     public Optional<MyPlantDto> readMyFirstPlant(Long userId){
         List<MyPlantDto> myPlantDtoList = readMyPlantList(userId);
         return myPlantDtoList.stream()
-                .filter(dto -> !dto.getIsDisable())
+                .filter(MyPlantDto::getIsDisable)
                 .findAny();
     }
 
-    public Optional<MyPlantDto> readMyPlant(Long plantId){
+    public Optional<MyPlantDto> readMyPlant(Long id){
         MyPlantDto ret = null;
-        Optional<MyPlant> data = repository.findById(plantId);
+        Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent())
             ret = data.get().toDto();
         return Optional.ofNullable(ret);
@@ -84,9 +84,9 @@ public class MyPlantService {
 
     private List<MyPlantDto> convContentType(List<MyPlant> inList){
         List<MyPlantDto> retList = new ArrayList<>();
-        for (MyPlant myPlant : inList) {
+        for (MyPlant myPlant : inList)
             retList.add(myPlant.toDto());
-        }
+
         return retList;
     }
 

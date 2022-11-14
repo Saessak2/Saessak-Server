@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
+import kr.ac.kumoh.Saessak_Server.domain.dto.PlanDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,13 +29,38 @@ public class Plan {
     private LocalDate date;
 
     @Column(name = "plan_type")
-    private boolean planType;
+    private String planType;
 
     @ManyToOne
-    @JoinColumn(name = "myplant_id")
+    @JoinColumn(name = "myPlant_id")
     private MyPlant myPlant;
 
     @Column(name = "done")
     private boolean isDone;
+
+    public Plan(PlanDto planDto){
+        this.id = planDto.getId();
+        this.user = new User(planDto.getUserId());
+        this.date = EntityUtility.getLocalDateFromStr(planDto.getTempDate());
+        this.planType = planDto.getPlanType();
+        this.myPlant = new MyPlant(planDto.getMyPlantId());
+        this.isDone = planDto.getIsDone();
+    }
+
+    public void update(PlanDto planDto){
+        if(planDto.getTempDate() != null || !planDto.getTempDate().equals(""))
+            this.date = EntityUtility.getLocalDateFromStr(planDto.getTempDate());
+
+        if(planDto.getPlanType() != null || !planDto.getPlanType().equals(""))
+            this.planType = planDto.getPlanType();
+
+        if(planDto.getIsDone() != null)
+            this.isDone = planDto.getIsDone();
+    }
+
+    public PlanDto toDto(){
+        return new PlanDto(id, user.getId(), planType, myPlant.getId(),
+                isDone, date.toString().replace('-', '.'));
+    }
 
 }

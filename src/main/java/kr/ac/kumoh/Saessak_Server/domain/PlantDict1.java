@@ -74,9 +74,9 @@ public class PlantDict1{
     private String imgUrl;
 
     public PlantDict1Dto toDto(){
-        return new PlantDict1Dto(id, plantEngName, plantName,
-                manageLevel, winterMinTemp, humidity, fertilizer,
-                soilInfo, waterCycleSpring, waterCycleSummer,
+        return new PlantDict1Dto(id, contentsNo, plantEngName, plantName,
+                growthHg,growthAra, manageLevel, winterMinTemp, humidity,
+                fertilizer, soilInfo, waterCycleSpring, waterCycleSummer,
                 waterCycleAutumn, waterCycleWinter, speclManageInfo,
                 prpgtMth, lightDemand, pest,imgUrl);
     }

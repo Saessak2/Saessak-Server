@@ -1,15 +1,15 @@
-package kr.ac.kumoh.Saessak_Server.domain;
+package kr.ac.kumoh.Saessak_Server;
 
 import java.time.LocalDate;
 
-public class EntityUtility {
+public class Utility {
 
     public static LocalDate getLocalDateFromStr(String inDate){
         String reg = " ";
         if(inDate.contains("-"))
             reg = "-";
-        else if(inDate.contains("\\."))
-            reg = ".";
+        else if(inDate.contains("."))
+            reg = "\\.";
         else if(inDate.contains("/"))
             reg = "/";
 

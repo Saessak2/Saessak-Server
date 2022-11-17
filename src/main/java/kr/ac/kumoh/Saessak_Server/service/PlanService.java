@@ -5,9 +5,8 @@ import kr.ac.kumoh.Saessak_Server.domain.dto.PlanDto;
 import kr.ac.kumoh.Saessak_Server.repository.PlanRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class PlanService {
@@ -40,9 +39,9 @@ public class PlanService {
 
     public List<PlanDto> readUserDailyPlanList(
             int year, int month, int day, Long userId){
-        String date = year + "-" + month + "-" + day;
+        LocalDate date = LocalDate.of(year, month, day);
         return convContentType(
-                repository.findPlansByUserAndDay(date, userId));
+                repository.findPlansByUserAndDay(userId, date));
     }
 
     public Optional<PlanDto> readPlan(Long id){
@@ -50,15 +49,6 @@ public class PlanService {
         Optional<Plan> data = repository.findById(id);
         if(data.isPresent())
             ret = data.get().toDto();
-        return Optional.ofNullable(ret);
-    }
-
-    // waterPlanUpdate arg id
-    //TODO: 물 주기 아이콘 기능 구현
-    public Optional<Long> updateWaterPlan(Long id){
-        Long ret = null;
-
-
         return Optional.ofNullable(ret);
     }
 
@@ -73,6 +63,19 @@ public class PlanService {
         return Optional.ofNullable(ret);
     }
 
+    public Optional<Long> updateWaterPlan(Long planId) {
+        Long ret = null;
+        Optional<Plan> data = repository.findById(planId);
+        if (data.isPresent()){
+            Plan plan = data.get();
+            if (Objects.equals(plan.getDate(), LocalDate.now()))
+                ret = setWatered(plan);
+            else
+                ret = undoWatering(plan);
+        }
+        return Optional.ofNullable(ret);
+    }
+
     public void deletePlan(Long id){
         repository.deleteById(id);
     }
@@ -81,9 +84,34 @@ public class PlanService {
         List<PlanDto> retList = new ArrayList<>();
         for (Plan plan : inList)
             retList.add(plan.toDto());
-
         return retList;
+    }
 
+    private Long setWatered(Plan plan){
+        plan.setDone(true);
+        plan.getMyPlant().setLatestWaterDate(LocalDate.now());
+        plan.getMyPlant().setLatestWaterDate(LocalDate.now());
+        return plan.getMyPlant().getId();
+    }
+
+    private Long undoWatering(Plan plan){
+        plan.setDone(false);
+
+        int year = LocalDate.now().getYear();
+        int month = LocalDate.now().getMonthValue();
+        List<Plan> planList = repository.findPlansByMyPlantAndMonth(
+                plan.getMyPlant().getId(), year, month);
+
+        Plan latestPlan;
+        for(int i = 1; i < planList.size(); i++){
+            if(planList.get(i).getDate().equals(LocalDate.now())){
+                planList.get(i).setDone(false);
+                latestPlan = planList.get(i - 1);
+                plan.getMyPlant().setLatestWaterDate(latestPlan.getDate());
+                return latestPlan.getId();
+            }
+        }
+        return plan.getId();
     }
 
 }

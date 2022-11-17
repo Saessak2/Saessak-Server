@@ -24,17 +24,17 @@ public class PlanController {
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
-    @GetMapping()
-    public ResponseEntity<PlanDto> readPlan(@RequestParam("plan-id") Long id){
+    @GetMapping("/{plan-id}")
+    public ResponseEntity<PlanDto> readPlan(@PathVariable("plan-id") Long id){
         Optional<PlanDto> ret = service.readPlan(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @GetMapping("/{year}/{month}/{day}")
+    @GetMapping("/{year}/{month}/{day}/user={user-id}")
     public ResponseEntity<List<PlanDto>> readUserDailyPlan(
             @PathVariable("year") int year, @PathVariable("month") int month,
-            @PathVariable("day") int day, @RequestParam("user-id") Long userId){
+            @PathVariable("day") int day, @PathVariable("user-id") Long userId){
         List<PlanDto> ret = service.readUserDailyPlanList(year, month, day, userId);
         if(!ret.isEmpty())
             return ResponseEntity.ok(ret);
@@ -42,8 +42,8 @@ public class PlanController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping("/{year}/{month}")
-    public ResponseEntity<List<PlanDto>> readUserMonthlyPlan(@RequestParam("user-id") Long userId,
+    @GetMapping("/{year}/{month}/user={user-id}")
+    public ResponseEntity<List<PlanDto>> readUserMonthlyPlan(@PathVariable("user-id") Long userId,
             @PathVariable("year") int year, @PathVariable("month") int month){
         List<PlanDto> ret = service.readUserMonthlyPlanList(year, month, userId);
         if(!ret.isEmpty())
@@ -51,8 +51,8 @@ public class PlanController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping("/{year}/{month}")
-    public ResponseEntity<List<PlanDto>> readMonthlyPlan(@RequestParam("plant-id") Long plantId,
+    @GetMapping("/{year}/{month}/my-plant={plant-id}")
+    public ResponseEntity<List<PlanDto>> readMyPlantMonthlyPlan(@PathVariable("plant-id") Long plantId,
             @PathVariable("year") int year, @PathVariable("month") int month) {
         List<PlanDto> ret = service.readMyPlantMonthlyPlanList(year, month, plantId);
         if(!ret.isEmpty())
@@ -60,18 +60,17 @@ public class PlanController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @PutMapping("/{plan-id}/{type}")
-    public ResponseEntity<Long> updatePlan(@PathVariable("plan-id") Long planId,
-            @PathVariable("type") String updateType, @RequestBody PlanDto planDto){
-        Optional<Long> ret = Optional.empty();
-        switch (updateType) {
-            case "all":
-                ret = service.updatePlan(planId, planDto);
-                break;
-            case "water":
-                ret = service.updateWaterPlan(planId);
-                break;
-        }
+    @PutMapping("/{plan-id}")
+    public ResponseEntity<Long> updatePlan(
+            @PathVariable("plan-id") Long planId, @RequestBody PlanDto planDto){
+        Optional<Long> ret = service.updatePlan(planId, planDto);
+        return ret.map(ResponseEntity::ok).orElseGet(()
+                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    }
+
+    @PutMapping("/{plan-id}/water")
+    public ResponseEntity<Long> updateWatering(@PathVariable("plan-id") Long planId) {
+        Optional<Long> ret = service.updateWaterPlan(planId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }

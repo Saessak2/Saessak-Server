@@ -66,11 +66,8 @@ public class PlantDictService {
 
     private List<PlantDictDto> convContentType(List<PlantDict> inList){
         List<PlantDictDto> retList = new ArrayList<>();
-//        for (PlantDict plantDict : inList) {
-//            retList.add(new PlantDictDto(plantDict));
-//        }
-        for(int i = 0; i < 10; i++){  //use upper code when release
-            retList.add(inList.get(i).toDto());
+        for (PlantDict plantDict : inList) {
+            retList.add(plantDict.toDto());
         }
         return retList;
     }

@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,8 +12,9 @@ public class PlanDto {
     private Long id;
     private Long userId;
     private String planType;
-    private Long myPlantId;
-    private Boolean isDone;
-    private String tempDate;
+    private Long myplant_id;
+    private String myplant_name;
+    private Boolean done;
+    private String date;
 
 }

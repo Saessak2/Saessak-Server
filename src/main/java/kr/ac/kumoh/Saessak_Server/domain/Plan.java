@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
+import kr.ac.kumoh.Saessak_Server.Utility;
 import kr.ac.kumoh.Saessak_Server.domain.dto.PlanDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 public class Plan {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "plan_id")
     private Long id;
 
@@ -32,7 +33,7 @@ public class Plan {
     private String planType;
 
     @ManyToOne
-    @JoinColumn(name = "myPlant_id")
+    @JoinColumn(name = "my_plant_id_fk1")
     private MyPlant myPlant;
 
     @Column(name = "done")
@@ -41,26 +42,26 @@ public class Plan {
     public Plan(PlanDto planDto){
         this.id = planDto.getId();
         this.user = new User(planDto.getUserId());
-        this.date = EntityUtility.getLocalDateFromStr(planDto.getTempDate());
+        this.date = Utility.getLocalDateFromStr(planDto.getDate());
         this.planType = planDto.getPlanType();
-        this.myPlant = new MyPlant(planDto.getMyPlantId());
-        this.isDone = planDto.getIsDone();
+        this.myPlant = new MyPlant(planDto.getMyplant_id());
+        this.isDone = planDto.getDone();
     }
 
     public void update(PlanDto planDto){
-        if(planDto.getTempDate() != null || !planDto.getTempDate().equals(""))
-            this.date = EntityUtility.getLocalDateFromStr(planDto.getTempDate());
+        if(planDto.getDate() != null || !planDto.getDate().equals(""))
+            this.date = Utility.getLocalDateFromStr(planDto.getDate());
 
         if(planDto.getPlanType() != null || !planDto.getPlanType().equals(""))
             this.planType = planDto.getPlanType();
 
-        if(planDto.getIsDone() != null)
-            this.isDone = planDto.getIsDone();
+        if(planDto.getDone() != null)
+            this.isDone = planDto.getDone();
     }
 
     public PlanDto toDto(){
         return new PlanDto(id, user.getId(), planType, myPlant.getId(),
-                isDone, date.toString().replace('-', '.'));
+                myPlant.getNickname(), isDone, date.toString().replace('-', '.'));
     }
 
 }

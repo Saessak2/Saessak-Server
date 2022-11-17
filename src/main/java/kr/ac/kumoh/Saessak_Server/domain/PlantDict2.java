@@ -63,10 +63,10 @@ public class PlantDict2{
     private String imgUrl2;
 
     public PlantDict2Dto toDto(){
-        return new PlantDict2Dto(id, plantName, growthInfo,
+        return new PlantDict2Dto(id, contentsNo, plantName, growthInfo,
                 growthSpeed, winterMinTemp, character, lightDemand,
                 waterCycle, prpgtMth, pest, manageLevel, batchPlace,
-                tip, imgUrl);
+                tip, imgUrl, imgUrl2);
     }
 
 }

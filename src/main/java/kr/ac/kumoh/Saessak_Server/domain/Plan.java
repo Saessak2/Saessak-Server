@@ -1,7 +1,8 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
 import kr.ac.kumoh.Saessak_Server.Utility;
-import kr.ac.kumoh.Saessak_Server.domain.dto.PlanDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.PlanReqDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.PlanResDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,28 +40,28 @@ public class Plan {
     @Column(name = "done")
     private boolean isDone;
 
-    public Plan(PlanDto planDto){
-        this.id = planDto.getId();
-        this.user = new User(planDto.getUserId());
-        this.date = Utility.getLocalDateFromStr(planDto.getDate());
-        this.planType = planDto.getPlanType();
-        this.myPlant = new MyPlant(planDto.getMyplant_id());
-        this.isDone = planDto.getDone();
+    public Plan(PlanReqDto planReqDto){
+        this.id = planReqDto.getId();
+        this.user = new User(planReqDto.getUserId());
+        this.date = Utility.getLocalDateFromStr(planReqDto.getDate());
+        this.planType = planReqDto.getPlanType();
+        this.myPlant = new MyPlant(planReqDto.getMyplant_id());
+        this.isDone = planReqDto.getDone();
     }
 
-    public void update(PlanDto planDto){
-        if(planDto.getDate() != null || !planDto.getDate().equals(""))
-            this.date = Utility.getLocalDateFromStr(planDto.getDate());
+    public void update(PlanResDto planResDto){
+        if(planResDto.getDate() != null || !planResDto.getDate().equals(""))
+            this.date = Utility.getLocalDateFromStr(planResDto.getDate());
 
-        if(planDto.getPlanType() != null || !planDto.getPlanType().equals(""))
-            this.planType = planDto.getPlanType();
+        if(planResDto.getPlanType() != null || !planResDto.getPlanType().equals(""))
+            this.planType = planResDto.getPlanType();
 
-        if(planDto.getDone() != null)
-            this.isDone = planDto.getDone();
+        if(planResDto.getDone() != null)
+            this.isDone = planResDto.getDone();
     }
 
-    public PlanDto toDto(){
-        return new PlanDto(id, user.getId(), planType, myPlant.getId(),
+    public PlanResDto toDto(){
+        return new PlanResDto(id, planType, myPlant.getId(),
                 myPlant.getNickname(), isDone, date.toString().replace('-', '.'));
     }
 

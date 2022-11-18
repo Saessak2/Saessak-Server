@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlanDto {
+public class PlanResDto {
 
     private Long id;
-    private Long userId;
     private String planType;
     private Long myplant_id;
     private String myplant_name;

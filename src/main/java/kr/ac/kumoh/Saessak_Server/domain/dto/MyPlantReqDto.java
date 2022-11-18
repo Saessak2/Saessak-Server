@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyPlantPostDto {
+public class MyPlantReqDto {
 
     private Long id;
     private Long userId;
@@ -21,6 +21,5 @@ public class MyPlantPostDto {
     private Boolean isActive;
     private String tempDate;
     private String plantedRegion;
-    private Boolean hasUploadedImg;
 
 }

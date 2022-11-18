@@ -1,13 +1,12 @@
 package kr.ac.kumoh.Saessak_Server.controller;
 
-import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantPostDto;
-import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantReqDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantResDto;
 import kr.ac.kumoh.Saessak_Server.service.MyPlantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -20,26 +19,16 @@ public class MyPlantController {
 
     //TODO: 물 주기 계획 자동 생성
     @PostMapping()
-    public ResponseEntity<Long> createMyPlant(@RequestBody MyPlantPostDto myPlantDto){
-        Optional<Long> ret = service.createMyPlant(myPlantDto);
+    public ResponseEntity<Long> createMyPlant(@RequestBody MyPlantReqDto myPlantReqDto){
+        Optional<Long> ret = service.createMyPlant(myPlantReqDto);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
-    @PostMapping("/{plant-id}/image")
-    public ResponseEntity<String> uploadImage(
-            @PathVariable("plant-id") Long id,
-            @RequestPart(value = "img_path") MultipartFile file){
-        if (file.isEmpty())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        else
-            return ResponseEntity.ok(service.updateImage(id, file));
-    }
-
     @GetMapping("/{user-id}")
-    public ResponseEntity<List<MyPlantDto>> readMyPlantList(
+    public ResponseEntity<List<MyPlantResDto>> readMyPlantList(
             @PathVariable("user-id") Long userId){
-        List<MyPlantDto> ret = service.readMyPlantList(userId);
+        List<MyPlantResDto> ret = service.readMyPlantList(userId);
         if(!ret.isEmpty())
             return ResponseEntity.ok(ret);
 
@@ -47,13 +36,13 @@ public class MyPlantController {
     }
 
     @GetMapping("/{user-id}/{plant-id}")
-    public ResponseEntity<MyPlantDto> readMyPlantOne(
-            @PathVariable("user-id") Long userId, @PathVariable("plant-id") Long id){
-        Optional<MyPlantDto> ret;
-        if(id == 0L)
+    public ResponseEntity<MyPlantResDto> readMyPlantOne(
+            @PathVariable("user-id") Long userId, @PathVariable("plant-id") Long plantId){
+        Optional<MyPlantResDto> ret;
+        if(plantId == 0L)
             ret = service.readMyFirstPlant(userId);
         else
-            ret = service.readMyPlant(id);
+            ret = service.readMyPlant(plantId);
 
         ret.get().setData();
         return ret.map(ResponseEntity::ok).orElseGet(()
@@ -63,17 +52,17 @@ public class MyPlantController {
     //TODO: 물 주기 계획 자동 변경
     @PutMapping("/{plant-id}/{type}")
     public ResponseEntity<Long> updateMyPlant(@PathVariable("plant-id") Long id,
-            @PathVariable("type") String updateType, @RequestBody MyPlantDto myPlantDto){
+            @PathVariable("type") String updateType, @RequestBody MyPlantReqDto myPlantReqDto){
         Optional<Long> ret = Optional.empty();
         switch (updateType){
             case "all":
-                ret = service.updateMyPlant(id, myPlantDto);
+                ret = service.updateMyPlant(id, myPlantReqDto);
                 break;
             case "date":
                 ret = service.updateLatestWaterDate(id);
                 break;
             case "active":
-                ret = service.updateAbility(id);
+                ret = service.updateActivation(id);
                 break;
         }
         return ret.map(ResponseEntity::ok).orElseGet(()
@@ -81,7 +70,7 @@ public class MyPlantController {
     }
 
     @DeleteMapping("/{plant-id}")
-    public ResponseEntity<MyPlantDto> deleteMyPlant(@PathVariable("plant-id") Long plantId){
+    public ResponseEntity<MyPlantResDto> deleteMyPlant(@PathVariable("plant-id") Long plantId){
         service.deleteMyPlant(plantId);
         return ResponseEntity.noContent().build();
     }

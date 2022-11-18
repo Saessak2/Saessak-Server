@@ -1,23 +1,17 @@
 package kr.ac.kumoh.Saessak_Server.service;
 
 import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
-import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantPostDto;
-import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantReqDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantResDto;
 import kr.ac.kumoh.Saessak_Server.repository.MyPlantRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MyPlantService {
-
-    private final String FILE_PATH = "C:/Users/mare1/workspace/Saessak-Server/src/main/resources/images/";
 
     private final MyPlantRepository repository;
 
@@ -25,61 +19,40 @@ public class MyPlantService {
         this.repository = repository;
     }
 
-    public Optional<Long> createMyPlant(MyPlantPostDto myPlantDto){
+    public Optional<Long> createMyPlant(MyPlantReqDto myPlantReqDto){
         Long ret = null;
         try {
-            ret = repository.save(new MyPlant(myPlantDto)).getId();
+            ret = repository.save(new MyPlant(myPlantReqDto)).getId();
         } catch(Exception ignored){ }
         return Optional.ofNullable(ret);
     }
 
-    public String updateImage(Long id, MultipartFile file){
-        String fileName = new Date().getTime() + "-" + file.getOriginalFilename();
-        String path = FILE_PATH + fileName;
-        try {
-            file.transferTo(new File(path));
-        } catch (IllegalStateException | IOException e) {
-            e.printStackTrace();
-            return "IMAGE UPLOADING FAILED";
-        }
-
-        Optional<MyPlant> data = repository.findById(id);
-        if(data.isEmpty())
-            return "IMAGE UPLOADED, 404 ON " + id;
-        else {
-            repository.updateImgUrlById(path, true, id);
-            MyPlant myPlant = data.get();
-            myPlant.setImgUrl(path);
-            repository.save(myPlant);
-            return "IMAGE UPLOADED, imgUrl of " + id + " was updated";
-        }
-    }
-
-    public List<MyPlantDto> readMyPlantList(Long userId){
+    public List<MyPlantResDto> readMyPlantList(Long userId){
         return convContentType(repository.findByUserId(userId));
     }
 
-    public Optional<MyPlantDto> readMyFirstPlant(Long userId){
-        List<MyPlantDto> myPlantDtoList = readMyPlantList(userId);
-        return myPlantDtoList.stream()
-                .filter(MyPlantDto::getIsActive)
-                .findAny();
+    public Optional<MyPlantResDto> readMyFirstPlant(Long userId){
+        MyPlantResDto ret = null;
+        List<MyPlant> data = repository.findMyPlantByUserIdAndActive(userId, true);
+        if(!data.isEmpty())
+            ret = data.get(0).toDto();
+        return Optional.ofNullable(ret);
     }
 
-    public Optional<MyPlantDto> readMyPlant(Long id){
-        MyPlantDto ret = null;
+    public Optional<MyPlantResDto> readMyPlant(Long id){
+        MyPlantResDto ret = null;
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent())
             ret = data.get().toDto();
         return Optional.ofNullable(ret);
     }
 
-    public Optional<Long> updateMyPlant(Long id, MyPlantDto myPlantDto){
+    public Optional<Long> updateMyPlant(Long id, MyPlantReqDto myPlantReqDto){
         Long ret = null;
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent()) {
             MyPlant myPlant = data.get();
-            myPlant.update(myPlantDto);
+            myPlant.update(myPlantReqDto);
             ret = repository.save(myPlant).getId();
         }
         return Optional.ofNullable(ret);
@@ -90,18 +63,18 @@ public class MyPlantService {
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent()){
             MyPlant myPlant = data.get();
-            myPlant.updateLatestWaterDateOnly();
+            myPlant.updateLatestWaterDate();
             ret = repository.save(myPlant).getId();
         }
         return Optional.ofNullable(ret);
     }
 
-    public Optional<Long> updateAbility(Long id){
+    public Optional<Long> updateActivation(Long id){
         Long ret = null;
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent()){
             MyPlant myPlant = data.get();
-            myPlant.updateAbilityOnly();
+            myPlant.updateIsActive();
             ret = repository.save(myPlant).getId();
         }
         return Optional.ofNullable(ret);
@@ -111,12 +84,17 @@ public class MyPlantService {
         repository.deleteById(id);
     }
 
-    private List<MyPlantDto> convContentType(List<MyPlant> inList){
-        List<MyPlantDto> retList = new ArrayList<>();
+    private List<MyPlantResDto> convContentType(List<MyPlant> inList){
+        List<MyPlantResDto> retList = new ArrayList<>();
         for (MyPlant myPlant : inList)
             retList.add(myPlant.toDto());
 
         return retList;
+    }
+
+    private void setWeatherRecommendation(String icon, String stmt){
+        //TODO:Using WeatherController(Service), fill icon and stmt
+        //need to set default data(ex. sunny, stmt1)
     }
 
 }

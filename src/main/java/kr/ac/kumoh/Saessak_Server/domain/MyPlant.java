@@ -1,8 +1,8 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
 import kr.ac.kumoh.Saessak_Server.Utility;
-import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantDto;
-import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantPostDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantResDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantReqDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,14 +55,11 @@ public class MyPlant {
     @Column(name = "planted_region")
     private String plantedRegion;
 
-    @Column(name = "uploaded_img")
-    private boolean hasUploadedImg;
-
     public MyPlant(Long id){
         this.id = id;
     }
 
-    public MyPlant(MyPlantPostDto myPlantGetDto){
+    public MyPlant(MyPlantReqDto myPlantGetDto){
         this.id = myPlantGetDto.getId();
         this.user = new User(myPlantGetDto.getUserId());
         this.nickname = myPlantGetDto.getNickname();
@@ -75,59 +72,53 @@ public class MyPlant {
         this.imgUrl = myPlantGetDto.getImgUrl();
         this.isActive = myPlantGetDto.getIsActive();
         this.plantedRegion = myPlantGetDto.getPlantedRegion();
-        this.hasUploadedImg = myPlantGetDto.getHasUploadedImg();
     }
 
-    public void update(MyPlantDto myPlantDto){
-        if(myPlantDto.getNickname() != null)
-            this.nickname = myPlantDto.getNickname();
+    public void update(MyPlantReqDto myPlantReqDto){
+        if(myPlantReqDto.getNickname() != null)
+            this.nickname = myPlantReqDto.getNickname();
 
-        if(myPlantDto.getSpecies() != null || !myPlantDto.getSpecies().equals(""))
-            this.species = myPlantDto.getSpecies();
+        if(myPlantReqDto.getSpecies() != null)
+            this.species = myPlantReqDto.getSpecies();
 
-        if(myPlantDto.getSunCondition() != 0)
-            this.sunCondition = myPlantDto.getSunCondition();
+        if(myPlantReqDto.getSunCondition() != 0)
+            this.sunCondition = myPlantReqDto.getSunCondition();
 
-        if(myPlantDto.getWindCondition() != 0)
-           this.windCondition = myPlantDto.getWindCondition();
+        if(myPlantReqDto.getWindCondition() != 0)
+           this.windCondition = myPlantReqDto.getWindCondition();
 
-        if(myPlantDto.getWaterCondition() != 0)
-            this.waterCondition = myPlantDto.getWaterCondition();
+        if(myPlantReqDto.getWaterCondition() != 0)
+            this.waterCondition = myPlantReqDto.getWaterCondition();
 
-        if(myPlantDto.getWaterCycle() != 0)
-            this.waterCycle = myPlantDto.getWaterCycle();
+        if(myPlantReqDto.getWaterCycle() != 0)
+            this.waterCycle = myPlantReqDto.getWaterCycle();
 
-        if(myPlantDto.getImgUrl().startsWith("http") ||
-                myPlantDto.getImgUrl() != null || !myPlantDto.getImgUrl().equals(""))
-            this.imgUrl = myPlantDto.getImgUrl();
+        if(myPlantReqDto.getImgUrl() != null)
+            this.imgUrl = myPlantReqDto.getImgUrl();
 
-        if(myPlantDto.getIsActive() != null)
-            this.isActive = myPlantDto.getIsActive();
+        if(myPlantReqDto.getIsActive() != null)
+            this.isActive = myPlantReqDto.getIsActive();
 
-        if(myPlantDto.getTempDate() != null || !myPlantDto.getTempDate().equals(""))
-            this.latestWaterDate = Utility.getLocalDateFromStr(myPlantDto.getTempDate());
+        if(myPlantReqDto.getTempDate() != null)
+            this.latestWaterDate = Utility.getLocalDateFromStr(myPlantReqDto.getTempDate());
 
-        if(myPlantDto.getPlantedRegion() != null || !myPlantDto.getPlantedRegion().equals(""))
-            this.plantedRegion = myPlantDto.getPlantedRegion();
-
-        if(myPlantDto.getHasUploadedImg() != null)
-            this.hasUploadedImg = myPlantDto.getHasUploadedImg();
-
+        if(myPlantReqDto.getPlantedRegion() != null)
+            this.plantedRegion = myPlantReqDto.getPlantedRegion();
     }
 
-    public void updateAbilityOnly(){
+    public void updateIsActive(){
         isActive = !isActive;
     }
 
-    public void updateLatestWaterDateOnly(){
+    public void updateLatestWaterDate(){
         this.latestWaterDate = LocalDate.now();
     }
 
-    public MyPlantDto toDto(){
-        return new MyPlantDto(id, user.getId(), nickname, species, sunCondition,
-                windCondition, waterCondition, waterCycle, imgUrl, isActive,
-                latestWaterDate.toString().replace('-', '.'),
-                plantedRegion, hasUploadedImg);
+    public MyPlantResDto toDto(){
+        return new MyPlantResDto(id, user.getId(), nickname, species,
+                sunCondition, windCondition, waterCondition, waterCycle, imgUrl,
+                isActive, latestWaterDate.toString().replace('-', '.'),
+                plantedRegion);
     }
 
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyPlantDto {
+public class MyPlantResDto {
 
     private Long id;
     private Long userId;
@@ -24,13 +24,12 @@ public class MyPlantDto {
     private String plantedRegion;
     private String icon;
     private String recommendStr;
-    private Boolean hasUploadedImg;
 
     @JsonIgnore
-    public MyPlantDto(Long id, Long userId, String nickname, String species,
-                      float sunCondition, float windCondition, float waterCondition,
-                      int waterCycle, String imgUrl, Boolean isActive, String tempDate,
-                      String plantedRegion, Boolean hasUploadedImg){
+    public MyPlantResDto(Long id, Long userId, String nickname,
+                         String species, float sunCondition, float windCondition,
+                         float waterCondition, int waterCycle, String imgUrl,
+                         Boolean isActive, String tempDate, String plantedRegion){
         this.id = id;
         this.userId = userId;
         this.nickname = nickname;
@@ -43,7 +42,6 @@ public class MyPlantDto {
         this.isActive = isActive;
         this.tempDate = tempDate;
         this.plantedRegion = plantedRegion;
-        this.hasUploadedImg = hasUploadedImg;
     }
 
     @JsonIgnore

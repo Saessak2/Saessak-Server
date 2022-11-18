@@ -1,6 +1,7 @@
 package kr.ac.kumoh.Saessak_Server.controller;
 
-import kr.ac.kumoh.Saessak_Server.domain.dto.PlanDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.PlanReqDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.PlanResDto;
 import kr.ac.kumoh.Saessak_Server.service.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,24 +19,24 @@ public class PlanController {
     private final PlanService service;
 
     @PostMapping()
-    public ResponseEntity<Long> createPlan(@RequestBody PlanDto planDto){
-        Optional<Long> ret = service.createPlan(planDto);
+    public ResponseEntity<Long> createPlan(@RequestBody PlanReqDto planReqDto){
+        Optional<Long> ret = service.createPlan(planReqDto);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
     @GetMapping("/{plan-id}")
-    public ResponseEntity<PlanDto> readPlan(@PathVariable("plan-id") Long id){
-        Optional<PlanDto> ret = service.readPlan(id);
+    public ResponseEntity<PlanResDto> readPlan(@PathVariable("plan-id") Long id){
+        Optional<PlanResDto> ret = service.readPlan(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @GetMapping("/{year}/{month}/{day}/user={user-id}")
-    public ResponseEntity<List<PlanDto>> readUserDailyPlan(
+    public ResponseEntity<List<PlanResDto>> readUserDailyPlan(
             @PathVariable("year") int year, @PathVariable("month") int month,
             @PathVariable("day") int day, @PathVariable("user-id") Long userId){
-        List<PlanDto> ret = service.readUserDailyPlanList(year, month, day, userId);
+        List<PlanResDto> ret = service.readUserDailyPlanList(year, month, day, userId);
         if(!ret.isEmpty())
             return ResponseEntity.ok(ret);
 
@@ -43,18 +44,18 @@ public class PlanController {
     }
 
     @GetMapping("/{year}/{month}/user={user-id}")
-    public ResponseEntity<List<PlanDto>> readUserMonthlyPlan(@PathVariable("user-id") Long userId,
-            @PathVariable("year") int year, @PathVariable("month") int month){
-        List<PlanDto> ret = service.readUserMonthlyPlanList(year, month, userId);
+    public ResponseEntity<List<PlanResDto>> readUserMonthlyPlan(@PathVariable("user-id") Long userId,
+                                                                @PathVariable("year") int year, @PathVariable("month") int month){
+        List<PlanResDto> ret = service.readUserMonthlyPlanList(year, month, userId);
         if(!ret.isEmpty())
             return ResponseEntity.ok(ret);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/{year}/{month}/my-plant={plant-id}")
-    public ResponseEntity<List<PlanDto>> readMyPlantMonthlyPlan(@PathVariable("plant-id") Long plantId,
-            @PathVariable("year") int year, @PathVariable("month") int month) {
-        List<PlanDto> ret = service.readMyPlantMonthlyPlanList(year, month, plantId);
+    public ResponseEntity<List<PlanResDto>> readMyPlantMonthlyPlan(@PathVariable("plant-id") Long plantId,
+                                                                   @PathVariable("year") int year, @PathVariable("month") int month) {
+        List<PlanResDto> ret = service.readMyPlantMonthlyPlanList(year, month, plantId);
         if(!ret.isEmpty())
             return ResponseEntity.ok(ret);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -62,8 +63,8 @@ public class PlanController {
 
     @PutMapping("/{plan-id}")
     public ResponseEntity<Long> updatePlan(
-            @PathVariable("plan-id") Long planId, @RequestBody PlanDto planDto){
-        Optional<Long> ret = service.updatePlan(planId, planDto);
+            @PathVariable("plan-id") Long planId, @RequestBody PlanResDto planResDto){
+        Optional<Long> ret = service.updatePlan(planId, planResDto);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
@@ -76,7 +77,7 @@ public class PlanController {
     }
 
     @DeleteMapping("/{plan-id}")
-    public ResponseEntity<PlanDto> deletePlan(@PathVariable("plan-id") Long planId){
+    public ResponseEntity<PlanResDto> deletePlan(@PathVariable("plan-id") Long planId){
         service.deletePlan(planId);
         return ResponseEntity.noContent().build();
     }

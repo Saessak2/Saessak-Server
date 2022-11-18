@@ -1,7 +1,8 @@
 package kr.ac.kumoh.Saessak_Server.service;
 
 import kr.ac.kumoh.Saessak_Server.domain.Plan;
-import kr.ac.kumoh.Saessak_Server.domain.dto.PlanDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.PlanReqDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.PlanResDto;
 import kr.ac.kumoh.Saessak_Server.repository.PlanRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,47 +18,47 @@ public class PlanService {
         this.repository = repository;
     }
 
-    public Optional<Long> createPlan(PlanDto planDto){
+    public Optional<Long> createPlan(PlanReqDto planReqDto){
         Long ret = null;
         try{
-            ret = repository.save(new Plan(planDto)).getId();
+            ret = repository.save(new Plan(planReqDto)).getId();
         } catch(Exception ignored) { }
         return Optional.ofNullable(ret);
     }
 
-    public List<PlanDto> readUserMonthlyPlanList(
+    public List<PlanResDto> readUserMonthlyPlanList(
             int year, int month, Long userId){
         return convContentType(
                 repository.findPlansByUserAndMonth(userId, year, month));
     }
 
-    public List<PlanDto> readMyPlantMonthlyPlanList(
+    public List<PlanResDto> readMyPlantMonthlyPlanList(
             int year, int month, Long plantId){
         return convContentType(
                 repository.findPlansByMyPlantAndMonth(plantId, year, month));
     }
 
-    public List<PlanDto> readUserDailyPlanList(
+    public List<PlanResDto> readUserDailyPlanList(
             int year, int month, int day, Long userId){
         LocalDate date = LocalDate.of(year, month, day);
         return convContentType(
                 repository.findPlansByUserAndDay(userId, date));
     }
 
-    public Optional<PlanDto> readPlan(Long id){
-        PlanDto ret = null;
+    public Optional<PlanResDto> readPlan(Long id){
+        PlanResDto ret = null;
         Optional<Plan> data = repository.findById(id);
         if(data.isPresent())
             ret = data.get().toDto();
         return Optional.ofNullable(ret);
     }
 
-    public Optional<Long> updatePlan(Long id, PlanDto planDto){
+    public Optional<Long> updatePlan(Long id, PlanResDto planResDto){
         Long ret = null;
         Optional<Plan> data = repository.findById(id);
         if(data.isPresent()){
             Plan plan = data.get();
-            plan.update(planDto);
+            plan.update(planResDto);
             ret = repository.save(plan).getId();
         }
         return Optional.ofNullable(ret);
@@ -80,8 +81,8 @@ public class PlanService {
         repository.deleteById(id);
     }
 
-    private List<PlanDto> convContentType(List<Plan> inList){
-        List<PlanDto> retList = new ArrayList<>();
+    private List<PlanResDto> convContentType(List<Plan> inList){
+        List<PlanResDto> retList = new ArrayList<>();
         for (Plan plan : inList)
             retList.add(plan.toDto());
         return retList;

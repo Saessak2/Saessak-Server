@@ -42,29 +42,33 @@ public class MyPlantController {
         if(plantId == 0L)
             ret = service.readMyFirstPlant(userId);
         else
-            ret = service.readMyPlant(plantId);
-
-        ret.get().setData();
+            ret = service.readMyPlant(plantId, userId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     //TODO: 물 주기 계획 자동 변경
-    @PutMapping("/{plant-id}/{type}")
-    public ResponseEntity<Long> updateMyPlant(@PathVariable("plant-id") Long id,
-            @PathVariable("type") String updateType, @RequestBody MyPlantReqDto myPlantReqDto){
-        Optional<Long> ret = Optional.empty();
-        switch (updateType){
-            case "all":
-                ret = service.updateMyPlant(id, myPlantReqDto);
-                break;
-            case "date":
-                ret = service.updateLatestWaterDate(id);
-                break;
-            case "active":
-                ret = service.updateActivation(id);
-                break;
-        }
+    @PutMapping("/{plant-id}/all")
+    public ResponseEntity<Long> updateMyPlant(
+            @PathVariable("plant-id") Long id,
+            @RequestBody MyPlantReqDto myPlantReqDto){
+        Optional<Long> ret = service.updateMyPlant(id, myPlantReqDto);
+        return ret.map(ResponseEntity::ok).orElseGet(()
+                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    }
+
+    @PutMapping("/{plant-id}/date")
+    public ResponseEntity<Long> updateMyPlantLWD(
+            @PathVariable("plant-id") Long id){
+        Optional<Long> ret = service.updateLatestWaterDate(id);
+        return ret.map(ResponseEntity::ok).orElseGet(()
+                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    }
+
+    @PutMapping("/{plant-id}/active")
+    public ResponseEntity<Long> updateMyPlantActive(
+            @PathVariable("plant-id") Long id){
+        Optional<Long> ret = service.updateActivation(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }

@@ -31,8 +31,15 @@ public class PlantDict {
     @Column(name = "img_url")
     private String imgUrl;
 
+    @Column(name = "water_value")
+    private float waterValue;
+
+    @Column(name = "water_rec")
+    private String waterRec;
+
     public PlantDictDto toDto(){
-        return new PlantDictDto(id, plantName, dType, idFromEachDict, imgUrl);
+        return new PlantDictDto(id, plantName, dType,
+                idFromEachDict, imgUrl, waterValue, waterRec);
     }
 
 }

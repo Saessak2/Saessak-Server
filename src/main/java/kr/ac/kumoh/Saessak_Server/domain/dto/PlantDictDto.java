@@ -14,5 +14,7 @@ public class PlantDictDto {
     private String dType;
     private Long idFromEachDict;
     private String imgUrl;
+    private float waterValue;
+    private String waterRec;
 
 }

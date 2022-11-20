@@ -49,15 +49,15 @@ public class Plan {
         this.isDone = planReqDto.getDone();
     }
 
-    public void update(PlanResDto planResDto){
-        if(planResDto.getDate() != null || !planResDto.getDate().equals(""))
-            this.date = Utility.getLocalDateFromStr(planResDto.getDate());
+    public void update(PlanReqDto planReqDto){
+        if(planReqDto.getDate() != null)
+            this.date = Utility.getLocalDateFromStr(planReqDto.getDate());
 
-        if(planResDto.getPlanType() != null || !planResDto.getPlanType().equals(""))
-            this.planType = planResDto.getPlanType();
+        if(planReqDto.getPlanType() != null)
+            this.planType = planReqDto.getPlanType();
 
-        if(planResDto.getDone() != null)
-            this.isDone = planResDto.getDone();
+        if(planReqDto.getDone() != null)
+            this.isDone = planReqDto.getDone();
     }
 
     public PlanResDto toDto(){

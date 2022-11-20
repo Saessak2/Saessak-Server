@@ -42,7 +42,7 @@ public class PlantDictService {
 
     public Optional<PlantDict1Dto> readOneFrom1(Long id){
         PlantDict1Dto ret = null;
-        Optional<PlantDict1> data = dict1Repo.findByIdFrom1(id);
+        Optional<PlantDict1> data = dict1Repo.findById(id);
         if(data.isPresent())
             ret = data.get().toDto();
         return Optional.ofNullable(ret);
@@ -50,7 +50,7 @@ public class PlantDictService {
 
     public Optional<PlantDict2Dto> readOneFrom2(Long id){
         PlantDict2Dto ret = null;
-        Optional<PlantDict2> data = dict2Repo.findByIdFrom2(id);
+        Optional<PlantDict2> data = dict2Repo.findById(id);
         if(data.isPresent())
             ret = data.get().toDto();
         return Optional.ofNullable(ret);
@@ -58,7 +58,7 @@ public class PlantDictService {
 
     public Optional<PlantDict3Dto> readOneFrom3(Long id){
         PlantDict3Dto ret = null;
-        Optional<PlantDict3> data = dict3Repo.findByIdFrom3(id);
+        Optional<PlantDict3> data = dict3Repo.findById(id);
         if(data.isPresent())
             ret = data.get().toDto();
         return Optional.ofNullable(ret);

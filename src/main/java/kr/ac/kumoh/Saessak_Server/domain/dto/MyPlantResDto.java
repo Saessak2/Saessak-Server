@@ -26,28 +26,9 @@ public class MyPlantResDto {
     private String recommendStr;
 
     @JsonIgnore
-    public MyPlantResDto(Long id, Long userId, String nickname,
-                         String species, float sunCondition, float windCondition,
-                         float waterCondition, int waterCycle, String imgUrl,
-                         Boolean isActive, String tempDate, String plantedRegion){
-        this.id = id;
-        this.userId = userId;
-        this.nickname = nickname;
-        this.species = species;
-        this.sunCondition = sunCondition;
-        this.windCondition = windCondition;
-        this.waterCondition = waterCondition;
-        this.waterCycle = waterCycle;
-        this.imgUrl = imgUrl;
-        this.isActive = isActive;
-        this.tempDate = tempDate;
-        this.plantedRegion = plantedRegion;
-    }
-
-    @JsonIgnore
-    public void setData(){
-        icon = "sun";
-        recommendStr = "해가 짱짱쩅쨩";
+    public void setWeatherRc(String icon, String recommendStr){
+        this.icon = icon;
+        this.recommendStr = recommendStr;
     }
 
 }

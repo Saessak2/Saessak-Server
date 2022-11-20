@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,19 +32,27 @@ public class MyPlantService {
         return convContentType(repository.findByUserId(userId));
     }
 
-    public Optional<MyPlantResDto> readMyFirstPlant(Long userId){
-        MyPlantResDto ret = null;
-        List<MyPlant> data = repository.findMyPlantByUserIdAndActive(userId, true);
-        if(!data.isEmpty())
-            ret = data.get(0).toDto();
-        return Optional.ofNullable(ret);
-    }
-
-    public Optional<MyPlantResDto> readMyPlant(Long id){
+    public Optional<MyPlantResDto> readMyPlant(Long id, Long userId){
         MyPlantResDto ret = null;
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent())
             ret = data.get().toDto();
+        else {
+            List<MyPlant> tempList = repository.findMyPlantByUserIdAndActive(userId, true);
+            if(!tempList.isEmpty())
+                ret = tempList.get(0).toDto();
+        }
+        setWeatherRecommendation(Objects.requireNonNull(ret));
+        return Optional.of(ret);
+    }
+
+    public Optional<MyPlantResDto> readMyFirstPlant(Long userId){
+        MyPlantResDto ret = null;
+        List<MyPlant> data = repository.findMyPlantByUserIdAndActive(userId, true);
+        if(!data.isEmpty()){
+            ret = data.get(0).toDto();
+            setWeatherRecommendation(ret);
+        }
         return Optional.ofNullable(ret);
     }
 
@@ -92,9 +101,9 @@ public class MyPlantService {
         return retList;
     }
 
-    private void setWeatherRecommendation(String icon, String stmt){
+    private void setWeatherRecommendation(MyPlantResDto myPlantResDto){
         //TODO:Using WeatherController(Service), fill icon and stmt
-        //need to set default data(ex. sunny, stmt1)
+        myPlantResDto.setWeatherRc("04n", "해가 짱짱쨍쨩");
     }
 
 }

@@ -118,7 +118,7 @@ public class MyPlant {
         return new MyPlantResDto(id, user.getId(), nickname, species,
                 sunCondition, windCondition, waterCondition, waterCycle, imgUrl,
                 isActive, latestWaterDate.toString().replace('-', '.'),
-                plantedRegion);
+                plantedRegion, "", "");
     }
 
 }

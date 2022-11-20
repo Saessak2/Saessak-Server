@@ -44,8 +44,9 @@ public class PlanController {
     }
 
     @GetMapping("/{year}/{month}/user={user-id}")
-    public ResponseEntity<List<PlanResDto>> readUserMonthlyPlan(@PathVariable("user-id") Long userId,
-                                                                @PathVariable("year") int year, @PathVariable("month") int month){
+    public ResponseEntity<List<PlanResDto>> readUserMonthlyPlan(
+            @PathVariable("user-id") Long userId, @PathVariable("year") int year,
+            @PathVariable("month") int month){
         List<PlanResDto> ret = service.readUserMonthlyPlanList(year, month, userId);
         if(!ret.isEmpty())
             return ResponseEntity.ok(ret);
@@ -53,32 +54,43 @@ public class PlanController {
     }
 
     @GetMapping("/{year}/{month}/my-plant={plant-id}")
-    public ResponseEntity<List<PlanResDto>> readMyPlantMonthlyPlan(@PathVariable("plant-id") Long plantId,
-                                                                   @PathVariable("year") int year, @PathVariable("month") int month) {
+    public ResponseEntity<List<PlanResDto>> readMyPlantMonthlyPlan(
+            @PathVariable("plant-id") Long plantId, @PathVariable("year") int year,
+            @PathVariable("month") int month) {
         List<PlanResDto> ret = service.readMyPlantMonthlyPlanList(year, month, plantId);
         if(!ret.isEmpty())
             return ResponseEntity.ok(ret);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    //TODO: Req 로 변경함, 검증 필요 - 문제 있을 시 Res 로 변경
     @PutMapping("/{plan-id}")
     public ResponseEntity<Long> updatePlan(
-            @PathVariable("plan-id") Long planId, @RequestBody PlanResDto planResDto){
-        Optional<Long> ret = service.updatePlan(planId, planResDto);
+            @PathVariable("plan-id") Long id, @RequestBody PlanReqDto planReqDto){
+        Optional<Long> ret = service.updatePlan(id, planReqDto);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
-    @PutMapping("/{plan-id}/water")
-    public ResponseEntity<Long> updateWatering(@PathVariable("plan-id") Long planId) {
-        Optional<Long> ret = service.updateWaterPlan(planId);
+    //TODO: planType: water 아닌 경우에 403 리턴 검증
+    //TODO: 물 주기 갱신/취소 작동 검증
+    @PutMapping("/{plan-id}/water/do")
+    public ResponseEntity<Long> updateWateringDone(@PathVariable("plan-id") Long id) {
+        Optional<Long> ret = service.doWatering(id);
+        return ret.map(ResponseEntity::ok).orElseGet(()
+                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    }
+
+    @PutMapping("/{plan-id}/water/undo")
+    public ResponseEntity<Long> updateWateringUndone(@PathVariable("plan-id") Long id) {
+        Optional<Long> ret = service.undoWatering(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
     @DeleteMapping("/{plan-id}")
-    public ResponseEntity<PlanResDto> deletePlan(@PathVariable("plan-id") Long planId){
-        service.deletePlan(planId);
+    public ResponseEntity<PlanResDto> deletePlan(@PathVariable("plan-id") Long id){
+        service.deletePlan(id);
         return ResponseEntity.noContent().build();
     }
 

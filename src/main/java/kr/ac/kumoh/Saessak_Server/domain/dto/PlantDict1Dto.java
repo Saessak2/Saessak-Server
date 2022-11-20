@@ -31,3 +31,4 @@ public class PlantDict1Dto {
     private String imgUrl;
 
 }
+

@@ -37,10 +37,7 @@ public class PlanController {
             @PathVariable("year") int year, @PathVariable("month") int month,
             @PathVariable("day") int day, @PathVariable("user-id") Long userId){
         List<PlanResDto> ret = service.readUserDailyPlanList(year, month, day, userId);
-        if(!ret.isEmpty())
-            return ResponseEntity.ok(ret);
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(ret);
     }
 
     @GetMapping("/{year}/{month}/user={user-id}")
@@ -48,9 +45,7 @@ public class PlanController {
             @PathVariable("user-id") Long userId, @PathVariable("year") int year,
             @PathVariable("month") int month){
         List<PlanResDto> ret = service.readUserMonthlyPlanList(year, month, userId);
-        if(!ret.isEmpty())
-            return ResponseEntity.ok(ret);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(ret);
     }
 
     @GetMapping("/{year}/{month}/my-plant={plant-id}")
@@ -58,12 +53,9 @@ public class PlanController {
             @PathVariable("plant-id") Long plantId, @PathVariable("year") int year,
             @PathVariable("month") int month) {
         List<PlanResDto> ret = service.readMyPlantMonthlyPlanList(year, month, plantId);
-        if(!ret.isEmpty())
-            return ResponseEntity.ok(ret);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(ret);
     }
 
-    //TODO: Req 로 변경함, 검증 필요 - 문제 있을 시 Res 로 변경
     @PutMapping("/{plan-id}")
     public ResponseEntity<Long> updatePlan(
             @PathVariable("plan-id") Long id, @RequestBody PlanReqDto planReqDto){
@@ -72,8 +64,6 @@ public class PlanController {
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
-    //TODO: planType: water 아닌 경우에 403 리턴 검증
-    //TODO: 물 주기 갱신/취소 작동 검증
     @PutMapping("/{plan-id}/water/do")
     public ResponseEntity<Long> updateWateringDone(@PathVariable("plan-id") Long id) {
         Optional<Long> ret = service.doWatering(id);

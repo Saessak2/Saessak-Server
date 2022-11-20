@@ -3,6 +3,7 @@ package kr.ac.kumoh.Saessak_Server.controller;
 import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantReqDto;
 import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantResDto;
 import kr.ac.kumoh.Saessak_Server.service.MyPlantService;
+import kr.ac.kumoh.Saessak_Server.service.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,15 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MyPlantController {
 
-    private final MyPlantService service;
+    private final MyPlantService myPlantService;
+    private final PlanService planService;
+    private final WeatherController weatherController;
 
-    //TODO: 물 주기 계획 자동 생성
     @PostMapping()
-    public ResponseEntity<Long> createMyPlant(@RequestBody MyPlantReqDto myPlantReqDto){
-        Optional<Long> ret = service.createMyPlant(myPlantReqDto);
+    public ResponseEntity<Long> createMyPlant(
+            @RequestBody MyPlantReqDto myPlantReqDto){
+        Optional<Long> ret = myPlantService.createMyPlant(
+                planService, myPlantReqDto);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
@@ -28,11 +32,8 @@ public class MyPlantController {
     @GetMapping("/{user-id}")
     public ResponseEntity<List<MyPlantResDto>> readMyPlantList(
             @PathVariable("user-id") Long userId){
-        List<MyPlantResDto> ret = service.readMyPlantList(userId);
-        if(!ret.isEmpty())
-            return ResponseEntity.ok(ret);
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        List<MyPlantResDto> ret = myPlantService.readMyPlantList(userId);
+        return ResponseEntity.ok(ret);
     }
 
     @GetMapping("/{user-id}/{plant-id}")
@@ -40,19 +41,18 @@ public class MyPlantController {
             @PathVariable("user-id") Long userId, @PathVariable("plant-id") Long plantId){
         Optional<MyPlantResDto> ret;
         if(plantId == 0L)
-            ret = service.readMyFirstPlant(userId);
+            ret = myPlantService.readMyFirstPlant(weatherController, userId);
         else
-            ret = service.readMyPlant(plantId, userId);
+            ret = myPlantService.readMyPlant(weatherController, plantId, userId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    //TODO: 물 주기 계획 자동 변경
     @PutMapping("/{plant-id}/all")
     public ResponseEntity<Long> updateMyPlant(
             @PathVariable("plant-id") Long id,
             @RequestBody MyPlantReqDto myPlantReqDto){
-        Optional<Long> ret = service.updateMyPlant(id, myPlantReqDto);
+        Optional<Long> ret = myPlantService.updateMyPlant(id, myPlantReqDto, planService);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
@@ -60,7 +60,7 @@ public class MyPlantController {
     @PutMapping("/{plant-id}/date")
     public ResponseEntity<Long> updateMyPlantLWD(
             @PathVariable("plant-id") Long id){
-        Optional<Long> ret = service.updateLatestWaterDate(id);
+        Optional<Long> ret = myPlantService.updateLatestWaterDate(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
@@ -68,14 +68,14 @@ public class MyPlantController {
     @PutMapping("/{plant-id}/active")
     public ResponseEntity<Long> updateMyPlantActive(
             @PathVariable("plant-id") Long id){
-        Optional<Long> ret = service.updateActivation(id);
+        Optional<Long> ret = myPlantService.updateActivation(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
     @DeleteMapping("/{plant-id}")
     public ResponseEntity<MyPlantResDto> deleteMyPlant(@PathVariable("plant-id") Long plantId){
-        service.deleteMyPlant(plantId);
+        myPlantService.deleteMyPlant(plantId);
         return ResponseEntity.noContent().build();
     }
 

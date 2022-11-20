@@ -2,11 +2,13 @@ package kr.ac.kumoh.Saessak_Server.service;
 
 import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
 import kr.ac.kumoh.Saessak_Server.domain.Plan;
+import kr.ac.kumoh.Saessak_Server.domain.User;
 import kr.ac.kumoh.Saessak_Server.domain.dto.PlanReqDto;
 import kr.ac.kumoh.Saessak_Server.domain.dto.PlanResDto;
 import kr.ac.kumoh.Saessak_Server.repository.MyPlantRepository;
 import kr.ac.kumoh.Saessak_Server.repository.PlanRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -29,6 +31,25 @@ public class PlanService {
             ret = planRepo.save(new Plan(planReqDto)).getId();
         } catch(Exception ignored) { }
         return Optional.ofNullable(ret);
+    }
+
+    //TODO: 일정 자동 생성 검증
+    public void createPlans(MyPlant myPlant){
+        User user = myPlant.getUser();
+        int cycle = myPlant.getWaterCycle();
+        LocalDate inDate = myPlant.getLatestWaterDate();
+        LocalDate maxDate = LocalDate.now().plusMonths(1);
+
+        while(!inDate.isAfter(maxDate)){
+            Plan plan = new Plan(0L, user, inDate, "water", myPlant, false);
+            planRepo.save(plan);
+            inDate = inDate.plusDays(cycle);
+        }
+
+        Plan firstPlan = planRepo.findPlanByMyPlantAndDate(
+                myPlant.getId(), myPlant.getLatestWaterDate());
+        firstPlan.setDone(true);
+        planRepo.save(firstPlan);
     }
 
     public List<PlanResDto> readUserMonthlyPlanList(
@@ -63,20 +84,37 @@ public class PlanService {
         Optional<Plan> data = planRepo.findById(id);
         if(data.isPresent()){
             Plan plan = data.get();
+            if(plan.getPlanType().equals("water")) {
+                if (plan.isDone())
+                    return doWatering(id);
+                else
+                    return undoWatering(id);
+            }
             plan.update(planReqDto);
             ret = planRepo.save(plan).getId();
         }
         return Optional.ofNullable(ret);
     }
 
-    //TODO: 물주기 작동 검증
+    public void updateDateOfPlans(
+            Long plantId, int waterCycle, LocalDate inDate){
+        List<Plan> data = planRepo.findPlansAfterInDate(plantId, inDate, "water");
+        if(!data.isEmpty()){
+            for(int i = 0 ; i < data.size(); i++){
+                LocalDate dueDate = inDate.plusDays((long) (i + 1) * waterCycle);
+                data.get(i).setDate(dueDate);
+                planRepo.save(data.get(i));
+            }
+        }
+    }
+
+    @Transactional
     public Optional<Long> doWatering(Long id) {
         Long ret = null;
         Optional<Plan> data = planRepo.findById(id);
         if (data.isPresent()){
             Plan plan = data.get();
-            if(!plan.getPlanType().equals("water")
-                    || !(Objects.equals(plan.getDate(), LocalDate.now())))
+            if(!plan.getPlanType().equals("water"))
                 return Optional.empty();
 
             else{
@@ -85,20 +123,20 @@ public class PlanService {
                 MyPlant myPlant = plan.getMyPlant();
                 myPlant.setLatestWaterDate(LocalDate.now());
                 myPlantRepo.save(myPlant);
-                ret = plan.getMyPlant().getId();
+                ret = plan.getId();
             }
         }
         return Optional.ofNullable(ret);
     }
 
-    //TODO: 물주기 취소 검증 - save 누락되어 작동 안함
+    //TODO: 물주기 취소 검증
+    @Transactional
     public Optional<Long> undoWatering(Long id) {
         Long ret = null;
         Optional<Plan> data = planRepo.findById(id);
         if (data.isPresent()) {
             Plan plan = data.get();
-            if (!plan.getPlanType().equals("water")
-                    || !(Objects.equals(plan.getDate(), LocalDate.now())))
+            if (!plan.getPlanType().equals("water"))
                 return Optional.empty();
 
             else {

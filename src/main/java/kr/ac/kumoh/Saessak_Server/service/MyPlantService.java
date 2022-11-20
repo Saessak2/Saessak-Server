@@ -1,8 +1,11 @@
 package kr.ac.kumoh.Saessak_Server.service;
 
+import kr.ac.kumoh.Saessak_Server.Utility;
+import kr.ac.kumoh.Saessak_Server.controller.WeatherController;
 import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
 import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantReqDto;
 import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantResDto;
+import kr.ac.kumoh.Saessak_Server.domain.dto.WeatherDTO;
 import kr.ac.kumoh.Saessak_Server.repository.MyPlantRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +23,13 @@ public class MyPlantService {
         this.repository = repository;
     }
 
-    public Optional<Long> createMyPlant(MyPlantReqDto myPlantReqDto){
+    public Optional<Long> createMyPlant(
+            PlanService planService, MyPlantReqDto myPlantReqDto){
         Long ret = null;
         try {
-            ret = repository.save(new MyPlant(myPlantReqDto)).getId();
+            MyPlant myPlant = repository.save(new MyPlant(myPlantReqDto));
+            ret = myPlant.getId();
+            planService.createPlans(myPlant);
         } catch(Exception ignored){ }
         return Optional.ofNullable(ret);
     }
@@ -32,7 +38,8 @@ public class MyPlantService {
         return convContentType(repository.findByUserId(userId));
     }
 
-    public Optional<MyPlantResDto> readMyPlant(Long id, Long userId){
+    public Optional<MyPlantResDto> readMyPlant(
+            WeatherController weatherController, Long id, Long userId){
         MyPlantResDto ret = null;
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent())
@@ -42,27 +49,38 @@ public class MyPlantService {
             if(!tempList.isEmpty())
                 ret = tempList.get(0).toDto();
         }
-        setWeatherRecommendation(Objects.requireNonNull(ret));
+        setWeatherRecommendation(weatherController, Objects.requireNonNull(ret));
         return Optional.of(ret);
     }
 
-    public Optional<MyPlantResDto> readMyFirstPlant(Long userId){
+    public Optional<MyPlantResDto> readMyFirstPlant(
+            WeatherController weatherController, Long userId){
         MyPlantResDto ret = null;
         List<MyPlant> data = repository.findMyPlantByUserIdAndActive(userId, true);
         if(!data.isEmpty()){
             ret = data.get(0).toDto();
-            setWeatherRecommendation(ret);
+            setWeatherRecommendation(weatherController, ret);
         }
         return Optional.ofNullable(ret);
     }
 
-    public Optional<Long> updateMyPlant(Long id, MyPlantReqDto myPlantReqDto){
+    public Optional<Long> updateMyPlant(
+            Long id, MyPlantReqDto myPlantReqDto, PlanService planService){
+        String[] updatedCols = new String[4];
         Long ret = null;
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent()) {
             MyPlant myPlant = data.get();
+            updatedCols[0] = String.valueOf(myPlant.getWaterCycle());
+            updatedCols[1] = myPlant.getLatestWaterDate().toString();
+
             myPlant.update(myPlantReqDto);
-            ret = repository.save(myPlant).getId();
+            MyPlant changedMyPlant = repository.save(myPlant);
+            updatedCols[2] = String.valueOf(myPlant.getWaterCycle());
+            updatedCols[3] = changedMyPlant.getLatestWaterDate().toString();
+
+            ret = changedMyPlant.getId();
+            checkUpdateCols(myPlant.getId(), planService, updatedCols);
         }
         return Optional.ofNullable(ret);
     }
@@ -101,9 +119,24 @@ public class MyPlantService {
         return retList;
     }
 
-    private void setWeatherRecommendation(MyPlantResDto myPlantResDto){
-        //TODO:Using WeatherController(Service), fill icon and stmt
-        myPlantResDto.setWeatherRc("04n", "해가 짱짱쨍쨩");
+    private void setWeatherRecommendation(
+            WeatherController weatherController, MyPlantResDto myPlantResDto){
+        String city = myPlantResDto.getPlantedRegion();
+        WeatherDTO weatherDTO = (WeatherDTO) weatherController.readWeather(city).getBody();
+        myPlantResDto.setWeatherRc(
+                Objects.requireNonNull(weatherDTO).getIcon(),
+                Objects.requireNonNull(weatherDTO).getComments());
+    }
+
+    //TODO: 주기 또는 최근 물 준 날짜 변경 시 계획 날짜 맞춰서 전부 갱신 검증
+    private void checkUpdateCols(
+            Long plantId, PlanService planService, String[] updatedCols){
+        if(!updatedCols[0].equals(updatedCols[2])
+                || !updatedCols[1].equals(updatedCols[3]))
+
+            planService.updateDateOfPlans(
+                    plantId, Integer.parseInt(updatedCols[2]),
+                    Utility.getLocalDateFromStr(updatedCols[3]));
     }
 
 }

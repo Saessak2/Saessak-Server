@@ -3,7 +3,7 @@ package kr.ac.kumoh.Saessak_Server.controller;
 import kr.ac.kumoh.Saessak_Server.domain.Image;
 import kr.ac.kumoh.Saessak_Server.domain.Question;
 import kr.ac.kumoh.Saessak_Server.domain.User;
-import kr.ac.kumoh.Saessak_Server.dto.QuestionDTO;
+import kr.ac.kumoh.Saessak_Server.domain.dto.QuestionDTO;
 import kr.ac.kumoh.Saessak_Server.service.CommentService;
 import kr.ac.kumoh.Saessak_Server.service.QuestionService;
 import kr.ac.kumoh.Saessak_Server.service.UserService;

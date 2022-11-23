@@ -1,6 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.controller;
 
-import kr.ac.kumoh.Saessak_Server.dto.WeatherDTO;
+import kr.ac.kumoh.Saessak_Server.domain.dto.WeatherDTO;
 import kr.ac.kumoh.Saessak_Server.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpEntity;

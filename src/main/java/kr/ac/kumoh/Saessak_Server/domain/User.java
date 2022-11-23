@@ -1,7 +1,7 @@
 package kr.ac.kumoh.Saessak_Server.domain;
 
-import kr.ac.kumoh.Saessak_Server.domain.Notification.Notification;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @Getter

@@ -28,7 +28,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'commons-io:commons-io:2.11.0'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
 	implementation 'org.modelmapper:modelmapper:3.1.0'
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
@@ -39,9 +38,9 @@ dependencies {
 
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
-	implementation 'com.google.code.gson:gson:2.8.7'
+	implementation 'com.google.code.gson:gson:2.8.9'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'commons-io:commons-io:2.6'
+	implementation 'commons-io:commons-io:2.11.0'
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
 	implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
 

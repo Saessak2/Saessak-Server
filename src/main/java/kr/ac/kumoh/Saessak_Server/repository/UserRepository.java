@@ -66,7 +66,7 @@ public class UserRepository {
     }
 
     public List<Object[]> readPlantCount(Long user_id) {
-        String jpql = "select m from MyPlant m where m.user_id = :user_id";
+        String jpql = "select m from MyPlant m where m.user = :user_id";//user_id means user from myPlant
         Query query  = em.createQuery(jpql).setParameter("user_id", user_id);
 
         List<Object[]> resultList = query.getResultList();

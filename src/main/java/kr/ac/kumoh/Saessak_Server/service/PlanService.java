@@ -203,19 +203,18 @@ public class PlanService {
         return plan.getId();
     }
 
-    //TODO: 물 취소 마지막 날짜 + cycle 일정 자동 삭제
     private Long cancelWatering(MyPlant myPlant, Plan plan) {
         plan.setDone(false);
         planRepo.save(plan);
 
         LocalDate passedLWD = myPlant.getLatestWaterDate();
-        Optional<Plan> oldPlan = planRepo.findOldPlan(
-                "water", myPlant.getId(), true);
-        if(oldPlan.isEmpty())
+        Optional<Plan> passedPlan = planRepo
+                .findTopByPlanTypeAndMyPlantAndIsDoneIsTrueOrderByDateDesc("water", myPlant);
+        if(passedPlan.isEmpty())
             myPlant.setLatestWaterDate(
                     myPlant.getLatestWaterDate().minusDays(myPlant.getWaterCycle()));
         else
-            myPlant.setLatestWaterDate(oldPlan.get().getDate());
+            myPlant.setLatestWaterDate(passedPlan.get().getDate());
         myPlantRepo.save(myPlant);
 
         List<Plan> tempList = planRepo.findPlansAfterInDate(

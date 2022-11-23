@@ -27,18 +27,4 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Diary> diaryList = new ArrayList<>();
 
-
-//    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
-//    private List<Notification> notificationList = new ArrayList<>();
-
-//    private List<Plan> calendarList = new ArrayList<>();
-//    private List<MyPlant> myPlantList = new ArrayList<>();
-
-//    public void addQuestion(Question question) {
-//        this.questionList.add(question);
-//        if(question.getUser_id() != this) {
-//            question.setUser_id(this);
-//        }
-//    }
-
 }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -62,6 +63,24 @@ public class UserRepository {
     public User createKakao(KakaoUser kakaoUser) {
         em.persist(kakaoUser);
         return kakaoUser;
+    }
+
+    public List<Object[]> readPlantCount(Long user_id) {
+        String jpql = "select m from MyPlant m where m.user_id = :user_id";
+        Query query  = em.createQuery(jpql).setParameter("user_id", user_id);
+
+        List<Object[]> resultList = query.getResultList();
+
+        return resultList;
+    }
+
+    public int CommentCnt(Long question_id) {
+        List<Object[]> list = readPlantCount(question_id);
+        int count = 0;
+        for(int i = 0; i < list.size(); i++){
+            count++;
+        }
+        return count;
     }
 
 }

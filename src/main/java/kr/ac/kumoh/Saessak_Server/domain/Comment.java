@@ -15,7 +15,10 @@ public class Comment {
 
     private String content;
     private String create_date;
-    private Long question_id;
+
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private Question question_id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

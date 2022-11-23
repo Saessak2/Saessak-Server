@@ -38,7 +38,7 @@ public class CommentRepository {
 
     //댓글 조회
     public List<Object[]> readCommentList(Long question_id) {
-        String jpql = "select c.id, c.content, c.create_date, c.user_id.id, c.user_id.userName from Comment c where c.question_id = :question_id";
+        String jpql = "select c.id, c.content, c.create_date, c.user_id.id, c.user_id.userName from Comment c where c.question_id.id = :question_id";
         Query query  = em.createQuery(jpql).setParameter("question_id", question_id);
 
         List<Object[]> resultList = query.getResultList();

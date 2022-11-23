@@ -27,6 +27,10 @@ public class QuestionService {
         questionRepository.updateQuestion(question);
     }
 
+    //이미지 등록
+    @Transactional
+    public void updateImage(Question question) { questionRepository.updateImage(question); }
+
     //질문 삭제 (댓글도 같이 삭제)
     @Transactional
     public void delete(Long id) {
@@ -48,5 +52,10 @@ public class QuestionService {
         Question question = questionRepository.readOne(id);
         return question;
     }
+
+    public List<String> readAllImage() {
+        return questionRepository.readAllImage();
+    }
+
 
 }

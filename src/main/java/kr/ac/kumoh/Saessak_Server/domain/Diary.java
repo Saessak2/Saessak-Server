@@ -20,9 +20,11 @@ public class Diary {
     private String activity1;
     private String activity2;
     private String activity3;
-    private String img_url;
 
     private Long user_id;
     private Long myplant_id;
+
+    @Embedded
+    private Image image;
 
 }

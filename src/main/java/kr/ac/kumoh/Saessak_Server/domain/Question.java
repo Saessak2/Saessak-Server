@@ -21,12 +21,12 @@ public class Question {
 
     private String content;
     private String create_date;
-    private String img_path;
     private String category;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "question_id")
+    @OneToMany(mappedBy = "question_id", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
+    @Embedded
+    private Image image;
 }
 

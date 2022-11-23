@@ -45,4 +45,8 @@ public class UserService {
         return userRepository.selectUser(kakaoId);
     }
 
+    public int CommentCnt(Long question_id) {
+        return userRepository.CommentCnt(question_id);
+    }
+
 }

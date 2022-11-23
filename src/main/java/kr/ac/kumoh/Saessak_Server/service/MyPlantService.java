@@ -128,7 +128,6 @@ public class MyPlantService {
                 Objects.requireNonNull(weatherDTO).getComments());
     }
 
-    //TODO: 주기 또는 최근 물 준 날짜 변경 시 계획 날짜 맞춰서 전부 갱신 검증
     private void checkUpdateCols(
             Long plantId, PlanService planService, String[] updatedCols){
         if(!updatedCols[0].equals(updatedCols[2])

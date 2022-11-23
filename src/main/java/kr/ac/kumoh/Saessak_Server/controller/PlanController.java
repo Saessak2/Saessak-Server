@@ -64,16 +64,16 @@ public class PlanController {
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
-    @PutMapping("/{plan-id}/water/do")
-    public ResponseEntity<Long> updateWateringDone(@PathVariable("plan-id") Long id) {
-        Optional<Long> ret = service.doWatering(id);
+    @PutMapping("/{plant-id}/water/do")
+    public ResponseEntity<Long> updateWateringDone(@PathVariable("plant-id") Long plantId) {
+        Optional<Long> ret = service.updateWateringDone(plantId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
-    @PutMapping("/{plan-id}/water/undo")
-    public ResponseEntity<Long> updateWateringUndone(@PathVariable("plan-id") Long id) {
-        Optional<Long> ret = service.undoWatering(id);
+    @PutMapping("/{plant-id}/water/undo")
+    public ResponseEntity<Long> updateWateringUndone(@PathVariable("plant-id") Long plantId) {
+        Optional<Long> ret = service.updateWateringUndone(plantId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }

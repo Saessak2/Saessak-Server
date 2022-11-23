@@ -26,10 +26,7 @@ public class PlantDictController {
     @GetMapping
     public ResponseEntity<List<PlantDictDto>> readPlantDictList(){
         List<PlantDictDto> ret = service.readList();
-        if(!ret.isEmpty()){
-           return  ResponseEntity.ok(ret);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return  ResponseEntity.ok(ret);
     }
 
     @GetMapping("/1/{id}")

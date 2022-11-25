@@ -12,6 +12,8 @@ import kr.ac.kumoh.Saessak_Server.repository.PlantDict2Repository;
 import kr.ac.kumoh.Saessak_Server.repository.PlantDict3Repository;
 import kr.ac.kumoh.Saessak_Server.repository.PlantDict1Repository;
 import kr.ac.kumoh.Saessak_Server.repository.PlantDictRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,8 +38,8 @@ public class PlantDictService {
         this.dict3Repo = dict3Repo;
     }
 
-    public List<PlantDictDto> readList(){
-        return convContentType(dictRepo.findAll());
+    public List<PlantDictDto> readList(Pageable pageable){
+        return convContentType(dictRepo.findAll(pageable));
     }
 
     public Optional<PlantDict1Dto> readOneFrom1(Long id){
@@ -64,7 +66,7 @@ public class PlantDictService {
         return Optional.ofNullable(ret);
     }
 
-    private List<PlantDictDto> convContentType(List<PlantDict> inList){
+    private List<PlantDictDto> convContentType(Page<PlantDict> inList){
         List<PlantDictDto> retList = new ArrayList<>();
         for (PlantDict plantDict : inList) {
             retList.add(plantDict.toDto());

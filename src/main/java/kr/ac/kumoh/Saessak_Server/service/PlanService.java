@@ -97,10 +97,7 @@ public class PlanService {
     public Plan updateDateOfPlans(
             Long plantId, int waterCycle, LocalDate inDate) {
         List<Plan> data = planRepo.findPlansAfterInDate(plantId, inDate, "water");
-        Plan lastPlan = data.get(data.size() - 1);
-        if (!data.isEmpty())
-            lastPlan = updateDateOfPlans(data, waterCycle, inDate);
-        return lastPlan;
+        return updateDateOfPlans(data, waterCycle, inDate);
     }
 
     public Optional<Long> updateWateringDone(Long plantId) {

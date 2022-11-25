@@ -20,7 +20,7 @@ public class MyPlantController {
     private final PlanService planService;
     private final WeatherController weatherController;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Long> createMyPlant(
             @RequestBody MyPlantReqDto myPlantReqDto){
         Optional<Long> ret = myPlantService.createMyPlant(

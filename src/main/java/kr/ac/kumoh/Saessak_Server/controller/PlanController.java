@@ -18,7 +18,7 @@ public class PlanController {
 
     private final PlanService service;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Long> createPlan(@RequestBody PlanReqDto planReqDto){
         Optional<Long> ret = service.createPlan(planReqDto);
         return ret.map(ResponseEntity::ok).orElseGet(()

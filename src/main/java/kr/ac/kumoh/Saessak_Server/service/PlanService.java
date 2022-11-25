@@ -97,10 +97,7 @@ public class PlanService {
     public Plan updateDateOfPlans(
             Long plantId, int waterCycle, LocalDate inDate) {
         List<Plan> data = planRepo.findPlansAfterInDate(plantId, inDate, "water");
-        Plan lastPlan = data.get(data.size() - 1);
-        if (!data.isEmpty())
-            lastPlan = updateDateOfPlans(data, waterCycle, inDate);
-        return lastPlan;
+        return updateDateOfPlans(data, waterCycle, inDate);
     }
 
     public Optional<Long> updateWateringDone(Long plantId) {
@@ -108,6 +105,10 @@ public class PlanService {
         Optional<MyPlant> data = myPlantRepo.findById(plantId);
         if (data.isPresent()){
             MyPlant myPlant = data.get();
+
+            if(checkWatered(myPlant))
+                return Optional.empty();
+
             List<Plan> tempList = planRepo.findPlansAfterInDate(
                     plantId, myPlant.getLatestWaterDate(), "water");
 
@@ -162,6 +163,14 @@ public class PlanService {
         }
     }
 
+    private boolean checkWatered(MyPlant myPlant){
+        Optional<Plan> planData = planRepo.findPlansByUserAndDay(
+                myPlant.getUser().getId(), myPlant.getLatestWaterDate())
+                .stream().findAny().filter(
+                        p-> p.getPlanType().equals("water") && p.isDone());
+        return planData.isPresent();
+    }
+
     private List<PlanResDto> convContentType(List<Plan> inList){
         List<PlanResDto> retList = new ArrayList<>();
         for (Plan plan : inList)
@@ -169,7 +178,6 @@ public class PlanService {
         return retList;
     }
 
-    //TODO: 물 주면 마지막 날짜 + cycle 일정 자동 생성
     private Long water(MyPlant myPlant, Plan plan, LocalDate lastDate){
         plan.setDone(true);
         planRepo.save(plan);
@@ -203,19 +211,18 @@ public class PlanService {
         return plan.getId();
     }
 
-    //TODO: 물 취소 마지막 날짜 + cycle 일정 자동 삭제
     private Long cancelWatering(MyPlant myPlant, Plan plan) {
         plan.setDone(false);
         planRepo.save(plan);
 
         LocalDate passedLWD = myPlant.getLatestWaterDate();
-        Optional<Plan> oldPlan = planRepo.findOldPlan(
-                "water", myPlant.getId(), true);
-        if(oldPlan.isEmpty())
+        Optional<Plan> passedPlan = planRepo
+                .findTopByPlanTypeAndMyPlantAndIsDoneIsTrueOrderByDateDesc("water", myPlant);
+        if(passedPlan.isEmpty())
             myPlant.setLatestWaterDate(
                     myPlant.getLatestWaterDate().minusDays(myPlant.getWaterCycle()));
         else
-            myPlant.setLatestWaterDate(oldPlan.get().getDate());
+            myPlant.setLatestWaterDate(passedPlan.get().getDate());
         myPlantRepo.save(myPlant);
 
         List<Plan> tempList = planRepo.findPlansAfterInDate(

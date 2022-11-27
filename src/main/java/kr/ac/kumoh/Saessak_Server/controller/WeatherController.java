@@ -95,7 +95,6 @@ public class WeatherController {
         } catch (Exception ignored) {
 
         }
-
         return weatherDTO;
     }
 
@@ -114,6 +113,5 @@ public class WeatherController {
         }
         return city;
     }
-
 
 }

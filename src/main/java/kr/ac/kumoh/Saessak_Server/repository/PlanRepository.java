@@ -27,8 +27,8 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
             @Param("inMonth") int month);
 
     @Query("SELECT p FROM Plan p WHERE p.user.id = :userId AND p.date = :inDate")
-    List<Plan> findPlansByUserAndDay(@Param("userId") Long userId,
-                                     @Param("inDate") LocalDate inDate);
+    List<Plan> findPlansByUserAndDay(
+            @Param("userId") Long userId, @Param("inDate") LocalDate inDate);
 
     @Query(value = "SELECT p FROM Plan p WHERE p.myPlant.id = :plantId " +
             "AND p.date > :inDate AND p.planType = :planType")
@@ -43,4 +43,9 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
 
     Optional<Plan> findTopByPlanTypeAndMyPlantAndIsDoneIsTrueOrderByDateDesc(
             @Param("planType") String planType, @Param("plantId") MyPlant myPlant);
+
+    Optional<Plan> findTopByMyPlantAndPlanTypeAndDateIsBeforeOrderByDateDesc(
+            @Param("plantId") MyPlant myPlant, @Param("planType") String planType,
+            @Param("date") LocalDate inDate);
+
 }

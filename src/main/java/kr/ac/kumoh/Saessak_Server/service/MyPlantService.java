@@ -34,8 +34,10 @@ public class MyPlantService {
         return Optional.ofNullable(ret);
     }
 
-    public List<MyPlantResDto> readMyPlantList(Long userId){
-        return convContentType(repository.findByUserId(userId));
+    public List<MyPlantResDto> readMyPlantList(
+            WeatherController weatherController, Long userId){
+        return convContentType(
+                weatherController, repository.findByUserId(userId));
     }
 
     public Optional<MyPlantResDto> readMyPlant(
@@ -111,11 +113,15 @@ public class MyPlantService {
         repository.deleteById(id);
     }
 
-    private List<MyPlantResDto> convContentType(List<MyPlant> inList){
+    private List<MyPlantResDto> convContentType(
+            WeatherController weatherController, List<MyPlant> inList){
         List<MyPlantResDto> retList = new ArrayList<>();
-        for (MyPlant myPlant : inList)
-            retList.add(myPlant.toDto());
-
+        MyPlantResDto tmpResDto;
+        for (MyPlant myPlant : inList) {
+            tmpResDto = myPlant.toDto();
+            setWeatherRecommendation(weatherController, tmpResDto);
+            retList.add(tmpResDto);
+        }
         return retList;
     }
 

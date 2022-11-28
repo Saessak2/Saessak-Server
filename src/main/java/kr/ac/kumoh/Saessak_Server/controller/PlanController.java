@@ -25,6 +25,13 @@ public class PlanController {
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
+    @PostMapping("/{user-id}/check")
+    public ResponseEntity<Long> checkPlansUpdate(@PathVariable("user-id") Long userId){
+        Optional<Long> ret = service.checkPlansUpdate(userId);
+        return ret.map(ResponseEntity::ok).orElseGet(()
+                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    }
+
     @GetMapping("/{plan-id}")
     public ResponseEntity<PlanResDto> readPlan(@PathVariable("plan-id") Long id){
         Optional<PlanResDto> ret = service.readPlan(id);

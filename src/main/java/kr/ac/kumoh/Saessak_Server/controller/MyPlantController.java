@@ -32,7 +32,8 @@ public class MyPlantController {
     @GetMapping("/{user-id}")
     public ResponseEntity<List<MyPlantResDto>> readMyPlantList(
             @PathVariable("user-id") Long userId){
-        List<MyPlantResDto> ret = myPlantService.readMyPlantList(userId);
+        List<MyPlantResDto> ret =
+                myPlantService.readMyPlantList(weatherController, userId);
         return ResponseEntity.ok(ret);
     }
 

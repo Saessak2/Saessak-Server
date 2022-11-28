@@ -77,6 +77,28 @@ public class PlanService {
         return Optional.ofNullable(ret);
     }
 
+    public Optional<Long> checkPlansUpdate(Long userId){
+        Long ret = userId;
+        List<MyPlant> myPlantList = myPlantRepo.findByUserId(userId);
+        for (MyPlant myPlant : myPlantList) {
+            ret = checkIfPlanNeedsUpdate(myPlant);
+        }
+        return Optional.ofNullable(ret);
+    }
+
+    private Long checkIfPlanNeedsUpdate(MyPlant myPlant){
+        Optional<Plan> data = planRepo
+                .findTopByMyPlantAndPlanTypeAndDateIsBeforeOrderByDateDesc(
+                        myPlant, "water", LocalDate.now());
+        if(data.isPresent() && !data.get().isDone()){
+            List<Plan> planList = planRepo.findPlansAfterInDate(
+                    myPlant.getId(), myPlant.getLatestWaterDate(), "water");
+            return updateDateOfPlans(planList, myPlant.getWaterCycle(),
+                    LocalDate.now().minusDays(myPlant.getWaterCycle())).getId();
+        }
+        return myPlant.getId();
+    }
+
     public Optional<Long> updatePlan(Long id, PlanReqDto planReqDto){
         Long ret = null;
         Optional<Plan> data = planRepo.findById(id);
@@ -105,6 +127,12 @@ public class PlanService {
         Optional<MyPlant> data = myPlantRepo.findById(plantId);
         if (data.isPresent()){
             MyPlant myPlant = data.get();
+            Optional<Plan> passedPlan = planRepo
+                    .findTopByPlanTypeAndMyPlantAndIsDoneIsTrueOrderByDateDesc(
+                            "water", myPlant);
+            if(passedPlan.isPresent()){
+                return Optional.empty();
+            }
             List<Plan> tempList = planRepo.findPlansAfterInDate(
                     plantId, myPlant.getLatestWaterDate(), "water");
 
@@ -166,7 +194,6 @@ public class PlanService {
         return retList;
     }
 
-    //TODO: 물 주면 마지막 날짜 + cycle 일정 자동 생성
     private Long water(MyPlant myPlant, Plan plan, LocalDate lastDate){
         plan.setDone(true);
         planRepo.save(plan);

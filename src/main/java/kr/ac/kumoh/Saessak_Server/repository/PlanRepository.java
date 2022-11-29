@@ -41,11 +41,15 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     List<Plan> findPlanByDateAndType(@Param("plantId") Long plantId,
             @Param("inDate") LocalDate inDate, @Param("planType") String planType);
 
-    Optional<Plan> findTopByPlanTypeAndMyPlantAndIsDoneIsTrueOrderByDateDesc(
-            @Param("planType") String planType, @Param("plantId") MyPlant myPlant);
+    Optional<Plan> findTopByMyPlantAndPlanTypeAndDateIsAfterOrderByDateDesc(
+            @Param("plant") MyPlant myPlant, @Param("planType") String planType,
+            @Param("inDate") LocalDate date);
 
-    Optional<Plan> findTopByMyPlantAndPlanTypeAndDateIsBeforeOrderByDateDesc(
+    Optional<Plan> findTopByMyPlantAndPlanTypeAndIsDoneIsTrueOrderByDateDesc(
+           @Param("plant") MyPlant myPlant, @Param("planType") String planType);
+
+    Optional<Plan> findTopByMyPlantAndPlanTypeAndIsDoneAndDateIsBeforeOrderByDateDesc(
             @Param("plantId") MyPlant myPlant, @Param("planType") String planType,
-            @Param("date") LocalDate inDate);
+            @Param("isDone") boolean isDone, @Param("date") LocalDate inDate);
 
 }

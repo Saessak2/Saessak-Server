@@ -71,23 +71,16 @@ public class PlanController {
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
-    @PutMapping("/{plan-id}/check")
-    public ResponseEntity<Long> togglePlanChecked(@PathVariable("plan-id") Long id){
-        Optional<Long> ret = service.updateDone(id);
-        return ret.map(ResponseEntity::ok).orElseGet(()
-                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
-    }
-
     @PutMapping("/{plant-id}/water/do")
     public ResponseEntity<Long> updateWateringDone(@PathVariable("plant-id") Long plantId) {
-        Optional<Long> ret = service.updateWateringDone(plantId);
+        Optional<Long> ret = service.updateWaterPlanDoneWithPlantId(plantId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
     @PutMapping("/{plant-id}/water/undo")
     public ResponseEntity<Long> updateWateringUndone(@PathVariable("plant-id") Long plantId) {
-        Optional<Long> ret = service.updateWateringUndone(plantId);
+        Optional<Long> ret = service.updateWaterPlanUndoneWithPlantId(plantId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }

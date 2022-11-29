@@ -29,11 +29,18 @@ public class MyPlantController {
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
+    @PostMapping("/{user-id}/check")
+    public ResponseEntity<Long> checkWeatherUpdate(@PathVariable("user-id") Long userId){
+        Optional<Long> ret = myPlantService.checkWeather(weatherController, userId);
+        return ret.map(ResponseEntity::ok).orElseGet(()
+                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    }
+
     @GetMapping("/{user-id}")
     public ResponseEntity<List<MyPlantResDto>> readMyPlantList(
             @PathVariable("user-id") Long userId){
         List<MyPlantResDto> ret =
-                myPlantService.readMyPlantList(weatherController, userId);
+                myPlantService.readMyPlantList(userId);
         return ResponseEntity.ok(ret);
     }
 
@@ -42,9 +49,9 @@ public class MyPlantController {
             @PathVariable("user-id") Long userId, @PathVariable("plant-id") Long plantId){
         Optional<MyPlantResDto> ret;
         if(plantId == 0L)
-            ret = myPlantService.readMyFirstPlant(weatherController, userId);
+            ret = myPlantService.readMyFirstPlant(userId);
         else
-            ret = myPlantService.readMyPlant(weatherController, plantId, userId);
+            ret = myPlantService.readMyPlant(plantId, userId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }

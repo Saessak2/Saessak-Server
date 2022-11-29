@@ -8,6 +8,7 @@ import kr.ac.kumoh.Saessak_Server.domain.dto.MyPlantResDto;
 import kr.ac.kumoh.Saessak_Server.domain.dto.WeatherDTO;
 import kr.ac.kumoh.Saessak_Server.repository.MyPlantRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,53 +36,61 @@ public class MyPlantService {
         return Optional.ofNullable(ret);
     }
 
-    public List<MyPlantResDto> readMyPlantList(
+    @Transactional
+    public Optional<Long> checkWeather(
             WeatherController weatherController, Long userId){
-        return convContentType(
-                weatherController, repository.findByUserId(userId));
-    }
-
-    public Optional<MyPlantResDto> readMyFirstPlant(
-            WeatherController weatherController, Long userId){
-        MyPlantResDto ret = null;
-        List<MyPlant> data = repository.findMyPlantByUserIdAndActive(userId, true);
+        Long ret = null;
+        List<MyPlant> data = repository.findByUserId(userId);
+        MyPlant myPlant;
         if(!data.isEmpty()){
-            ret = data.get(0).toDto();
-            setWeatherRecommendation(weatherController, ret);
+            for (MyPlant datum : data) {
+                myPlant = datum;
+                setWeatherRecommendation(weatherController, myPlant);
+                ret = repository.save(myPlant).getId();
+            }
         }
         return Optional.ofNullable(ret);
     }
 
-    public Optional<MyPlantResDto> readMyPlant(
-            WeatherController weatherController, Long id, Long userId){
+    public List<MyPlantResDto> readMyPlantList(Long userId){
+        return convContentType(repository.findByUserId(userId));
+    }
+
+    public Optional<MyPlantResDto> readMyFirstPlant(Long userId){
+        MyPlantResDto ret = null;
+        List<MyPlant> data = repository.findMyPlantByUserIdAndActive(userId, true);
+        if(!data.isEmpty())
+            ret = data.get(0).toDto();
+        return Optional.ofNullable(ret);
+    }
+
+    public Optional<MyPlantResDto> readMyPlant(Long id, Long userId){
         MyPlantResDto ret;
         Optional<MyPlant> data = repository.findById(id);
-        if(data.isPresent()){
+        if(data.isPresent())
             ret = data.get().toDto();
-            setWeatherRecommendation(weatherController, ret);
-        }
         else
-            return readMyFirstPlant(weatherController, userId);
+            return readMyFirstPlant(userId);
         return Optional.of(ret);
     }
 
     public Optional<Long> updateMyPlant(
             Long id, MyPlantReqDto myPlantReqDto, PlanService planService){
-        String[] attrArr = new String[4];
+        String[] attrs = new String[4];
         Long ret = null;
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent()) {
             MyPlant myPlant = data.get();
-            attrArr[0] = String.valueOf(myPlant.getWaterCycle());
-            attrArr[1] = myPlant.getLatestWaterDate().toString();
+            attrs[0] = String.valueOf(myPlant.getWaterCycle());
+            attrs[1] = myPlant.getLatestWaterDate().toString();
 
             myPlant.update(myPlantReqDto);
             MyPlant changedMyPlant = repository.save(myPlant);
-            attrArr[2] = String.valueOf(myPlant.getWaterCycle());
-            attrArr[3] = changedMyPlant.getLatestWaterDate().toString();
+            attrs[2] = String.valueOf(myPlant.getWaterCycle());
+            attrs[3] = changedMyPlant.getLatestWaterDate().toString();
 
             ret = changedMyPlant.getId();
-            checkUpdatedAttrs(myPlant.getId(), planService, attrArr);
+            checkUpdatedAttrs(myPlant.getId(), planService, attrs);
         }
         return Optional.ofNullable(ret);
     }
@@ -112,34 +121,29 @@ public class MyPlantService {
         repository.deleteById(id);
     }
 
-    private List<MyPlantResDto> convContentType(
-            WeatherController weatherController, List<MyPlant> inList){
+    private List<MyPlantResDto> convContentType(List<MyPlant> inList){
         List<MyPlantResDto> retList = new ArrayList<>();
-        for (MyPlant myPlant : inList) {
-//            MyPlantResDto tmpResDto = myPlant.toDto();
-//            setWeatherRecommendation(weatherController, tmpResDto);
-//            retList.add(tmpResDto);
+        for (MyPlant myPlant : inList)
             retList.add(myPlant.toDto());
-        }
         return retList;
     }
 
     private void setWeatherRecommendation(
-            WeatherController weatherController, MyPlantResDto myPlantResDto){
-        String city = myPlantResDto.getPlantedRegion();
+            WeatherController weatherController, MyPlant myPlantDto){
+        String city = myPlantDto.getPlantedRegion();
         WeatherDTO weatherDTO = (WeatherDTO) weatherController.readWeather(city).getBody();
-        myPlantResDto.setIconAndRecStr(
+        myPlantDto.setIconAndRecStr(
                 Objects.requireNonNull(weatherDTO).getIcon(),
                 Objects.requireNonNull(weatherDTO).getComments());
     }
 
     private void checkUpdatedAttrs(
-            Long plantId, PlanService planService, String[] updatedAttrs){
-        if(!updatedAttrs[0].equals(updatedAttrs[2])
-                || !updatedAttrs[1].equals(updatedAttrs[3]))
+            Long plantId, PlanService planService, String[] attrs){
+        if(!attrs[0].equals(attrs[2])
+                || !attrs[1].equals(attrs[3]))
             planService.updateDateOfPlans(
-                    plantId, Integer.parseInt(updatedAttrs[2]),
-                    Utility.getLocalDateFromStr(updatedAttrs[3]));
+                    plantId, Integer.parseInt(attrs[2]),
+                    Utility.getLocalDateFromStr(attrs[3]));
     }
 
 }

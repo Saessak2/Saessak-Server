@@ -86,6 +86,11 @@ public class MyPlant {
                 plantedRegion, icon, recStr);
     }
 
+    public void setIconAndRecStr(String icon, String recStr){
+        this.icon = icon;
+        this.recStr = recStr;
+    }
+
     public void update(MyPlantReqDto myPlantReqDto){
         if(myPlantReqDto.getNickname() != null)
             this.nickname = myPlantReqDto.getNickname();

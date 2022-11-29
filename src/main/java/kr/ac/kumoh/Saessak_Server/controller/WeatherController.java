@@ -61,7 +61,7 @@ public class WeatherController {
             HttpResponse httpResponse = httpClient.execute(new HttpGet(uri));
             HttpEntity entity = httpResponse.getEntity();
             String content = EntityUtils.toString(entity);
-            System.out.println("content = " + content);
+//            System.out.println("content = " + content);
 
             weatherDTO.setIcon(weatherService.icon(content));
 
@@ -86,7 +86,7 @@ public class WeatherController {
             HttpResponse httpResponse = httpClient.execute(new HttpGet(uri));
             HttpEntity entity = httpResponse.getEntity();
             String content = EntityUtils.toString(entity);
-            System.out.println("content = " + content);
+//            System.out.println("content = " + content);
 
             weatherDTO.setIcon(weatherService.icon(content));
             weatherDTO.setComments(weatherService.comments(content));

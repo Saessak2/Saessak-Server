@@ -26,7 +26,7 @@ public class MyPlantResDto {
     private String recommendStr;
 
     @JsonIgnore
-    public void setWeatherRc(String icon, String recommendStr){
+    public void setIconAndRecStr(String icon, String recommendStr){
         this.icon = icon;
         this.recommendStr = recommendStr;
     }

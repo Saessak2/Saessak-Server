@@ -9,6 +9,7 @@ import kr.ac.kumoh.Saessak_Server.domain.dto.WeatherDTO;
 import kr.ac.kumoh.Saessak_Server.repository.MyPlantRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +30,7 @@ public class MyPlantService {
         try {
             MyPlant myPlant = repository.save(new MyPlant(myPlantReqDto));
             ret = myPlant.getId();
-            planService.createPlans(myPlant);
+            planService.createPlansForNewPlant(myPlant);
         } catch(Exception ignored){ }
         return Optional.ofNullable(ret);
     }
@@ -38,21 +39,6 @@ public class MyPlantService {
             WeatherController weatherController, Long userId){
         return convContentType(
                 weatherController, repository.findByUserId(userId));
-    }
-
-    public Optional<MyPlantResDto> readMyPlant(
-            WeatherController weatherController, Long id, Long userId){
-        MyPlantResDto ret = null;
-        Optional<MyPlant> data = repository.findById(id);
-        if(data.isPresent())
-            ret = data.get().toDto();
-        else {
-            List<MyPlant> tempList = repository.findMyPlantByUserIdAndActive(userId, true);
-            if(!tempList.isEmpty())
-                ret = tempList.get(0).toDto();
-        }
-        setWeatherRecommendation(weatherController, Objects.requireNonNull(ret));
-        return Optional.of(ret);
     }
 
     public Optional<MyPlantResDto> readMyFirstPlant(
@@ -66,23 +52,36 @@ public class MyPlantService {
         return Optional.ofNullable(ret);
     }
 
+    public Optional<MyPlantResDto> readMyPlant(
+            WeatherController weatherController, Long id, Long userId){
+        MyPlantResDto ret;
+        Optional<MyPlant> data = repository.findById(id);
+        if(data.isPresent()){
+            ret = data.get().toDto();
+            setWeatherRecommendation(weatherController, ret);
+        }
+        else
+            return readMyFirstPlant(weatherController, userId);
+        return Optional.of(ret);
+    }
+
     public Optional<Long> updateMyPlant(
             Long id, MyPlantReqDto myPlantReqDto, PlanService planService){
-        String[] updatedCols = new String[4];
+        String[] attrArr = new String[4];
         Long ret = null;
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent()) {
             MyPlant myPlant = data.get();
-            updatedCols[0] = String.valueOf(myPlant.getWaterCycle());
-            updatedCols[1] = myPlant.getLatestWaterDate().toString();
+            attrArr[0] = String.valueOf(myPlant.getWaterCycle());
+            attrArr[1] = myPlant.getLatestWaterDate().toString();
 
             myPlant.update(myPlantReqDto);
             MyPlant changedMyPlant = repository.save(myPlant);
-            updatedCols[2] = String.valueOf(myPlant.getWaterCycle());
-            updatedCols[3] = changedMyPlant.getLatestWaterDate().toString();
+            attrArr[2] = String.valueOf(myPlant.getWaterCycle());
+            attrArr[3] = changedMyPlant.getLatestWaterDate().toString();
 
             ret = changedMyPlant.getId();
-            checkUpdateCols(myPlant.getId(), planService, updatedCols);
+            checkUpdatedAttrs(myPlant.getId(), planService, attrArr);
         }
         return Optional.ofNullable(ret);
     }
@@ -92,7 +91,7 @@ public class MyPlantService {
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent()){
             MyPlant myPlant = data.get();
-            myPlant.updateLatestWaterDate();
+            myPlant.setLatestWaterDate(LocalDate.now());
             ret = repository.save(myPlant).getId();
         }
         return Optional.ofNullable(ret);
@@ -103,7 +102,7 @@ public class MyPlantService {
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent()){
             MyPlant myPlant = data.get();
-            myPlant.updateIsActive();
+            myPlant.setActive(!myPlant.isActive());
             ret = repository.save(myPlant).getId();
         }
         return Optional.ofNullable(ret);
@@ -116,11 +115,11 @@ public class MyPlantService {
     private List<MyPlantResDto> convContentType(
             WeatherController weatherController, List<MyPlant> inList){
         List<MyPlantResDto> retList = new ArrayList<>();
-        MyPlantResDto tmpResDto;
         for (MyPlant myPlant : inList) {
-            tmpResDto = myPlant.toDto();
-            setWeatherRecommendation(weatherController, tmpResDto);
-            retList.add(tmpResDto);
+//            MyPlantResDto tmpResDto = myPlant.toDto();
+//            setWeatherRecommendation(weatherController, tmpResDto);
+//            retList.add(tmpResDto);
+            retList.add(myPlant.toDto());
         }
         return retList;
     }
@@ -129,19 +128,18 @@ public class MyPlantService {
             WeatherController weatherController, MyPlantResDto myPlantResDto){
         String city = myPlantResDto.getPlantedRegion();
         WeatherDTO weatherDTO = (WeatherDTO) weatherController.readWeather(city).getBody();
-        myPlantResDto.setWeatherRc(
+        myPlantResDto.setIconAndRecStr(
                 Objects.requireNonNull(weatherDTO).getIcon(),
                 Objects.requireNonNull(weatherDTO).getComments());
     }
 
-    private void checkUpdateCols(
-            Long plantId, PlanService planService, String[] updatedCols){
-        if(!updatedCols[0].equals(updatedCols[2])
-                || !updatedCols[1].equals(updatedCols[3]))
-
+    private void checkUpdatedAttrs(
+            Long plantId, PlanService planService, String[] updatedAttrs){
+        if(!updatedAttrs[0].equals(updatedAttrs[2])
+                || !updatedAttrs[1].equals(updatedAttrs[3]))
             planService.updateDateOfPlans(
-                    plantId, Integer.parseInt(updatedCols[2]),
-                    Utility.getLocalDateFromStr(updatedCols[3]));
+                    plantId, Integer.parseInt(updatedAttrs[2]),
+                    Utility.getLocalDateFromStr(updatedAttrs[3]));
     }
 
 }

@@ -65,10 +65,9 @@ public class WeatherController {
 
             weatherDTO.setIcon(weatherService.icon(content));
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
-
         return ResponseEntity.ok(weatherDTO);
     }
 

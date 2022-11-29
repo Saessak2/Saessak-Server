@@ -55,23 +55,35 @@ public class MyPlant {
     @Column(name = "planted_region")
     private String plantedRegion;
 
+    private String icon;
+
+    @Column(name = "rec_str")
+    private String recStr;
+
     public MyPlant(Long id){
         this.id = id;
     }
 
-    public MyPlant(MyPlantReqDto myPlantGetDto){
-        this.id = myPlantGetDto.getId();
-        this.user = new User(myPlantGetDto.getUserId());
-        this.nickname = myPlantGetDto.getNickname();
-        this.species = myPlantGetDto.getSpecies();
-        this.sunCondition = myPlantGetDto.getSunCondition();
-        this.windCondition= myPlantGetDto.getWindCondition();
-        this.waterCondition = myPlantGetDto.getWaterCondition();
-        this.latestWaterDate = Utility.getLocalDateFromStr(myPlantGetDto.getTempDate());
-        this.waterCycle = myPlantGetDto.getWaterCycle();
-        this.imgUrl = myPlantGetDto.getImgUrl();
-        this.isActive = myPlantGetDto.getIsActive();
-        this.plantedRegion = myPlantGetDto.getPlantedRegion();
+    public MyPlant(MyPlantReqDto myPlantReqDto){
+        this.id = myPlantReqDto.getId();
+        this.user = new User(myPlantReqDto.getUserId());
+        this.nickname = myPlantReqDto.getNickname();
+        this.species = myPlantReqDto.getSpecies();
+        this.sunCondition = myPlantReqDto.getSunCondition();
+        this.windCondition= myPlantReqDto.getWindCondition();
+        this.waterCondition = myPlantReqDto.getWaterCondition();
+        this.latestWaterDate = Utility.getLocalDateFromStr(myPlantReqDto.getTempDate());
+        this.waterCycle = myPlantReqDto.getWaterCycle();
+        this.imgUrl = myPlantReqDto.getImgUrl();
+        this.isActive = myPlantReqDto.getIsActive();
+        this.plantedRegion = myPlantReqDto.getPlantedRegion();
+    }
+
+    public MyPlantResDto toDto(){
+        return new MyPlantResDto(id, user.getId(), nickname, species,
+                sunCondition, windCondition, waterCondition, waterCycle, imgUrl,
+                isActive, latestWaterDate.toString().replace('-', '.'),
+                plantedRegion, icon, recStr);
     }
 
     public void update(MyPlantReqDto myPlantReqDto){
@@ -85,7 +97,7 @@ public class MyPlant {
             this.sunCondition = myPlantReqDto.getSunCondition();
 
         if(myPlantReqDto.getWindCondition() != 0)
-           this.windCondition = myPlantReqDto.getWindCondition();
+            this.windCondition = myPlantReqDto.getWindCondition();
 
         if(myPlantReqDto.getWaterCondition() != 0)
             this.waterCondition = myPlantReqDto.getWaterCondition();
@@ -104,21 +116,6 @@ public class MyPlant {
 
         if(myPlantReqDto.getPlantedRegion() != null)
             this.plantedRegion = myPlantReqDto.getPlantedRegion();
-    }
-
-    public void updateIsActive(){
-        isActive = !isActive;
-    }
-
-    public void updateLatestWaterDate(){
-        this.latestWaterDate = LocalDate.now();
-    }
-
-    public MyPlantResDto toDto(){
-        return new MyPlantResDto(id, user.getId(), nickname, species,
-                sunCondition, windCondition, waterCondition, waterCycle, imgUrl,
-                isActive, latestWaterDate.toString().replace('-', '.'),
-                plantedRegion, "", "");
     }
 
 }

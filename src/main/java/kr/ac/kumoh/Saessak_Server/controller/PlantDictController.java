@@ -25,27 +25,27 @@ public class PlantDictController {
 
     @GetMapping
     public ResponseEntity<List<PlantDictDto>> readPlantDictList(){
-        List<PlantDictDto> ret = service.readList();
+        List<PlantDictDto> ret = service.readAll();
         return  ResponseEntity.ok(ret);
     }
 
     @GetMapping("/1/{id}")
     public ResponseEntity<PlantDict1Dto> readPlantDict1(@PathVariable("id") Long id){
-        Optional<PlantDict1Dto> ret = service.readOneFrom1(id);
+        Optional<PlantDict1Dto> ret = service.readOneFromDict1(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @GetMapping("/2/{id}")
     public ResponseEntity<PlantDict2Dto> readPlantDict2(@PathVariable("id") Long id){
-        Optional<PlantDict2Dto> ret = service.readOneFrom2(id);
+        Optional<PlantDict2Dto> ret = service.readOneFromDict2(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @GetMapping("/3/{id}")
     public ResponseEntity<PlantDict3Dto> readPlantDict3(@PathVariable("id") Long id){
-        Optional<PlantDict3Dto> ret = service.readOneFrom3(id);
+        Optional<PlantDict3Dto> ret = service.readOneFromDict3(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }

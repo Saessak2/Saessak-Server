@@ -18,8 +18,7 @@ public class PlanService {
     private final PlanRepository planRepo;
     private final MyPlantRepository myPlantRepo;
 
-    public PlanService(PlanRepository planRepo,
-            MyPlantRepository myPlantRepo){
+    public PlanService(PlanRepository planRepo, MyPlantRepository myPlantRepo){
         this.planRepo = planRepo;
         this.myPlantRepo = myPlantRepo;
     }
@@ -32,7 +31,16 @@ public class PlanService {
         return Optional.ofNullable(ret);
     }
 
-    public void createPlans(MyPlant myPlant) {
+    public Optional<Long> checkPlansUpdate(Long userId){
+        Long ret = userId;
+        List<MyPlant> myPlantList = myPlantRepo.findByUserId(userId);
+        for (MyPlant myPlant : myPlantList) {
+            ret = checkIfPlanNeedsUpdate(myPlant);
+        }
+        return Optional.ofNullable(ret);
+    }
+
+    public void createPlansForNewPlant(MyPlant myPlant) {
         final int AVERAGE_WATER_CYCLE = 15;
         User user = myPlant.getUser();
         int cycle = myPlant.getWaterCycle();
@@ -50,6 +58,14 @@ public class PlanService {
             createPlansForN(myPlant, user, cycle);
     }
 
+    public Optional<PlanResDto> readPlan(Long id){
+        PlanResDto ret = null;
+        Optional<Plan> data = planRepo.findById(id);
+        if(data.isPresent())
+            ret = data.get().toDto();
+        return Optional.ofNullable(ret);
+    }
+
     public List<PlanResDto> readUserMonthlyPlanList(
             int year, int month, Long userId){
         return convContentType(
@@ -64,51 +80,32 @@ public class PlanService {
 
     public List<PlanResDto> readUserDailyPlanList(
             int year, int month, int day, Long userId){
-        LocalDate date = LocalDate.of(year, month, day);
         return convContentType(
-                planRepo.findPlansByUserAndDay(userId, date));
-    }
-
-    public Optional<PlanResDto> readPlan(Long id){
-        PlanResDto ret = null;
-        Optional<Plan> data = planRepo.findById(id);
-        if(data.isPresent())
-            ret = data.get().toDto();
-        return Optional.ofNullable(ret);
-    }
-
-    public Optional<Long> checkPlansUpdate(Long userId){
-        Long ret = userId;
-        List<MyPlant> myPlantList = myPlantRepo.findByUserId(userId);
-        for (MyPlant myPlant : myPlantList) {
-            ret = checkIfPlanNeedsUpdate(myPlant);
-        }
-        return Optional.ofNullable(ret);
-    }
-
-    private Long checkIfPlanNeedsUpdate(MyPlant myPlant){
-        Optional<Plan> data = planRepo
-                .findTopByMyPlantAndPlanTypeAndDateIsBeforeOrderByDateDesc(
-                        myPlant, "water", LocalDate.now());
-        if(data.isPresent() && !data.get().isDone()){
-            List<Plan> planList = planRepo.findPlansAfterInDate(
-                    myPlant.getId(), myPlant.getLatestWaterDate(), "water");
-            return updateDateOfPlans(planList, myPlant.getWaterCycle(),
-                    LocalDate.now().minusDays(myPlant.getWaterCycle())).getId();
-        }
-        return myPlant.getId();
+                planRepo.findPlansByUserAndDay(
+                        userId, LocalDate.of(year, month, day)));
     }
 
     public Optional<Long> updatePlan(Long id, PlanReqDto planReqDto){
         Long ret = null;
         Optional<Plan> data = planRepo.findById(id);
+        Object[] updatedAttrs = new Object[4];
         if(data.isPresent()){
             Plan plan = data.get();
-            if(plan.getPlanType().equals("water")) {
-                if (plan.isDone())
-                    return updateWateringDone(plan.getMyPlant().getId());
+            updatedAttrs[0] = plan.getPlanType();
+            updatedAttrs[1] = plan.isDone();
+            updatedAttrs[2] = planReqDto.getPlanType();
+            updatedAttrs[3] = planReqDto.getDone();
+            if(!updatedAttrs[0].equals(updatedAttrs[2])){
+                if(updatedAttrs[2].equals("water"))
+                    return Optional.ofNullable(updateWaterPlanDone(plan, planReqDto));
+                if(updatedAttrs[0].equals("water"))
+                    return Optional.ofNullable(updateWaterPlanUndone(plan, planReqDto));
+            }
+            if(updatedAttrs[0].equals("water") && updatedAttrs[2].equals("water") && !updatedAttrs[1].equals(updatedAttrs[3])){
+                if(updatedAttrs[1].equals(false))
+                    return Optional.ofNullable(updateWaterPlanDone(plan, planReqDto));
                 else
-                    return updateWateringUndone(id);
+                    return Optional.ofNullable(updateWaterPlanUndone(plan, planReqDto));
             }
             plan.update(planReqDto);
             ret = planRepo.save(plan).getId();
@@ -116,10 +113,15 @@ public class PlanService {
         return Optional.ofNullable(ret);
     }
 
-    public Plan updateDateOfPlans(
-            Long plantId, int waterCycle, LocalDate inDate) {
-        List<Plan> data = planRepo.findPlansAfterInDate(plantId, inDate, "water");
-        return updateDateOfPlans(data, waterCycle, inDate);
+    public Optional<Long> updateDone(Long id){
+        Long ret = null;
+        Optional<Plan> data = planRepo.findById(id);
+        if(data.isPresent()){
+            Plan plan = data.get();
+            plan.setDone(!plan.isDone());
+            ret = planRepo.save(plan).getId();
+        }
+        return Optional.ofNullable(ret);
     }
 
     public Optional<Long> updateWateringDone(Long plantId) {
@@ -164,6 +166,25 @@ public class PlanService {
         planRepo.deleteById(id);
     }
 
+    public Plan updateDateOfPlans(
+            Long plantId, int waterCycle, LocalDate inDate) {
+        List<Plan> data = planRepo.findPlansAfterInDate(plantId, inDate, "water");
+        return updateDateOfPlans(data, waterCycle, inDate);
+    }
+
+    private Long checkIfPlanNeedsUpdate(MyPlant myPlant){
+        Optional<Plan> data = planRepo
+                .findTopByMyPlantAndPlanTypeAndDateIsBeforeOrderByDateDesc(
+                        myPlant, "water", LocalDate.now());
+        if(data.isPresent() && !data.get().isDone()){
+            List<Plan> planList = planRepo.findPlansAfterInDate(
+                    myPlant.getId(), myPlant.getLatestWaterDate(), "water");
+            return updateDateOfPlans(planList, myPlant.getWaterCycle(),
+                    LocalDate.now().minusDays(myPlant.getWaterCycle())).getId();
+        }
+        return myPlant.getId();
+    }
+
     private void createPlansUntilN(MyPlant myPlant, User user, int cycle){
         final int AUTO_CREATING_PLAN_MONTH = 1;
         LocalDate inDate = myPlant.getLatestWaterDate().plusDays(cycle);
@@ -194,6 +215,43 @@ public class PlanService {
         return retList;
     }
 
+    private Long updateWaterPlanDone(Plan plan, PlanReqDto planReqDto){
+        plan.update(planReqDto);
+        planRepo.save(plan);
+
+        List<Plan> tempList = planRepo.findPlansAfterInDate(
+                plan.getMyPlant().getId(), plan.getMyPlant().getLatestWaterDate(), "water");
+        autoCreateOne(plan.getMyPlant(), tempList.get(tempList.size() - 1).getDate());
+
+        MyPlant myPlant = plan.getMyPlant();
+        myPlant.setLatestWaterDate(LocalDate.now());
+        myPlantRepo.save(myPlant);
+
+        return plan.getId();
+    }
+
+    private Long updateWaterPlanUndone(Plan plan, PlanReqDto planReqDto) {
+        plan.update(planReqDto);
+        planRepo.save(plan);
+        List<Plan> tempList = planRepo.findPlansAfterInDate(
+                plan.getMyPlant().getId(), plan.getMyPlant().getLatestWaterDate(), "water");
+        Plan lastPlan = tempList.get(tempList.size() - 1);
+        planRepo.delete(lastPlan);
+
+        MyPlant myPlant = plan.getMyPlant();
+        Optional<Plan> passedPlan = planRepo
+                .findTopByMyPlantAndPlanTypeAndDateIsBeforeOrderByDateDesc(
+                        myPlant, "water", myPlant.getLatestWaterDate());
+        if(passedPlan.isPresent())
+            myPlant.setLatestWaterDate(passedPlan.get().getDate());
+        else
+            myPlant.setLatestWaterDate(
+                    myPlant.getLatestWaterDate().minusDays(myPlant.getWaterCycle()));
+        return plan.getId();
+    }
+
+
+
     private Long water(MyPlant myPlant, Plan plan, LocalDate lastDate){
         plan.setDone(true);
         planRepo.save(plan);
@@ -201,10 +259,7 @@ public class PlanService {
         myPlant.setLatestWaterDate(LocalDate.now());
         myPlantRepo.save(myPlant);
 
-        planRepo.save(new Plan(
-                0L, myPlant.getUser(), lastDate.plusDays(myPlant.getWaterCycle()),
-                "water", myPlant, false));
-
+        autoCreateOne(myPlant, lastDate);
         return plan.getId();
     }
 
@@ -219,12 +274,15 @@ public class PlanService {
         planList.remove(0);
         LocalDate lastDate = updateDateOfPlans(
                 planList, myPlant.getWaterCycle(), LocalDate.now()).getDate();
+        autoCreateOne(myPlant, lastDate);
 
+        return plan.getId();
+    }
+
+    private void autoCreateOne(MyPlant myPlant, LocalDate lastDate){
         planRepo.save(new Plan(
                 0L, myPlant.getUser(), lastDate.plusDays(myPlant.getWaterCycle()),
                 "water", myPlant, false));
-
-        return plan.getId();
     }
 
     private Long cancelWatering(MyPlant myPlant, Plan plan) {

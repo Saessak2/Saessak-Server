@@ -67,7 +67,7 @@ public class MyPlantController {
     }
 
     @PutMapping("/{plant-id}/active")
-    public ResponseEntity<Long> updateMyPlantActive(
+    public ResponseEntity<Long> ToggleMyPlantActivation(
             @PathVariable("plant-id") Long id){
         Optional<Long> ret = myPlantService.updateActivation(id);
         return ret.map(ResponseEntity::ok).orElseGet(()

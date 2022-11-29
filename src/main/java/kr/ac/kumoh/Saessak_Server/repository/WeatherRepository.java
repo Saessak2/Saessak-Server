@@ -49,7 +49,6 @@ public class WeatherRepository {
         String str = Double.toString(tem_result);
 
         return str + "ºC\n" + comments;
-
     }
 
     //멘트

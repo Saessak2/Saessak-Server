@@ -39,14 +39,6 @@ public class PlanController {
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @GetMapping("/{year}/{month}/{day}/user={user-id}")
-    public ResponseEntity<List<PlanResDto>> readUserDailyPlan(
-            @PathVariable("year") int year, @PathVariable("month") int month,
-            @PathVariable("day") int day, @PathVariable("user-id") Long userId){
-        List<PlanResDto> ret = service.readUserDailyPlanList(year, month, day, userId);
-        return ResponseEntity.ok(ret);
-    }
-
     @GetMapping("/{year}/{month}/user={user-id}")
     public ResponseEntity<List<PlanResDto>> readUserMonthlyPlan(
             @PathVariable("user-id") Long userId, @PathVariable("year") int year,
@@ -63,10 +55,25 @@ public class PlanController {
         return ResponseEntity.ok(ret);
     }
 
+    @GetMapping("/{year}/{month}/{day}/user={user-id}")
+    public ResponseEntity<List<PlanResDto>> readUserDailyPlan(
+            @PathVariable("year") int year, @PathVariable("month") int month,
+            @PathVariable("day") int day, @PathVariable("user-id") Long userId){
+        List<PlanResDto> ret = service.readUserDailyPlanList(year, month, day, userId);
+        return ResponseEntity.ok(ret);
+    }
+
     @PutMapping("/{plan-id}")
     public ResponseEntity<Long> updatePlan(
             @PathVariable("plan-id") Long id, @RequestBody PlanReqDto planReqDto){
         Optional<Long> ret = service.updatePlan(id, planReqDto);
+        return ret.map(ResponseEntity::ok).orElseGet(()
+                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    }
+
+    @PutMapping("/{plan-id}/check")
+    public ResponseEntity<Long> togglePlanChecked(@PathVariable("plan-id") Long id){
+        Optional<Long> ret = service.updateDone(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }

@@ -26,11 +26,13 @@ public class MyPlantService {
     }
 
     public Optional<Long> createMyPlant(
+            WeatherController weatherController,
             PlanService planService, MyPlantReqDto myPlantReqDto){
         Long ret = null;
         try {
-            MyPlant myPlant = repository.save(new MyPlant(myPlantReqDto));
-            ret = myPlant.getId();
+            MyPlant myPlant = new MyPlant(myPlantReqDto);
+            setWeatherRecommendation(weatherController, myPlant);
+            ret = repository.save(myPlant).getId();
             planService.createPlansForNewPlant(myPlant);
         } catch(Exception ignored){ }
         return Optional.ofNullable(ret);
@@ -117,6 +119,17 @@ public class MyPlantService {
         return Optional.ofNullable(ret);
     }
 
+    public Optional<Long> updateMyPlantOrder(Long plantId, int listOrder) {
+        Long ret = null;
+        Optional<MyPlant> data = repository.findById(plantId);
+        if(data.isPresent()) {
+            MyPlant myPlant = data.get();
+            myPlant.setListOrder(listOrder);
+            ret = repository.save(myPlant).getId();
+        }
+        return Optional.ofNullable(ret);
+    }
+
     public void deleteMyPlant(Long id){
         repository.deleteById(id);
     }
@@ -129,10 +142,11 @@ public class MyPlantService {
     }
 
     private void setWeatherRecommendation(
-            WeatherController weatherController, MyPlant myPlantDto){
-        String city = myPlantDto.getPlantedRegion();
-        WeatherDTO weatherDTO = (WeatherDTO) weatherController.readWeather(city).getBody();
-        myPlantDto.setIconAndRecStr(
+            WeatherController weatherController, MyPlant myPlant){
+        String city = myPlant.getPlantedRegion();
+        WeatherDTO weatherDTO = weatherController
+                .readWeatherWithSunCond(city, myPlant.getSunCondition());
+        myPlant.setIconAndRecStr(
                 Objects.requireNonNull(weatherDTO).getIcon(),
                 Objects.requireNonNull(weatherDTO).getComments());
     }

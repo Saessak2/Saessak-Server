@@ -15,5 +15,6 @@ public class PlanResDto {
     private String myplant_name;
     private Boolean done;
     private String date;
+    private String donedone;
 
 }

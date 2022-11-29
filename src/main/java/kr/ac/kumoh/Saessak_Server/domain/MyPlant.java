@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@DynamicInsert
 @Getter
 @Setter
 @Table(name = "myplant")
@@ -59,6 +61,9 @@ public class MyPlant {
 
     @Column(name = "rec_str")
     private String recStr;
+
+    @Column(name = "list_order")
+    private int listOrder;
 
     public MyPlant(Long id){
         this.id = id;

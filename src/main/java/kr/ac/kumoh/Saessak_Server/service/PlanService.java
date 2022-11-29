@@ -131,10 +131,9 @@ public class PlanService {
     }
 
     private boolean wateredToday(MyPlant myPlant){
-        Optional<Plan> data = planRepo
-                .findTopByMyPlantAndPlanTypeAndIsDoneIsTrueOrderByDateDesc(
-                        myPlant, "water");
-        return data.isPresent() && data.get().getDate().equals(myPlant.getLatestWaterDate());
+        List<Plan> tempList = planRepo.findPlanByDateAndType(
+                myPlant.getId(), myPlant.getLatestWaterDate(), "water");
+        return !tempList.isEmpty() && tempList.get(0).isDone();
     }
 
     public Optional<Long> updateWaterPlanUndoneWithPlantId(Long plantId) {

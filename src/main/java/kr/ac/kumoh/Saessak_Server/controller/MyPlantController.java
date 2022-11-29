@@ -24,7 +24,7 @@ public class MyPlantController {
     public ResponseEntity<Long> createMyPlant(
             @RequestBody MyPlantReqDto myPlantReqDto){
         Optional<Long> ret = myPlantService.createMyPlant(
-                planService, myPlantReqDto);
+                weatherController, planService, myPlantReqDto);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
@@ -77,6 +77,14 @@ public class MyPlantController {
     public ResponseEntity<Long> ToggleMyPlantActivation(
             @PathVariable("plant-id") Long id){
         Optional<Long> ret = myPlantService.updateActivation(id);
+        return ret.map(ResponseEntity::ok).orElseGet(()
+                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    }
+
+    @PutMapping("/{plant-id}={list-order}")
+    public ResponseEntity<Long> updateMyPlantOrder(
+            @PathVariable("plant-id") Long plantId, @PathVariable("list-order") int listOrder) {
+        Optional<Long> ret = myPlantService.updateMyPlantOrder(plantId, listOrder);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }

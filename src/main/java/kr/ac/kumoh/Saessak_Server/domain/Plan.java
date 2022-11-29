@@ -51,7 +51,8 @@ public class Plan {
 
     public PlanResDto toDto(){
         return new PlanResDto(id, planType, myPlant.getId(),
-                myPlant.getNickname(), isDone, date.toString().replace('-', '.'));
+                myPlant.getNickname(), isDone, date.toString().replace('-', '.'),
+                String.valueOf(isDone));
     }
 
     public void update(PlanReqDto planReqDto){

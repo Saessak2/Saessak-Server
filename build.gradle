@@ -20,7 +20,6 @@ repositories {
 
 dependencies {
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
-
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -29,26 +28,24 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.springframework.boot:spring-boot-starter-cache:2.7.6'
-
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
-	implementation 'com.google.code.gson:gson:2.10'
-	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-	implementation 'commons-io:commons-io:2.11.0'
-	implementation 'org.apache.commons:commons-lang3:3.12.0'
-
 	implementation 'org.modelmapper:modelmapper:3.1.0'
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-
-	implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
-	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
-	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
-
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
+	implementation 'com.google.code.gson:gson:2.8.9'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'commons-io:commons-io:2.11.0'
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+	implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
+
 	testImplementation 'junit:junit:4.13.2'
+
 	testImplementation("org.junit.vintage:junit-vintage-engine") {
 		exclude group: "org.hamcrest", module: "hamcrest-core"
 	}

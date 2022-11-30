@@ -17,7 +17,6 @@ public class WeatherService {
         return weatherRepository.icon(content);
     }
 
-
     //날씨 온도 + 멘트
     public String comments(String content) {
         return weatherRepository.comments(content);

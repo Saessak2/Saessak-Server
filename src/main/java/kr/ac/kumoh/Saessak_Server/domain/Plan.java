@@ -49,6 +49,12 @@ public class Plan {
         this.isDone = planReqDto.getDone();
     }
 
+    public PlanResDto toDto(){
+        return new PlanResDto(id, planType, myPlant.getId(),
+                myPlant.getNickname(), isDone,
+                date.toString().replace('-', '.'));
+    }
+
     public void update(PlanReqDto planReqDto){
         if(planReqDto.getDate() != null)
             this.date = Utility.getLocalDateFromStr(planReqDto.getDate());
@@ -58,11 +64,6 @@ public class Plan {
 
         if(planReqDto.getDone() != null)
             this.isDone = planReqDto.getDone();
-    }
-
-    public PlanResDto toDto(){
-        return new PlanResDto(id, planType, myPlant.getId(),
-                myPlant.getNickname(), isDone, date.toString().replace('-', '.'));
     }
 
 }

@@ -1,12 +1,13 @@
 package kr.ac.kumoh.Saessak_Server.controller;
 
+import kr.ac.kumoh.Saessak_Server.domain.AutoComment;
 import kr.ac.kumoh.Saessak_Server.domain.Image;
 import kr.ac.kumoh.Saessak_Server.domain.Question;
 import kr.ac.kumoh.Saessak_Server.domain.User;
+import kr.ac.kumoh.Saessak_Server.domain.dto.AutoCommentDTO;
+import kr.ac.kumoh.Saessak_Server.domain.dto.AutoQuestionDTO;
 import kr.ac.kumoh.Saessak_Server.domain.dto.QuestionDTO;
-import kr.ac.kumoh.Saessak_Server.service.CommentService;
-import kr.ac.kumoh.Saessak_Server.service.QuestionService;
-import kr.ac.kumoh.Saessak_Server.service.UserService;
+import kr.ac.kumoh.Saessak_Server.service.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -37,39 +38,43 @@ public class QuestionController {
     private final QuestionService questionService;
     private final UserService userService;
     private final CommentService commentService;
+    private final RestTemplateService restTemplateService;
+    private final AutoCommentService autoCommentService;
 
     //질문 등록
     @PostMapping("questions/createQuestion")
-    public @ResponseBody ResponseEntity createQuestion(@RequestBody QuestionDTO questionDTO) {
+    public void createQuestion(@RequestBody QuestionDTO questionDTO) throws Exception {
         Question question = new Question();
         User user = userService.findOne(questionDTO.getUser_id());
 
         question.setContent(questionDTO.getContent());
-        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd HH:mm"));
+        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
         question.setCreate_date(formatDate);
         question.setCategory(questionDTO.getCategory());
         question.setUser_id(user);
+        question.setUser_name(user.getUserName());
 
-        questionService.create(question);
+        if(question.getCategory().equals("전체") || question.getCategory().equals("식물관리") || question.getCategory().equals("아파요")) {
+            question.setAnswer_count(1);
+            questionService.create(question);
 
-        Question question2 = questionService.readOne(question.getId());
-        QuestionDTO questionDTO2 = new QuestionDTO();
+            AutoQuestionDTO autoQuestionDTO = new AutoQuestionDTO();
+            autoQuestionDTO.setCategory(question.getCategory());
+            autoQuestionDTO.setQuestion(question.getContent());
+            restTemplateService.get(autoQuestionDTO);
 
-        questionDTO2.setId(question2.getId());
-        questionDTO2.setUser_id(question2.getUser_id().getId());
-        questionDTO2.setCategory(question2.getCategory());
-        questionDTO2.setContent(question2.getContent());
-        questionDTO2.setDateTime(question2.getCreate_date());
-        questionDTO2.setUserName(question2.getUser_id().getUserName());
+            AutoCommentDTO[] list = restTemplateService.get(autoQuestionDTO);
 
-        Long temp = Long.valueOf(commentService.CommentCnt(questionDTO2.getId()));
-        String count = Long.toString(temp);
-        questionDTO2.setCommentCnt(count);
-
-        List<QuestionDTO> list = new ArrayList<>();
-        list.add(questionDTO2);
-
-        return ResponseEntity.ok(list);
+            AutoComment autoComment = new AutoComment();
+            autoComment.setLink(list[0].getLink());
+            autoComment.setTitle(list[0].getTitle());
+            autoComment.setSimilarity(list[0].getSimilarity());
+            autoComment.setAnswer(list[0].getAnswer());
+            autoComment.setQuestion_id(question);
+            autoCommentService.createAutoComment(autoComment);
+        } else {
+            questionService.create(question);
+        }
 
     }
 
@@ -81,7 +86,28 @@ public class QuestionController {
         question.setContent(questionDTO.getContent());
         question.setCategory(questionDTO.getCategory());
 
-        questionService.update(question);
+        //
+        if(question.getCategory().equals("전체") || question.getCategory().equals("식물관리") || question.getCategory().equals("아파요")) {
+            questionService.update(question);
+
+            autoCommentService.delete(question.getId());
+
+            AutoQuestionDTO autoQuestionDTO = new AutoQuestionDTO();
+            autoQuestionDTO.setCategory(question.getCategory());
+            autoQuestionDTO.setQuestion(question.getContent());
+
+            AutoCommentDTO[] list = restTemplateService.get(autoQuestionDTO);
+
+            AutoComment autoComment = new AutoComment();
+            autoComment.setLink(list[0].getLink());
+            autoComment.setTitle(list[0].getTitle());
+            autoComment.setSimilarity(list[0].getSimilarity());
+            autoComment.setAnswer(list[0].getAnswer());
+            autoComment.setQuestion_id(question);
+            autoCommentService.createAutoComment(autoComment);
+        } else {
+            questionService.update(question);
+        }
 
         Question question2 = questionService.readOne(question.getId());
         QuestionDTO questionDTO2 = new QuestionDTO();
@@ -92,10 +118,8 @@ public class QuestionController {
         questionDTO2.setContent(question2.getContent());
         questionDTO2.setDateTime(question2.getCreate_date());
         questionDTO2.setUserName(question2.getUser_id().getUserName());
-
-        Long temp = Long.valueOf(commentService.CommentCnt(questionDTO2.getId()));
-        String count = Long.toString(temp);
-        questionDTO2.setCommentCnt(count);
+        int temp = commentService.CommentCnt(questionDTO2.getId());
+        questionDTO2.setCommentCnt(temp);
 
         List<QuestionDTO> list = new ArrayList<>();
         list.add(questionDTO2);
@@ -124,10 +148,7 @@ public class QuestionController {
             map.put("category", question[3]);
             map.put("user_id", question[4]);
             map.put("userName", question[5]);
-
-            Long temp = Long.valueOf(commentService.CommentCnt((Long) question[0]));
-            String count = Long.toString(temp);
-            map.put("commentCnt", count);
+            map.put("commentCnt", question[6]);
 
             list.add(map);
         }
@@ -147,10 +168,7 @@ public class QuestionController {
         questionDTO.setContent(question.getContent());
         questionDTO.setDateTime(question.getCreate_date());
         questionDTO.setUserName(question.getUser_id().getUserName());
-
-        int temp = commentService.CommentCnt(question.getId());
-        String count = Integer.toString(temp);
-        questionDTO.setCommentCnt(count);
+        questionDTO.setCommentCnt(question.getAnswer_count());
 
         List<QuestionDTO> list = new ArrayList<>();
         list.add(questionDTO);
@@ -223,33 +241,6 @@ public class QuestionController {
 
             return null;
         }
-    }
-
-    @GetMapping("questions/readPage")
-    public @ResponseBody ResponseEntity<List<Map<String, Object>>> readPage(Long cursorId, Integer size) {
-
-        List<Map<String, Object>> list = new ArrayList<>();
-        List<Object[]> questionList = questionService.readAll();
-
-        for(int i = 0; i < questionList.toArray().length; i++) {
-            Map<String, Object> map = new HashMap<>();
-            Object[] question = (Object[]) questionList.toArray()[i];
-            map.put("id", question[0]);
-            map.put("content", question[1]);
-            map.put("dateTime", question[2]);
-            map.put("category", question[3]);
-            map.put("user_id", question[4]);
-            map.put("userName", question[5]);
-
-            Long temp = Long.valueOf(commentService.CommentCnt((Long) question[0]));
-            String count = Long.toString(temp);
-            map.put("commentCnt", count);
-
-            list.add(map);
-        }
-
-
-        return ResponseEntity.ok(list);
     }
 
 }

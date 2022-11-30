@@ -19,9 +19,7 @@ public class KakaoLoginController {
     public @ResponseBody ResponseEntity kakaoCallBack(@PathVariable("code") String code) {
         System.out.println("callbackcode = " + code);
         String accessToken = kakaoUserService.getKakaoAccessToken(code);
-        System.out.println("//////");
         System.out.println(accessToken);
-        System.out.println("//////");
 
         String userInfo = kakaoUserService.getUserInfo(accessToken);
         System.out.println(userInfo);

@@ -32,6 +32,7 @@ public class CommentController {
         Comment comment = new Comment();
         User user = userService.findOne(commentDTO.getUser_id());
         Question question = questionService.findOne(commentDTO.getQuestion_id());
+        question.setAnswer_count(question.getAnswer_count()+1);
 
         comment.setContent(commentDTO.getContent());
         String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd HH:mm"));
@@ -87,6 +88,9 @@ public class CommentController {
     @DeleteMapping("comments/deleteComment/{id}")
     public void deleteComment(@PathVariable("id") Long id) {
         commentService.delete(id);
+        Comment comment = commentService.findOne(id);
+        Question question = questionService.findOne(comment.getQuestion_id().getId());
+        question.setAnswer_count(question.getAnswer_count()-1);
     }
 
     //댓글 리스트 조회 //질문 id 담기

@@ -127,15 +127,6 @@ public class KakaoUserService {
         else {
             return userService.selectUser(id);
         }
-
-        // 등록된 사용자인지 확인
-//        if (isRegisteredUser(id)) {
-//            KakaoUser user = new KakaoUser();
-//            user.setKakaoId(id);
-//            user.setUserName(name);
-//
-//            userRepository.createUser(user);
-//        }
     }
 
     private boolean isRegisteredUser(Long kakaoId) {
@@ -161,15 +152,6 @@ public class KakaoUserService {
         else {
             return userService.selectUser(userDTO.getId());
         }
-
-        // 등록된 사용자인지 확인
-//        if (isRegisteredUser(id)) {
-//            KakaoUser user = new KakaoUser();
-//            user.setKakaoId(id);
-//            user.setUserName(name);
-//
-//            userRepository.createUser(user);
-//        }
     }
 
 }

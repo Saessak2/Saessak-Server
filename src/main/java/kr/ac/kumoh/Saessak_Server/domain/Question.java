@@ -22,11 +22,19 @@ public class Question {
     private String content;
     private String create_date;
     private String category;
+    private int answer_count;
+
+    @Column(name = "user_name")
+    private String user_name;
 
     @OneToMany(mappedBy = "question_id", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "question_id", cascade = CascadeType.ALL)
+    private List<AutoComment> autoCommentList = new ArrayList<>();
+
     @Embedded
     private Image image;
+
 }
 

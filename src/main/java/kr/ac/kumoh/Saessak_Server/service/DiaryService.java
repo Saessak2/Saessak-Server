@@ -3,6 +3,7 @@ package kr.ac.kumoh.Saessak_Server.service;
 import kr.ac.kumoh.Saessak_Server.domain.Diary;
 import kr.ac.kumoh.Saessak_Server.repository.DiaryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +66,5 @@ public class DiaryService {
     //이미지 등록
     @Transactional
     public void updateImage(Diary diary) { diaryRepository.updateImage(diary); }
-
 
 }

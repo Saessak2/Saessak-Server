@@ -57,6 +57,9 @@ public class MyPlant {
     @Column(name = "planted_region")
     private String plantedRegion;
 
+    @Column(name = "list_order")
+    private int listOrder;
+
     @OneToMany
     @JoinColumn(name = "myplant_id")
     private List<Diary> diaryList = new ArrayList<>();

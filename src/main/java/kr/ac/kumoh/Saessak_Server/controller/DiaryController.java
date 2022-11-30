@@ -2,8 +2,10 @@ package kr.ac.kumoh.Saessak_Server.controller;
 
 import kr.ac.kumoh.Saessak_Server.domain.Diary;
 import kr.ac.kumoh.Saessak_Server.domain.Image;
+import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
 import kr.ac.kumoh.Saessak_Server.domain.dto.DiaryDTO;
 import kr.ac.kumoh.Saessak_Server.service.DiaryService;
+import kr.ac.kumoh.Saessak_Server.service.MyPlantService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -28,6 +30,7 @@ import java.util.List;
 public class DiaryController {
 
     private final DiaryService diaryService;
+    private final MyPlantService myPlantService;
 
     //일기 등록
     @PostMapping("diaries/createDiary")
@@ -42,6 +45,7 @@ public class DiaryController {
         diary.setActivity2(diaryDTO.getActivity2());
         diary.setActivity3(diaryDTO.getActivity3());
         diary.setUser_id(diaryDTO.getUser_id());
+        MyPlant myPlant = myPlantService.findOne(diaryDTO.getMyplant_id());
         diary.setMyplant_id(diaryDTO.getMyplant_id());
 
         diaryService.create(diary);

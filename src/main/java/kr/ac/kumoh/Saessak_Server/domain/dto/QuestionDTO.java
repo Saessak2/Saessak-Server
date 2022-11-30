@@ -13,7 +13,6 @@ public class QuestionDTO {
     private Long user_id;
     private String dateTime;
     private String userName;
-    private String commentCnt;
-//    private List commentList = new ArrayList<>();
+    private int commentCnt;
 
 }

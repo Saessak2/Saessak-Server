@@ -68,14 +68,23 @@ public class DiaryRepository {
 
     //식물별 일기 조회 (최신 3개)
     public List<Diary> readDiaryByRecent(Long myplant_id) {
-        List<Diary> diaryList = em.createQuery("select d from Diary d where d.myplant_id = :myplant_id order by d.id desc",
-                        Diary.class)
-                .setParameter("myplant_id", myplant_id)
-                .setFirstResult(0) //몇번째부터
-                .setMaxResults(3) //몇개까지
-                .getResultList();
+        if(myplant_id == 0) {
+            List<Diary> diaryList = em.createQuery("select d from Diary d inner join MyPlant m on m.listOrder = (select min(m.listOrder) from MyPlant m) and m.isActive = 1 order by d.id desc")
+                    .setFirstResult(0)
+                    .setMaxResults(3)
+                    .getResultList();
 
-        return diaryList;
+            return diaryList;
+        } else {
+            List<Diary> diaryList = em.createQuery("select d from Diary d where d.myplant_id = :myplant_id order by d.id desc",
+                            Diary.class)
+                    .setParameter("myplant_id", myplant_id)
+                    .setFirstResult(0) //몇번째부터
+                    .setMaxResults(3) //몇개까지
+                    .getResultList();
+
+            return diaryList;
+        }
     }
 
     //이미지 저장

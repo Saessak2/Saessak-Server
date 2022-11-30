@@ -138,4 +138,8 @@ public class MyPlantService {
                     Utility.getLocalDateFromStr(updatedCols[3]));
     }
 
+    public MyPlant findOne(Long id) {
+        return repository.findOne(id);
+    }
+
 }

@@ -1,9 +1,12 @@
 package kr.ac.kumoh.Saessak_Server.repository;
 
+import kr.ac.kumoh.Saessak_Server.domain.dto.WeatherDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -47,6 +50,8 @@ public class WeatherRepository {
         double tem = Double.parseDouble(temperature);
         double tem_result = Math.round(tem - 273.15);
         String str = Double.toString(tem_result);
+
+        List<WeatherDTO> list = new ArrayList<>();
 
         return str + "ºC\n" + comments;
 

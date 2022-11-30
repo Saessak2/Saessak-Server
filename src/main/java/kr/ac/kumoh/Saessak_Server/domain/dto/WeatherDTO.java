@@ -8,5 +8,6 @@ public class WeatherDTO {
 
     private String icon;
     private String comments;
+    private String tem;
 
 }

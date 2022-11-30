@@ -19,4 +19,7 @@ public interface MyPlantRepository extends JpaRepository<MyPlant, Long> {
     List<MyPlant> findMyPlantByUserIdAndActive(
             @Param("userId") Long userId, @Param("isActive") boolean isActive);
 
+    @Query(value = "SELECT p FROM MyPlant p WHERE p.id = :id")
+    MyPlant findOne(@Param("id") Long id);
+
 }

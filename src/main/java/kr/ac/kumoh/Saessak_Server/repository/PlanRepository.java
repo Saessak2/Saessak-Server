@@ -1,6 +1,5 @@
 package kr.ac.kumoh.Saessak_Server.repository;
 
-import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
 import kr.ac.kumoh.Saessak_Server.domain.Plan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -41,6 +40,10 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     List<Plan> findPlanByDateAndType(@Param("plantId") Long plantId,
             @Param("inDate") LocalDate inDate, @Param("planType") String planType);
 
-    Optional<Plan> findTopByPlanTypeAndMyPlantAndIsDoneIsTrueOrderByDateDesc(
-            @Param("planType") String planType, @Param("plantId") MyPlant myPlant);
+    @Query(value = "SELECT p FROM Plan p WHERE p.planType = :planType " +
+            "AND p.myPlant.id = :plantId AND p.isDone = :isDone " +
+            "ORDER BY p.id DESC")
+    Optional<Plan> findOldPlan(@Param("planType") String planType,
+            @Param("plantId") Long plantId, @Param("isDone") boolean isDone);
+
 }

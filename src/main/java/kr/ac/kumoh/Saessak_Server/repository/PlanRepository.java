@@ -1,6 +1,5 @@
 package kr.ac.kumoh.Saessak_Server.repository;
 
-import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
 import kr.ac.kumoh.Saessak_Server.domain.Plan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,8 +26,8 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
             @Param("inMonth") int month);
 
     @Query("SELECT p FROM Plan p WHERE p.user.id = :userId AND p.date = :inDate")
-    List<Plan> findPlansByUserAndDay(
-            @Param("userId") Long userId, @Param("inDate") LocalDate inDate);
+    List<Plan> findPlansByUserAndDay(@Param("userId") Long userId,
+                                     @Param("inDate") LocalDate inDate);
 
     @Query(value = "SELECT p FROM Plan p WHERE p.myPlant.id = :plantId " +
             "AND p.date > :inDate AND p.planType = :planType")
@@ -41,12 +40,10 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     List<Plan> findPlanByDateAndType(@Param("plantId") Long plantId,
             @Param("inDate") LocalDate inDate, @Param("planType") String planType);
 
-    Optional<Plan> findTopByMyPlantAndPlanTypeAndDateIsAfterOrderByDateDesc(
-            @Param("plant") MyPlant myPlant, @Param("planType") String planType,
-            @Param("inDate") LocalDate date);
-
-    Optional<Plan> findTopByMyPlantAndPlanTypeAndIsDoneAndDateIsBeforeOrderByDateDesc(
-            @Param("plantId") MyPlant myPlant, @Param("planType") String planType,
-            @Param("isDone") boolean isDone, @Param("date") LocalDate inDate);
+    @Query(value = "SELECT p FROM Plan p WHERE p.planType = :planType " +
+            "AND p.myPlant.id = :plantId AND p.isDone = :isDone " +
+            "ORDER BY p.id DESC")
+    Optional<Plan> findOldPlan(@Param("planType") String planType,
+            @Param("plantId") Long plantId, @Param("isDone") boolean isDone);
 
 }

@@ -20,18 +20,11 @@ public class MyPlantController {
     private final PlanService planService;
     private final WeatherController weatherController;
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Long> createMyPlant(
             @RequestBody MyPlantReqDto myPlantReqDto){
         Optional<Long> ret = myPlantService.createMyPlant(
-                weatherController, planService, myPlantReqDto);
-        return ret.map(ResponseEntity::ok).orElseGet(()
-                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
-    }
-
-    @PostMapping("/{user-id}/check")
-    public ResponseEntity<Long> checkWeatherUpdate(@PathVariable("user-id") Long userId){
-        Optional<Long> ret = myPlantService.checkWeather(weatherController, userId);
+                planService, myPlantReqDto);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
@@ -39,8 +32,7 @@ public class MyPlantController {
     @GetMapping("/{user-id}")
     public ResponseEntity<List<MyPlantResDto>> readMyPlantList(
             @PathVariable("user-id") Long userId){
-        List<MyPlantResDto> ret =
-                myPlantService.readMyPlantList(userId);
+        List<MyPlantResDto> ret = myPlantService.readMyPlantList(userId);
         return ResponseEntity.ok(ret);
     }
 
@@ -49,9 +41,9 @@ public class MyPlantController {
             @PathVariable("user-id") Long userId, @PathVariable("plant-id") Long plantId){
         Optional<MyPlantResDto> ret;
         if(plantId == 0L)
-            ret = myPlantService.readMyFirstPlant(userId);
+            ret = myPlantService.readMyFirstPlant(weatherController, userId);
         else
-            ret = myPlantService.readMyPlant(plantId, userId);
+            ret = myPlantService.readMyPlant(weatherController, plantId, userId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
@@ -74,17 +66,9 @@ public class MyPlantController {
     }
 
     @PutMapping("/{plant-id}/active")
-    public ResponseEntity<Long> ToggleMyPlantActivation(
+    public ResponseEntity<Long> updateMyPlantActive(
             @PathVariable("plant-id") Long id){
         Optional<Long> ret = myPlantService.updateActivation(id);
-        return ret.map(ResponseEntity::ok).orElseGet(()
-                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
-    }
-
-    @PutMapping("/{plant-id}={list-order}")
-    public ResponseEntity<Long> updateMyPlantOrder(
-            @PathVariable("plant-id") Long plantId, @PathVariable("list-order") int listOrder) {
-        Optional<Long> ret = myPlantService.updateMyPlantOrder(plantId, listOrder);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }

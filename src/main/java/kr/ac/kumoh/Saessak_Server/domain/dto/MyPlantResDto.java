@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,11 @@ public class MyPlantResDto {
     private String plantedRegion;
     private String icon;
     private String recommendStr;
+
+    @JsonIgnore
+    public void setWeatherRc(String icon, String recommendStr){
+        this.icon = icon;
+        this.recommendStr = recommendStr;
+    }
 
 }

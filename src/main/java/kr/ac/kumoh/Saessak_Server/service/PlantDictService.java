@@ -36,11 +36,11 @@ public class PlantDictService {
         this.dict3Repo = dict3Repo;
     }
 
-    public List<PlantDictDto> readList(){
+    public List<PlantDictDto> readAll(){
         return convContentType(dictRepo.findAll());
     }
 
-    public Optional<PlantDict1Dto> readOneFrom1(Long id){
+    public Optional<PlantDict1Dto> readOneFromDict1(Long id){
         PlantDict1Dto ret = null;
         Optional<PlantDict1> data = dict1Repo.findById(id);
         if(data.isPresent())
@@ -48,7 +48,7 @@ public class PlantDictService {
         return Optional.ofNullable(ret);
     }
 
-    public Optional<PlantDict2Dto> readOneFrom2(Long id){
+    public Optional<PlantDict2Dto> readOneFromDict2(Long id){
         PlantDict2Dto ret = null;
         Optional<PlantDict2> data = dict2Repo.findById(id);
         if(data.isPresent())
@@ -56,7 +56,7 @@ public class PlantDictService {
         return Optional.ofNullable(ret);
     }
 
-    public Optional<PlantDict3Dto> readOneFrom3(Long id){
+    public Optional<PlantDict3Dto> readOneFromDict3(Long id){
         PlantDict3Dto ret = null;
         Optional<PlantDict3> data = dict3Repo.findById(id);
         if(data.isPresent())

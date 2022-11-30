@@ -6,7 +6,6 @@ import kr.ac.kumoh.Saessak_Server.domain.dto.PlantDict3Dto;
 import kr.ac.kumoh.Saessak_Server.domain.dto.PlantDictDto;
 import kr.ac.kumoh.Saessak_Server.service.PlantDictService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +24,8 @@ public class PlantDictController {
     private final PlantDictService service;
 
     @GetMapping
-    public ResponseEntity<List<PlantDictDto>> readPlantDictList(Pageable pageable){
-        List<PlantDictDto> ret = service.readList(pageable);
+    public ResponseEntity<List<PlantDictDto>> readPlantDictList(){
+        List<PlantDictDto> ret = service.readList();
         return  ResponseEntity.ok(ret);
     }
 

@@ -18,16 +18,9 @@ public class PlanController {
 
     private final PlanService service;
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Long> createPlan(@RequestBody PlanReqDto planReqDto){
         Optional<Long> ret = service.createPlan(planReqDto);
-        return ret.map(ResponseEntity::ok).orElseGet(()
-                -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
-    }
-
-    @PostMapping("/{user-id}/check")
-    public ResponseEntity<Long> checkPlansUpdate(@PathVariable("user-id") Long userId){
-        Optional<Long> ret = service.checkPlansUpdate(userId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
@@ -37,6 +30,14 @@ public class PlanController {
         Optional<PlanResDto> ret = service.readPlan(id);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/{year}/{month}/{day}/user={user-id}")
+    public ResponseEntity<List<PlanResDto>> readUserDailyPlan(
+            @PathVariable("year") int year, @PathVariable("month") int month,
+            @PathVariable("day") int day, @PathVariable("user-id") Long userId){
+        List<PlanResDto> ret = service.readUserDailyPlanList(year, month, day, userId);
+        return ResponseEntity.ok(ret);
     }
 
     @GetMapping("/{year}/{month}/user={user-id}")
@@ -55,14 +56,6 @@ public class PlanController {
         return ResponseEntity.ok(ret);
     }
 
-    @GetMapping("/{year}/{month}/{day}/user={user-id}")
-    public ResponseEntity<List<PlanResDto>> readUserDailyPlan(
-            @PathVariable("year") int year, @PathVariable("month") int month,
-            @PathVariable("day") int day, @PathVariable("user-id") Long userId){
-        List<PlanResDto> ret = service.readUserDailyPlanList(year, month, day, userId);
-        return ResponseEntity.ok(ret);
-    }
-
     @PutMapping("/{plan-id}")
     public ResponseEntity<Long> updatePlan(
             @PathVariable("plan-id") Long id, @RequestBody PlanReqDto planReqDto){
@@ -73,14 +66,14 @@ public class PlanController {
 
     @PutMapping("/{plant-id}/water/do")
     public ResponseEntity<Long> updateWateringDone(@PathVariable("plant-id") Long plantId) {
-        Optional<Long> ret = service.updateWaterPlanDoneWithPlantId(plantId);
+        Optional<Long> ret = service.updateWateringDone(plantId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
     @PutMapping("/{plant-id}/water/undo")
     public ResponseEntity<Long> updateWateringUndone(@PathVariable("plant-id") Long plantId) {
-        Optional<Long> ret = service.updateWaterPlanUndoneWithPlantId(plantId);
+        Optional<Long> ret = service.updateWateringUndone(plantId);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }

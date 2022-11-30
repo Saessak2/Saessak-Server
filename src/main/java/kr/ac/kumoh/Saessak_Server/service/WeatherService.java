@@ -22,8 +22,5 @@ public class WeatherService {
         return weatherRepository.comments(content);
     }
 
-    public String comments(String content, float sunCond) {
-        return weatherRepository.comments(content, sunCond);
-    }
 
 }

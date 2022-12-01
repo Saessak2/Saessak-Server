@@ -28,13 +28,6 @@ public class AutoCommentController {
         List<Object[]> comments = autoCommentService.readAutoCommentList(id);
 
         if(comments.toArray().length == 0) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("link", "");
-            map.put("title", "아직 자동답변이 달리지 않았습니다.");
-            map.put("similarity", "");
-            map.put("answer", "");
-
-            list.add(map);
         }
         else {
             Map<String, Object> map = new HashMap<>();

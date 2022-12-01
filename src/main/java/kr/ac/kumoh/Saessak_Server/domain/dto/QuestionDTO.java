@@ -14,5 +14,6 @@ public class QuestionDTO {
     private String dateTime;
     private String userName;
     private int commentCnt;
+    private boolean img;
 
 }

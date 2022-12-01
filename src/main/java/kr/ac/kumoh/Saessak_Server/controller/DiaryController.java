@@ -2,7 +2,6 @@ package kr.ac.kumoh.Saessak_Server.controller;
 
 import kr.ac.kumoh.Saessak_Server.domain.Diary;
 import kr.ac.kumoh.Saessak_Server.domain.Image;
-import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
 import kr.ac.kumoh.Saessak_Server.domain.dto.DiaryDTO;
 import kr.ac.kumoh.Saessak_Server.service.DiaryService;
 import kr.ac.kumoh.Saessak_Server.service.MyPlantService;
@@ -45,7 +44,6 @@ public class DiaryController {
         diary.setActivity2(diaryDTO.getActivity2());
         diary.setActivity3(diaryDTO.getActivity3());
         diary.setUser_id(diaryDTO.getUser_id());
-        MyPlant myPlant = myPlantService.findOne(diaryDTO.getMyplant_id());
         diary.setMyplant_id(diaryDTO.getMyplant_id());
 
         diaryService.create(diary);
@@ -161,6 +159,7 @@ public class DiaryController {
 
         diary.setId(id);
         diary.setImage(file);
+        diary.setImg(true);
 
         diaryService.updateImage(diary);
     }
@@ -169,13 +168,14 @@ public class DiaryController {
     @GetMapping(value = "diaries/readImage/{id}")
     public ResponseEntity<Resource> readImageDiary(@PathVariable("id") Long id) {
         Diary diary = diaryService.findOne(id);
-        String fileName = diary.getImage().getFileName();
+        HttpHeaders header = new HttpHeaders();
 
         try {
+            boolean isExist = true;
+            String fileName = diary.getImage().getFileName();
             String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
             FileSystemResource resource = new FileSystemResource(path+fileName);
 
-            HttpHeaders header = new HttpHeaders();
             Path filePath = null;
             filePath = Paths.get(path+fileName);
             header.add("Content-Type", Files.probeContentType(filePath));
@@ -183,8 +183,75 @@ public class DiaryController {
             return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
 
         } catch (Exception e) {
-            return null;
+            return new ResponseEntity<Resource>((Resource) null, HttpStatus.OK);
         }
     }
+//    @GetMapping(value = "diaries/readImage/{id}")
+//    public ResponseEntity<Resource> readImageDiary(@PathVariable("id") Long id) {
+//        Diary diary = diaryService.findOne(id);
+//        HttpHeaders header = new HttpHeaders();
+//
+//        try {
+//            boolean isExist = true;
+//            String fileName = diary.getImage().getFileName();
+//            String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+//            FileSystemResource resource = new FileSystemResource(path+fileName);
+//
+//            Path filePath = null;
+//            filePath = Paths.get(path+fileName);
+//            header.add("Content-Type", Files.probeContentType(filePath));
+//
+//            return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
+//
+//        } catch (Exception e) {
+//            return new ResponseEntity<Resource>((Resource) null, HttpStatus.OK);
+//        }
+//    }
+
+    //다중이미지 조회 (식물 id)
+//    @GetMapping(value = "diaries/readMultiImage/{id}")
+//    public ResponseEntity<List<Resource>> readMultiImageDiary(@PathVariable("id") Long id) throws IOException {
+//        List<Diary> diaryList = diaryService.readDiaryByPlant(id);
+//        HttpHeaders header = new HttpHeaders();
+//        List<Resource> resourceList = new ArrayList<>();
+//
+//        for(int i = 0; i < diaryList.size(); i++) {
+//            try {
+//                Diary diary = diaryService.findOne(diaryList.get(i).getId());
+//                String fileName = diary.getImage().getFileName();
+//                String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+//                FileSystemResource resource = new FileSystemResource(path+fileName);
+//
+//                Path filePath = null;
+//                filePath = Paths.get(path+fileName);
+//                header.add("Content-Type", Files.probeContentType(filePath));
+//
+//                resourceList.add(resource);
+//                return new ResponseEntity<List<Resource>>(resourceList, header, HttpStatus.OK);
+//
+//            } catch (Exception e) {
+//                return new ResponseEntity<Resource>((Resource) null, HttpStatus.OK);
+//            }
+//        }
+//
+//
+//        try {
+//            boolean isExist = true;
+//            String fileName = diaryList.getImage().getFileName();
+//            String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+//            FileSystemResource resource = new FileSystemResource(path+fileName);
+//
+//            Path filePath = null;
+//            filePath = Paths.get(path+fileName);
+//            header.add("Content-Type", Files.probeContentType(filePath));
+//
+//            return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
+//
+//        } catch (Exception e) {
+//            return new ResponseEntity<Resource>((Resource) null, HttpStatus.OK);
+//        }
+//
+//
+//    }
 
 }

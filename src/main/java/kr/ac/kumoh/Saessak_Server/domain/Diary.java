@@ -20,6 +20,7 @@ public class Diary {
     private String activity1;
     private String activity2;
     private String activity3;
+    private boolean img;
 
     private Long user_id;
     private Long myplant_id;

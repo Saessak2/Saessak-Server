@@ -149,6 +149,7 @@ public class QuestionController {
             map.put("user_id", question[4]);
             map.put("userName", question[5]);
             map.put("commentCnt", question[6]);
+            map.put("img", question[7]);
 
             list.add(map);
         }
@@ -169,6 +170,7 @@ public class QuestionController {
         questionDTO.setDateTime(question.getCreate_date());
         questionDTO.setUserName(question.getUser_id().getUserName());
         questionDTO.setCommentCnt(question.getAnswer_count());
+        questionDTO.setImg(question.isImg());
 
         List<QuestionDTO> list = new ArrayList<>();
         list.add(questionDTO);
@@ -215,6 +217,7 @@ public class QuestionController {
 
         question.setId(id);
         question.setImage(file);
+        question.setImg(true);
 
         questionService.updateImage(question);
 
@@ -224,9 +227,9 @@ public class QuestionController {
     @GetMapping(value = "questions/readImage/{id}")
     public ResponseEntity<Resource> readImageQuestion(@PathVariable("id") Long id) {
         Question question = questionService.readOne(id);
-        String fileName = question.getImage().getFileName();
 
         try {
+            String fileName = question.getImage().getFileName();
             String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
             FileSystemResource resource = new FileSystemResource(path+fileName);
 

@@ -92,6 +92,7 @@ public class DiaryRepository {
         Diary updateDiary = findOne(diary.getId());
 
         updateDiary.setImage(diary.getImage());
+        updateDiary.setImg(diary.isImg());
     }
 
     //이미지 파일이름 조회

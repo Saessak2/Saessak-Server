@@ -23,6 +23,7 @@ public class Question {
     private String create_date;
     private String category;
     private int answer_count;
+    private boolean img;
 
     @Column(name = "user_name")
     private String user_name;

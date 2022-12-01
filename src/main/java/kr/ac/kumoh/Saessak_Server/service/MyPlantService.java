@@ -76,6 +76,10 @@ public class MyPlantService {
         return Optional.of(ret);
     }
 
+    public MyPlant findOne(Long id) {
+        return repository.findOne(id);
+    }
+
     public Optional<Long> updateMyPlant(
             Long id, MyPlantReqDto myPlantReqDto, PlanService planService){
         String[] attrs = new String[4];

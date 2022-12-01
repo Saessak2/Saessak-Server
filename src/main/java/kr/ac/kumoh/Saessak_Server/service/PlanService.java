@@ -130,12 +130,6 @@ public class PlanService {
         return Optional.ofNullable(ret);
     }
 
-    private boolean wateredToday(MyPlant myPlant){
-        List<Plan> tempList = planRepo.findPlanByDateAndType(
-                myPlant.getId(), myPlant.getLatestWaterDate(), "water");
-        return !tempList.isEmpty() && tempList.get(0).isDone();
-    }
-
     public Optional<Long> updateWaterPlanUndoneWithPlantId(Long plantId) {
         Long ret = null;
         Optional<MyPlant> myPlantDate = myPlantRepo.findById(plantId);
@@ -235,6 +229,12 @@ public class PlanService {
                 0L, myPlant.getUser(),
                 plan.getDate().plusDays(myPlant.getWaterCycle()),
                 "water", myPlant, false)));
+    }
+
+    private boolean wateredToday(MyPlant myPlant){
+        List<Plan> tempList = planRepo.findPlanByDateAndType(
+                myPlant.getId(), myPlant.getLatestWaterDate(), "water");
+        return !tempList.isEmpty() && tempList.get(0).isDone();
     }
 
     private Long updateWaterPlanUndone(Plan plan) {

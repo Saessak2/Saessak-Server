@@ -1,12 +1,9 @@
 package kr.ac.kumoh.Saessak_Server.repository;
 
-import kr.ac.kumoh.Saessak_Server.domain.dto.WeatherDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -54,6 +51,33 @@ public class WeatherRepository {
         return str + "ºC\n" + comments;
     }
 
+    //멘트
+    public String comment(String str) {
+        String comments;
+        switch(str) {
+            case "Clouds": case "Drizzle":
+                comments = "구름 몽글";
+                break;
+            case "Rain":
+                comments = "비 축축";
+                break;
+            case "Snow":
+                comments = "눈 동글";
+                break;
+            case "Clear":
+                comments = "해 반짝";
+                break;
+            case "Atmosphere": case "Additional":
+                comments = "바람 슝슝";
+                break;
+            case "Thunderstorm": case "Extreme":
+                comments = "기타 등등";
+                break;
+            default: comments = "까꿍"; break;
+        }
+        return comments;
+    }
+
     public String comments(String content, float sunCond){
         int temp1 = content.indexOf("main") + 7;
         int temp2 = content.indexOf("temp") + 5;
@@ -61,20 +85,17 @@ public class WeatherRepository {
         StringBuilder weather = new StringBuilder(content.substring(temp1, temp1 + 1));
         while(true) {
             temp1++;
-            if(content.charAt(temp1) == '"') {
+            if(content.charAt(temp1) == '"')
                 break;
-            }
             weather.append(content.charAt(temp1));
         }
 
         String comments = comment(weather.toString(), sunCond);
-
         StringBuilder temperature = new StringBuilder(content.substring(temp2, temp2));
         while(true) {
             temp2++;
-            if(content.charAt(temp2) == ',') {
+            if(content.charAt(temp2) == ',')
                 break;
-            }
             temperature.append(content.charAt(temp2));
         }
 
@@ -110,35 +131,6 @@ public class WeatherRepository {
                 break;
             case "Atmosphere": case "Additional":
                 comments = "바람이 슝슝슝";
-                break;
-            case "Thunderstorm": case "Extreme":
-                comments = "기타 등등";
-                break;
-            default: comments = "까꿍"; break;
-        }
-        return comments;
-
-
-    }
-
-    //멘트
-    public String comment(String str) {
-        String comments;
-        switch(str) {
-            case "Clouds": case "Drizzle":
-                comments = "구름 몽글";
-                break;
-            case "Rain":
-                comments = "비 축축";
-                break;
-            case "Snow":
-                comments = "눈 동글";
-                break;
-            case "Clear":
-                comments = "해 반짝";
-                break;
-            case "Atmosphere": case "Additional":
-                comments = "바람 슝슝";
                 break;
             case "Thunderstorm": case "Extreme":
                 comments = "기타 등등";

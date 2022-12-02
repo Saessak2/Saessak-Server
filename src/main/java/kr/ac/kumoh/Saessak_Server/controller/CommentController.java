@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ public class CommentController {
         User user = userService.findOne(commentDTO.getUser_id());
         Question question = questionService.findOne(commentDTO.getQuestion_id());
         question.setAnswer_count(question.getAnswer_count()+1);
+        questionService.update(question);
 
         comment.setContent(commentDTO.getContent());
         String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd HH:mm"));
@@ -91,6 +95,7 @@ public class CommentController {
         Comment comment = commentService.findOne(id);
         Question question = questionService.findOne(comment.getQuestion_id().getId());
         question.setAnswer_count(question.getAnswer_count()-1);
+        questionService.update(question);
     }
 
     //댓글 리스트 조회 //질문 id 담기

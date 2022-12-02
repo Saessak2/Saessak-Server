@@ -80,7 +80,7 @@ public class QuestionController {
 
     //질문 수정
     @PutMapping("questions/updateQuestion/{id}")
-    public @ResponseBody ResponseEntity updateQuestion(@RequestBody QuestionDTO questionDTO, @PathVariable("id") Long id) {
+    public void updateQuestion(@RequestBody QuestionDTO questionDTO, @PathVariable("id") Long id) {
         Question question = questionService.findOne(id);
 
         question.setContent(questionDTO.getContent());
@@ -108,23 +108,6 @@ public class QuestionController {
         } else {
             questionService.update(question);
         }
-
-        Question question2 = questionService.readOne(question.getId());
-        QuestionDTO questionDTO2 = new QuestionDTO();
-
-        questionDTO2.setId(questionDTO2.getId());
-        questionDTO2.setUser_id(question2.getUser_id().getId());
-        questionDTO2.setCategory(question2.getCategory());
-        questionDTO2.setContent(question2.getContent());
-        questionDTO2.setDateTime(question2.getCreate_date());
-        questionDTO2.setUserName(question2.getUser_id().getUserName());
-        int temp = commentService.CommentCnt(questionDTO2.getId());
-        questionDTO2.setCommentCnt(temp);
-
-        List<QuestionDTO> list = new ArrayList<>();
-        list.add(questionDTO2);
-
-        return ResponseEntity.ok(list);
     }
 
     //질문 삭제

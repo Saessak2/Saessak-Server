@@ -1,16 +1,11 @@
-package kr.ac.kumoh.Saessak_Server.domain;
+package kr.ac.kumoh.Saessak_Server.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-
-@Entity
 @Getter @Setter
-public class Diary {
+public class DiaryDTO {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "diary_id")
     private Long id;
     private String date;
     private String time;
@@ -20,12 +15,8 @@ public class Diary {
     private String activity1;
     private String activity2;
     private String activity3;
-    private boolean img;
-
+    private String img_url;
     private Long user_id;
     private Long myplant_id;
-
-    @Embedded
-    private Image image;
 
 }

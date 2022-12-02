@@ -1,13 +1,11 @@
 package kr.ac.kumoh.Saessak_Server.repository;
 
-import kr.ac.kumoh.Saessak_Server.domain.Category;
 import kr.ac.kumoh.Saessak_Server.domain.Question;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -24,9 +22,8 @@ public class QuestionRepository {
     //질문 수정
     public void updateQuestion(Question question) {
         Question updateQuestion = findOne(question.getId());
+
         updateQuestion.setContent(question.getContent());
-        updateQuestion.setUpdate_date(LocalDate.now());
-        updateQuestion.setImg_path(question.getImg_path());
         updateQuestion.setCategory(question.getCategory());
     }
 
@@ -37,13 +34,18 @@ public class QuestionRepository {
     //질문 삭제
     public void deleteQuestion(Long id) {
         Question question = findOne(id);
+
         em.remove(question);
     }
 
-    //질문 조회 (날짜별, 최신순)
-    public List<Question> readAll(Sort sort) {
-        return em.createQuery("select q from Question q", Question.class)
-                .getResultList();
+    //질문 조회
+    public List<Object[]> readAll() {
+        String jpql = "select q.id, q.content, q.create_date, q.category, q.user_id.id, q.user_id.userName, q.answer_count, q.img from Question q order by q.id desc";
+        Query query  = em.createQuery(jpql);
+
+        List<Object[]> resultList = query.getResultList();
+
+        return resultList;
     }
 
     //질문 상세 조회
@@ -51,11 +53,22 @@ public class QuestionRepository {
         return em.find(Question.class, id);
     }
 
-    //질문 검색
-//    public List<Question> searchQuestionByCategory(String category) {
-//        if(category == Category.전체.name()) {
-//        }
-//
-//    }
+    //이미지 저장
+    public void updateImage(Question question) {
+        Question updateQuestion = findOne(question.getId());
+
+        updateQuestion.setImage(question.getImage());
+        updateQuestion.setImg(question.isImg());
+    }
+
+    //이미지 파일이름 조회
+    public List<String> readAllImage() {
+        String jpql = "select q.image.fileName from Question q";
+        Query query = em.createQuery(jpql);
+
+        List<String> list = query.getResultList();
+
+        return list;
+    }
 
 }

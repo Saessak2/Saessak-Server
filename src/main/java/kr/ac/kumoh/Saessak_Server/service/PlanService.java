@@ -53,7 +53,7 @@ public class PlanService {
             inDate = inDate.plusDays(cycle);
         }
 
-        if (cycle <= 15)
+        if (cycle <= 10)
             createPlansUntilM(myPlant, user, cycle);
         else
             createPlansForN(myPlant, user, cycle);
@@ -233,7 +233,7 @@ public class PlanService {
 
     private boolean wateredToday(MyPlant myPlant){
         List<Plan> tempList = planRepo.findPlanByDateAndType(
-                myPlant.getId(), myPlant.getLatestWaterDate(), "water");
+                myPlant.getId(), LocalDate.now(), "water");
         return !tempList.isEmpty() && tempList.get(0).isDone();
     }
 

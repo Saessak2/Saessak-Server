@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class KakaoLoginController {
@@ -33,8 +36,9 @@ public class KakaoLoginController {
     }
 
     @PostMapping("kakaoLogin")
-    public @ResponseBody ResponseEntity createQuestion(@RequestBody UserDTO userDTO) {
+    public @ResponseBody ResponseEntity<List<MyPageDTO>> createQuestion(@RequestBody UserDTO userDTO) {
         User user = kakaoUserService.createKakaoLogin(userDTO);
+        List<MyPageDTO> list = new ArrayList<>();
 
         String userName = userService.getUserName(user.getId());
         MyPageDTO myPageDTO = new MyPageDTO();
@@ -43,8 +47,9 @@ public class KakaoLoginController {
         myPageDTO.setUserName(userName);
         int count = userService.CommentCnt(user.getId());
         myPageDTO.setPlantCount(count);
+        list.add(myPageDTO);
 
-        return ResponseEntity.ok(myPageDTO);
+        return ResponseEntity.ok(list);
     }
 
 }

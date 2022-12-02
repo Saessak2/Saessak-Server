@@ -16,7 +16,7 @@ spring:
 #    password: "A5b4c3d2e1."
 
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://54.180.155.27:3306/saessac?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://34.64.194.141:3306/saessac?serverTimezone=UTC&characterEncoding=UTF-8
     username: "saessacki"
     password: "1234"
   jpa:

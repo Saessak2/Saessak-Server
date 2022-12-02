@@ -61,6 +61,8 @@ public class DiaryController {
         diaryDTO1.setDate(diary1.getDate());
         diaryDTO1.setTime(diary1.getTime());
         diaryDTO1.setCond(diary1.getCond());
+        diaryDTO1.setContent(diary1.getContent());
+        diaryDTO1.setWeather(diary1.getWeather());
         diaryDTO1.setActivity1(diary1.getActivity1());
         diaryDTO1.setActivity2(diary1.getActivity2());
         diaryDTO1.setActivity3(diary1.getActivity3());
@@ -140,7 +142,7 @@ public class DiaryController {
 
         File destinationFile;
         String destinationFileName;
-        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+        String fileUrl = "C:\\Users\\DeepLearning_4\\Desktop";
 
         do {
             destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
@@ -180,7 +182,7 @@ public class DiaryController {
         try {
             boolean isExist = true;
             String fileName = diary.getImage().getFileName();
-            String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+            String path = "C:\\Users\\DeepLearning_4\\Desktop";
             FileSystemResource resource = new FileSystemResource(path+fileName);
 
             Path filePath = null;

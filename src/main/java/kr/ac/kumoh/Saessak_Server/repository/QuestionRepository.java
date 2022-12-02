@@ -40,7 +40,7 @@ public class QuestionRepository {
 
     //질문 조회
     public List<Object[]> readAll() {
-        String jpql = "select q.id, q.content, q.create_date, q.category, q.user_id.id, q.user_id.userName, q.answer_count, q.img from Question q";
+        String jpql = "select q.id, q.content, q.create_date, q.category, q.user_id.id, q.user_id.userName, q.answer_count, q.img from Question q order by q.id desc";
         Query query  = em.createQuery(jpql);
 
         List<Object[]> resultList = query.getResultList();

@@ -11,7 +11,7 @@ public class RestTemplateService {
 
     public AutoCommentDTO[] get(AutoQuestionDTO autoQuestionDTO) {
 
-        String url = "http://192.168.208.137:8080/qa/comment/auto/";
+        String url = "http://192.168.223.227:80/qa/comment/auto/";
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();

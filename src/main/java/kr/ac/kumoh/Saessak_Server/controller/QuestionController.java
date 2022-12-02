@@ -43,12 +43,12 @@ public class QuestionController {
 
     //질문 등록
     @PostMapping("questions/createQuestion")
-    public void createQuestion(@RequestBody QuestionDTO questionDTO) throws Exception {
+    public @ResponseBody ResponseEntity createQuestion(@RequestBody QuestionDTO questionDTO) throws Exception {
         Question question = new Question();
         User user = userService.findOne(questionDTO.getUser_id());
 
         question.setContent(questionDTO.getContent());
-        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm"));
         question.setCreate_date(formatDate);
         question.setCategory(questionDTO.getCategory());
         question.setUser_id(user);
@@ -75,6 +75,22 @@ public class QuestionController {
         } else {
             questionService.create(question);
         }
+
+        Question question2 = questionService.readOne(question.getId());
+        QuestionDTO questionDTO2 = new QuestionDTO();
+
+        questionDTO2.setId(question2.getId());
+        questionDTO2.setUser_id(question2.getUser_id().getId());
+        questionDTO2.setCategory(question2.getCategory());
+        questionDTO2.setContent(question2.getContent());
+        questionDTO2.setDateTime(question2.getCreate_date());
+        questionDTO2.setUserName(question2.getUser_id().getUserName());
+        questionDTO2.setCommentCnt(question2.getAnswer_count());
+
+        List<QuestionDTO> list = new ArrayList<>();
+        list.add(questionDTO2);
+
+        return ResponseEntity.ok(list);
 
     }
 
@@ -175,7 +191,7 @@ public class QuestionController {
 
         File destinationFile;
         String destinationFileName;
-        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+        String fileUrl = "C:\\Users\\DeepLearning_4\\Desktop";
 
         do {
             destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
@@ -213,7 +229,7 @@ public class QuestionController {
 
         try {
             String fileName = question.getImage().getFileName();
-            String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+            String path = "C:\\Users\\DeepLearning_4\\Desktop";
             FileSystemResource resource = new FileSystemResource(path+fileName);
 
             HttpHeaders header = new HttpHeaders();

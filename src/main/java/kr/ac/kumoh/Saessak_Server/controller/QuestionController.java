@@ -43,7 +43,7 @@ public class QuestionController {
 
     //질문 등록
     @PostMapping("questions/createQuestion")
-    public void createQuestion(@RequestBody QuestionDTO questionDTO) throws Exception {
+    public @ResponseBody ResponseEntity createQuestion(@RequestBody QuestionDTO questionDTO) throws Exception {
         Question question = new Question();
         User user = userService.findOne(questionDTO.getUser_id());
 
@@ -72,10 +72,26 @@ public class QuestionController {
             autoComment.setAnswer(list[0].getAnswer());
             autoComment.setQuestion_id(question);
             autoCommentService.createAutoComment(autoComment);
+            System.out.println(autoComment.getLink());
         } else {
             questionService.create(question);
         }
 
+        Question question2 = questionService.readOne(question.getId());
+        QuestionDTO questionDTO2 = new QuestionDTO();
+
+        questionDTO2.setId(question2.getId());
+        questionDTO2.setUser_id(question2.getUser_id().getId());
+        questionDTO2.setCategory(question2.getCategory());
+        questionDTO2.setContent(question2.getContent());
+        questionDTO2.setDateTime(question2.getCreate_date());
+        questionDTO2.setUserName(question2.getUser_id().getUserName());
+        questionDTO2.setCommentCnt(question2.getAnswer_count());
+
+        List<QuestionDTO> list = new ArrayList<>();
+        list.add(questionDTO2);
+
+        return ResponseEntity.ok(list);
     }
 
     //질문 수정

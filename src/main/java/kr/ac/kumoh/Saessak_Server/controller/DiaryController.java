@@ -60,6 +60,8 @@ public class DiaryController {
         diaryDTO1.setId(diary1.getId());
         diaryDTO1.setDate(diary1.getDate());
         diaryDTO1.setTime(diary1.getTime());
+        diaryDTO1.setContent(diary1.getContent());
+        diaryDTO1.setWeather(diary1.getWeather());
         diaryDTO1.setCond(diary1.getCond());
         diaryDTO1.setActivity1(diary1.getActivity1());
         diaryDTO1.setActivity2(diary1.getActivity2());
@@ -168,7 +170,6 @@ public class DiaryController {
         diary.setImg(true);
 
         diaryService.updateImage(diary);
-//        imageResize(fileUrl+destinationFileName);
     }
 
     //이미지 조회

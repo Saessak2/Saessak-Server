@@ -69,7 +69,7 @@ public class DiaryRepository {
     //식물별 일기 조회 (최신 3개)
     public List<Diary> readDiaryByRecent(Long myplant_id) {
         if(myplant_id == 0) {
-            List<Diary> diaryList = em.createQuery("select d from Diary d inner join MyPlant m on m.listOrder = (select min(m.listOrder) from MyPlant m) and m.isActive = 1 order by d.id desc")
+            List<Diary> diaryList = em.createQuery("select d from Diary d inner join MyPlant m on m.listOrder = (select min(m.listOrder) from MyPlant m where m.user_id = d.user_id) and m.isActive = 1order by d.id desc")
                     .setFirstResult(0)
                     .setMaxResults(3)
                     .getResultList();

@@ -42,8 +42,18 @@ public class AutoCommentRepository {
                 .getResultList();
 
         Long id = autoCommentList.get(0).getId();
-//        em.remove(id);
         return id;
     }
 
+    //자동댓글 수정
+    public void updateAutoComment(AutoComment autoComment) {
+        AutoComment autoComment1 = new AutoComment();
+
+        autoComment1.setTags(autoComment.getTags());
+        autoComment1.setAnswer(autoComment.getAnswer());
+        autoComment1.setQuestion_id(autoComment.getQuestion_id());
+        autoComment1.setId(autoComment.getId());
+        autoComment1.setLink(autoComment.getLink());
+        autoComment1.setTitle(autoComment.getTitle());
+    }
 }

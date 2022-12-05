@@ -37,7 +37,6 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final UserService userService;
-    private final CommentService commentService;
     private final RestTemplateService restTemplateService;
     private final AutoCommentService autoCommentService;
 
@@ -55,7 +54,6 @@ public class QuestionController {
         question.setUser_name(user.getUserName());
 
         if(question.getCategory().equals("전체") || question.getCategory().equals("식물관리") || question.getCategory().equals("아파요")) {
-            question.setAnswer_count(1);
             questionService.create(question);
 
             AutoQuestionDTO autoQuestionDTO = new AutoQuestionDTO();
@@ -73,6 +71,9 @@ public class QuestionController {
             autoComment.setQuestion_id(question);
             autoCommentService.createAutoComment(autoComment);
             System.out.println(autoComment.getLink());
+
+            question.setAnswer_count(1);
+            questionService.update(question);
         } else {
             questionService.create(question);
         }
@@ -105,16 +106,18 @@ public class QuestionController {
         //
         if(question.getCategory().equals("전체") || question.getCategory().equals("식물관리") || question.getCategory().equals("아파요")) {
             questionService.update(question);
-
-            autoCommentService.delete(question.getId());
+//            autoCommentService.delete(question.getId());
 
             AutoQuestionDTO autoQuestionDTO = new AutoQuestionDTO();
             autoQuestionDTO.setCategory(question.getCategory());
             autoQuestionDTO.setQuestion(question.getContent());
+            questionService.update(question);
+
+            Long autoComment_id = autoCommentService.update(question.getId());
+            AutoComment autoComment = autoCommentService.findOne(autoComment_id);
 
             AutoCommentDTO[] list = restTemplateService.get(autoQuestionDTO);
 
-            AutoComment autoComment = new AutoComment();
             autoComment.setLink(list[0].getLink());
             autoComment.setTitle(list[0].getTitle());
             autoComment.setTags(list[0].getTags());

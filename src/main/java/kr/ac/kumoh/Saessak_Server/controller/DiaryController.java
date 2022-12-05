@@ -4,7 +4,6 @@ import kr.ac.kumoh.Saessak_Server.domain.Diary;
 import kr.ac.kumoh.Saessak_Server.domain.Image;
 import kr.ac.kumoh.Saessak_Server.domain.dto.DiaryDTO;
 import kr.ac.kumoh.Saessak_Server.service.DiaryService;
-import kr.ac.kumoh.Saessak_Server.service.MyPlantService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -16,14 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,7 +28,6 @@ import java.util.List;
 public class DiaryController {
 
     private final DiaryService diaryService;
-    private final MyPlantService myPlantService;
 
     //일기 등록
     @PostMapping("diaries/createDiary")

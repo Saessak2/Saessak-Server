@@ -1,5 +1,6 @@
 package kr.ac.kumoh.Saessak_Server.service;
 
+import kr.ac.kumoh.Saessak_Server.domain.AutoComment;
 import kr.ac.kumoh.Saessak_Server.domain.dto.AutoCommentDTO;
 import kr.ac.kumoh.Saessak_Server.domain.dto.AutoQuestionDTO;
 import org.springframework.http.*;

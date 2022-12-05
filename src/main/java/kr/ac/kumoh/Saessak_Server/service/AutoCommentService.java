@@ -1,6 +1,7 @@
 package kr.ac.kumoh.Saessak_Server.service;
 
 import kr.ac.kumoh.Saessak_Server.domain.AutoComment;
+import kr.ac.kumoh.Saessak_Server.domain.dto.AutoCommentDTO;
 import kr.ac.kumoh.Saessak_Server.repository.AutoCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,10 +32,9 @@ public class AutoCommentService {
         return autoCommentRepository.readAutoCommentList(question_id);
     }
 
-
     //자동댓글 삭제
-    public void delete(Long question_id) {
-        autoCommentRepository.delete(question_id);
+    public Long update(Long question_id) {
+        return autoCommentRepository.update(question_id);
     }
 
 }

@@ -1,6 +1,7 @@
 package kr.ac.kumoh.Saessak_Server.repository;
 
 import kr.ac.kumoh.Saessak_Server.domain.AutoComment;
+import kr.ac.kumoh.Saessak_Server.domain.dto.AutoCommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -35,13 +36,14 @@ public class AutoCommentRepository {
     }
 
     //자동댓글 삭제
-    public void delete(Long question_id) {
+    public Long update(Long question_id) {
         List<AutoComment> autoCommentList = em.createQuery("select a from AutoComment a where a.question_id.id = :question_id", AutoComment.class)
                 .setParameter("question_id", question_id)
                 .getResultList();
 
         Long id = autoCommentList.get(0).getId();
-        em.remove(id);
+//        em.remove(id);
+        return id;
     }
 
 }

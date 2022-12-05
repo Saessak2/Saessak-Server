@@ -16,7 +16,7 @@ public interface MyPlantRepository extends JpaRepository<MyPlant, Long> {
     List<MyPlant> findByUserId(@Param("userId") Long userId);
 
     @Query(value = "SELECT p FROM MyPlant p WHERE p.user.id = :userId " +
-            "AND p.isActive = :isActive ORDER BY p.id")
+            "AND p.isActive = :isActive ORDER BY p.listOrder")
     List<MyPlant> findMyPlantByUserIdAndActive(
             @Param("userId") Long userId, @Param("isActive") boolean isActive);
 

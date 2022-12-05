@@ -52,6 +52,7 @@ public class QuestionController {
         question.setCategory(questionDTO.getCategory());
         question.setUser_id(user);
         question.setUser_name(user.getUserName());
+        question.setAnswer_count(1);
 
         if(question.getCategory().equals("전체") || question.getCategory().equals("식물관리") || question.getCategory().equals("아파요")) {
             questionService.create(question);
@@ -71,8 +72,8 @@ public class QuestionController {
             autoComment.setQuestion_id(question);
             autoCommentService.createAutoComment(autoComment);
 
-            question.setAnswer_count(1);
-            questionService.update(question);
+//            question.setAnswer_count(1);
+//            questionService.update(question);
         } else {
             questionService.create(question);
         }

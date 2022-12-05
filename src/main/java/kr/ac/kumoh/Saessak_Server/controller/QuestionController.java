@@ -48,7 +48,7 @@ public class QuestionController {
         User user = userService.findOne(questionDTO.getUser_id());
 
         question.setContent(questionDTO.getContent());
-        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm"));
         question.setCreate_date(formatDate);
         question.setCategory(questionDTO.getCategory());
         question.setUser_id(user);

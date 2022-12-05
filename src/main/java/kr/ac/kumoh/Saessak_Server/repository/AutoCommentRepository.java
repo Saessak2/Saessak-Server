@@ -27,7 +27,7 @@ public class AutoCommentRepository {
 
     //자동댓글 조회
     public List<Object[]> readAutoCommentList(Long question_id) {
-        String jpql = "select a.link, a.title, a.tags, a.answer from AutoComment a where a.question_id.id = :question_id";
+        String jpql = "select a.link, a.title, a.tags, a.answer, a.date_time from AutoComment a where a.question_id.id = :question_id";
         Query query  = em.createQuery(jpql).setParameter("question_id", question_id);
 
         List<Object[]> resultList = query.getResultList();

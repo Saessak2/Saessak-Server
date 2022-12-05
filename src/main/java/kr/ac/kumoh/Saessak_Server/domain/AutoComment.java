@@ -19,6 +19,7 @@ public class AutoComment {
     private String link;
     private String tags;
     private String answer;
+    private String date_time;
 
     @ManyToOne
     @JoinColumn(name = "question_id")

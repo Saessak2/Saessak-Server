@@ -47,7 +47,7 @@ public class QuestionController {
         User user = userService.findOne(questionDTO.getUser_id());
 
         question.setContent(questionDTO.getContent());
-        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm"));
+        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss"));
         question.setCreate_date(formatDate);
         question.setCategory(questionDTO.getCategory());
         question.setUser_id(user);
@@ -69,6 +69,8 @@ public class QuestionController {
             autoComment.setTitle(list[0].getTitle());
             autoComment.setTags(list[0].getTags());
             autoComment.setAnswer(list[0].getAnswer());
+            String formatDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss"));
+            autoComment.setDate_time(formatDateTime);
             autoComment.setQuestion_id(question);
             autoCommentService.createAutoComment(autoComment);
 
@@ -122,6 +124,8 @@ public class QuestionController {
             autoComment.setTitle(list[0].getTitle());
             autoComment.setTags(list[0].getTags());
             autoComment.setAnswer(list[0].getAnswer());
+            String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss"));
+            autoComment.setDate_time(formatDate);
             autoComment.setQuestion_id(question);
             autoCommentService.updateAutoComment(autoComment);
         } else {

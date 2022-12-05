@@ -36,6 +36,7 @@ public class AutoCommentController {
             map.put("title", comment[1]);
             map.put("tags", comment[2]);
             map.put("answer", comment[3]);
+            map.put("date_time", comment[4]);
 
             list.add(map);
         }

@@ -9,6 +9,7 @@ public class AutoCommentDTO {
     private String title; // 지식인 제목
     private String tags; // 태그
     private String answer;
+    private String date_time;
 
 
 

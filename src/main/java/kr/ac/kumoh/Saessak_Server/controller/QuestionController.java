@@ -70,7 +70,6 @@ public class QuestionController {
             autoComment.setAnswer(list[0].getAnswer());
             autoComment.setQuestion_id(question);
             autoCommentService.createAutoComment(autoComment);
-            System.out.println(autoComment.getLink());
 
             question.setAnswer_count(1);
             questionService.update(question);
@@ -123,7 +122,7 @@ public class QuestionController {
             autoComment.setTags(list[0].getTags());
             autoComment.setAnswer(list[0].getAnswer());
             autoComment.setQuestion_id(question);
-            autoCommentService.createAutoComment(autoComment);
+            autoCommentService.updateAutoComment(autoComment);
         } else {
             questionService.update(question);
         }

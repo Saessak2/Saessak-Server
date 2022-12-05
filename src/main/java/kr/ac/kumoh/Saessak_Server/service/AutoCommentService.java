@@ -37,4 +37,9 @@ public class AutoCommentService {
         return autoCommentRepository.update(question_id);
     }
 
+    //자동댓글 수정
+    public void updateAutoComment(AutoComment autoComment) {
+        autoCommentRepository.updateAutoComment(autoComment);
+    }
+
 }

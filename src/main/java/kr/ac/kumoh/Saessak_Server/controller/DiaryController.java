@@ -137,8 +137,10 @@ public class DiaryController {
         File destinationFile;
         String destinationFileName;
 //        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
-        String fileUrl = System.getProperty("user.dir") + "\\src\\main\\resources\\userImgs\\";
+//        String fileUrl = System.getProperty("user.dir") + "\\src\\main\\resources\\userImgs\\";
+        String fileUrl = "/home/ec2-user/Saessak-Server/src/main/resources/userImgs/";
         System.out.println(fileUrl);
+
 
         do {
             destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
@@ -178,7 +180,8 @@ public class DiaryController {
             boolean isExist = true;
             String fileName = diary.getImage().getFileName();
 //            String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
-            String path = System.getProperty("user.dir") + "\\src\\main\\resources\\userImgs\\";
+//            String path = System.getProperty("user.dir") + "\\src\\main\\resources\\userImgs\\";
+            String path = "/home/ec2-user/Saessak-Server/src/main/resources/userImgs/";
             System.out.println(path);
 
             FileSystemResource resource = new FileSystemResource(path+fileName);

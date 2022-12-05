@@ -17,7 +17,7 @@ public class AutoComment {
 
     private String title;
     private String link;
-    private String similarity;
+    private String tags;
     private String answer;
 
     @ManyToOne

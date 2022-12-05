@@ -34,7 +34,7 @@ public class AutoCommentController {
             Object[] comment = (Object[]) comments.toArray()[0];
             map.put("link", comment[0]);
             map.put("title", comment[1]);
-            map.put("similarity", comment[2]);
+            map.put("tags", comment[2]);
             map.put("answer", comment[3]);
 
             list.add(map);

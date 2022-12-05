@@ -68,7 +68,7 @@ public class QuestionController {
             AutoComment autoComment = new AutoComment();
             autoComment.setLink(list[0].getLink());
             autoComment.setTitle(list[0].getTitle());
-            autoComment.setSimilarity(list[0].getSimilarity());
+            autoComment.setTags(list[0].getTags());
             autoComment.setAnswer(list[0].getAnswer());
             autoComment.setQuestion_id(question);
             autoCommentService.createAutoComment(autoComment);
@@ -117,7 +117,7 @@ public class QuestionController {
             AutoComment autoComment = new AutoComment();
             autoComment.setLink(list[0].getLink());
             autoComment.setTitle(list[0].getTitle());
-            autoComment.setSimilarity(list[0].getSimilarity());
+            autoComment.setTags(list[0].getTags());
             autoComment.setAnswer(list[0].getAnswer());
             autoComment.setQuestion_id(question);
             autoCommentService.createAutoComment(autoComment);
@@ -212,14 +212,12 @@ public class QuestionController {
             temp += sourceFileName.substring(count, count + 1);
         }
         Long id = Long.valueOf(temp);
-        System.out.println(id);
 
         question.setId(id);
         question.setImage(file);
         question.setImg(true);
 
         questionService.updateImage(question);
-
     }
 
     //이미지 조회
@@ -244,5 +242,48 @@ public class QuestionController {
             return null;
         }
     }
+
+    //이미지 수정
+//    @PostMapping("questions/updateImage")
+//    public void updateFile(@RequestPart(value = "img_path") MultipartFile files) throws IOException {
+//        Question question = new Question();
+//
+//        //
+//        String sourceFileName = files.getOriginalFilename();
+//
+//        String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
+//
+//        FilenameUtils.removeExtension(sourceFileName);
+//
+//        File destinationFile;
+//        String destinationFileName;
+//        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+//
+//        do {
+//            destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
+//            destinationFile = new File(fileUrl + destinationFileName);
+//        } while (destinationFile.exists());
+//
+//        destinationFile.getParentFile().mkdirs();
+//        files.transferTo(destinationFile);
+//
+//        Image file = new Image(destinationFileName, sourceFileName, fileUrl);
+//        int count = 0;
+//        String temp = sourceFileName.substring(0, count + 1);
+//        while(true) {
+//            count++;
+//            if(sourceFileName.substring(count, count + 1).equals(".")) {
+//                break;
+//            }
+//            temp += sourceFileName.substring(count, count + 1);
+//        }
+//        Long id = Long.valueOf(temp);
+//
+//        Question question1 = questionService.findOne(id);
+//        question1.setImage(file);
+//        question1.setImg(true);
+//
+//        questionService.updateImage(question1);
+//    }
 
 }

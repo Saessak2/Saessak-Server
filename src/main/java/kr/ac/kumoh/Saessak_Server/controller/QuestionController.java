@@ -191,7 +191,8 @@ public class QuestionController {
 
         File destinationFile;
         String destinationFileName;
-        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+//        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+        String fileUrl = System.getProperty("user.dir") + "./src/main/resources/userImgs/";
 
         do {
             destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
@@ -227,7 +228,8 @@ public class QuestionController {
 
         try {
             String fileName = question.getImage().getFileName();
-            String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+//            String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+            String path = System.getProperty("user.dir") + "./src/main/resources/userImgs/";
             FileSystemResource resource = new FileSystemResource(path+fileName);
 
             HttpHeaders header = new HttpHeaders();

@@ -59,7 +59,7 @@ public class DiaryRepository {
 
     //식물별 일기 조회
     public List<Diary> readDiaryByPlant(Long myplant_id) {
-        List<Diary> diaryList = em.createQuery("select d from Diary d where d.myplant_id = :myplant_id  by d.id desc", Diary.class)
+        List<Diary> diaryList = em.createQuery("select d from Diary d where d.myplant_id = :myplant_id", Diary.class)
                 .setParameter("myplant_id", myplant_id)
                 .getResultList();
 

@@ -17,8 +17,9 @@ public class AutoComment {
 
     private String title;
     private String link;
-    private String similarity;
+    private String tags;
     private String answer;
+    private String date_time;
 
     @ManyToOne
     @JoinColumn(name = "question_id")

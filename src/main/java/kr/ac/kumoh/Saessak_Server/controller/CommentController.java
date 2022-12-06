@@ -11,9 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.IOError;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,9 +31,13 @@ public class CommentController {
     public @ResponseBody ResponseEntity<List<Map<String, Object>>> createComment(@RequestBody CommentDTO commentDTO) {
         Comment comment = new Comment();
         User user = userService.findOne(commentDTO.getUser_id());
+
         Question question = questionService.findOne(commentDTO.getQuestion_id());
-        question.setAnswer_count(question.getAnswer_count()+1);
-        questionService.update(question);
+        questionService.updateCommentCnt(question, 1);
+
+
+        System.out.println("//////////////");
+        System.out.println(question.getAnswer_count());
 
         comment.setContent(commentDTO.getContent());
         String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd HH:mm"));
@@ -45,6 +46,7 @@ public class CommentController {
         comment.setUser_id(user);
 
         commentService.create(comment);
+        //
 
         List<Map<String, Object>> list = new ArrayList<>();
         List<Object[]> comments = commentService.readCommentList(comment.getQuestion_id().getId());
@@ -91,11 +93,9 @@ public class CommentController {
     //댓글 삭제
     @DeleteMapping("comments/deleteComment/{id}")
     public void deleteComment(@PathVariable("id") Long id) {
-        commentService.delete(id);
         Comment comment = commentService.findOne(id);
-        Question question = questionService.findOne(comment.getQuestion_id().getId());
-        question.setAnswer_count(question.getAnswer_count()-1);
-        questionService.update(question);
+        questionService.updateCommentCnt(comment.getQuestion_id(), 0);
+        commentService.delete(id);
     }
 
     //댓글 리스트 조회 //질문 id 담기

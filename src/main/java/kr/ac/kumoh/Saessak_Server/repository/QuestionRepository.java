@@ -27,6 +27,19 @@ public class QuestionRepository {
         updateQuestion.setCategory(question.getCategory());
     }
 
+    //댓글 수 update
+    public void updateCommentCnt(Question question, int temp) {
+        Question updateQuestion = findOne(question.getId());
+        int count = updateQuestion.getAnswer_count();
+        if(temp == 1) {
+            updateQuestion.setAnswer_count(count+1);
+        } else {
+            updateQuestion.setAnswer_count(count-1);
+        }
+
+
+    }
+
     public Question findOne(Long id) {
         return em.find(Question.class, id);
     }

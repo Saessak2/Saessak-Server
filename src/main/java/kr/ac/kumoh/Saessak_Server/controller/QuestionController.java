@@ -37,7 +37,6 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final UserService userService;
-    private final CommentService commentService;
     private final RestTemplateService restTemplateService;
     private final AutoCommentService autoCommentService;
 
@@ -48,14 +47,14 @@ public class QuestionController {
         User user = userService.findOne(questionDTO.getUser_id());
 
         question.setContent(questionDTO.getContent());
-        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm"));
+        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss"));
         question.setCreate_date(formatDate);
         question.setCategory(questionDTO.getCategory());
         question.setUser_id(user);
         question.setUser_name(user.getUserName());
+        question.setAnswer_count(1);
 
         if(question.getCategory().equals("전체") || question.getCategory().equals("식물관리") || question.getCategory().equals("아파요")) {
-            question.setAnswer_count(1);
             questionService.create(question);
 
             AutoQuestionDTO autoQuestionDTO = new AutoQuestionDTO();
@@ -68,10 +67,15 @@ public class QuestionController {
             AutoComment autoComment = new AutoComment();
             autoComment.setLink(list[0].getLink());
             autoComment.setTitle(list[0].getTitle());
-            autoComment.setSimilarity(list[0].getSimilarity());
+            autoComment.setTags(list[0].getTags());
             autoComment.setAnswer(list[0].getAnswer());
+            String formatDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss"));
+            autoComment.setDate_time(formatDateTime);
             autoComment.setQuestion_id(question);
             autoCommentService.createAutoComment(autoComment);
+
+//            question.setAnswer_count(1);
+//            questionService.update(question);
         } else {
             questionService.create(question);
         }
@@ -91,7 +95,6 @@ public class QuestionController {
         list.add(questionDTO2);
 
         return ResponseEntity.ok(list);
-
     }
 
     //질문 수정
@@ -105,22 +108,26 @@ public class QuestionController {
         //
         if(question.getCategory().equals("전체") || question.getCategory().equals("식물관리") || question.getCategory().equals("아파요")) {
             questionService.update(question);
-
-            autoCommentService.delete(question.getId());
+//            autoCommentService.delete(question.getId());
 
             AutoQuestionDTO autoQuestionDTO = new AutoQuestionDTO();
             autoQuestionDTO.setCategory(question.getCategory());
             autoQuestionDTO.setQuestion(question.getContent());
+            questionService.update(question);
+
+            Long autoComment_id = autoCommentService.update(question.getId());
+            AutoComment autoComment = autoCommentService.findOne(autoComment_id);
 
             AutoCommentDTO[] list = restTemplateService.get(autoQuestionDTO);
 
-            AutoComment autoComment = new AutoComment();
             autoComment.setLink(list[0].getLink());
             autoComment.setTitle(list[0].getTitle());
-            autoComment.setSimilarity(list[0].getSimilarity());
+            autoComment.setTags(list[0].getTags());
             autoComment.setAnswer(list[0].getAnswer());
+            String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss"));
+            autoComment.setDate_time(formatDate);
             autoComment.setQuestion_id(question);
-            autoCommentService.createAutoComment(autoComment);
+            autoCommentService.updateAutoComment(autoComment);
         } else {
             questionService.update(question);
         }
@@ -191,7 +198,10 @@ public class QuestionController {
 
         File destinationFile;
         String destinationFileName;
-        String fileUrl = "C:\\Users\\DeepLearning_4\\Desktop";
+//        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+//        String fileUrl = System.getProperty("user.dir") + "\\src\\main\\resources\\userImgs\\";
+        String fileUrl = "/home/ec2-user/Saessak-Server/src/main/resources/userImgs/";
+        System.out.println(fileUrl);
 
         do {
             destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
@@ -212,14 +222,12 @@ public class QuestionController {
             temp += sourceFileName.substring(count, count + 1);
         }
         Long id = Long.valueOf(temp);
-        System.out.println(id);
 
         question.setId(id);
         question.setImage(file);
         question.setImg(true);
 
         questionService.updateImage(question);
-
     }
 
     //이미지 조회
@@ -229,7 +237,10 @@ public class QuestionController {
 
         try {
             String fileName = question.getImage().getFileName();
-            String path = "C:\\Users\\DeepLearning_4\\Desktop";
+//            String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+//            String path = System.getProperty("user.dir") + "\\src\\main\\resources\\userImgs\\";
+            String path = "/home/ec2-user/Saessak-Server/src/main/resources/userImgs/";
+            System.out.println(path);
             FileSystemResource resource = new FileSystemResource(path+fileName);
 
             HttpHeaders header = new HttpHeaders();
@@ -244,5 +255,48 @@ public class QuestionController {
             return null;
         }
     }
+
+    //이미지 수정
+//    @PostMapping("questions/updateImage")
+//    public void updateFile(@RequestPart(value = "img_path") MultipartFile files) throws IOException {
+//        Question question = new Question();
+//
+//        //
+//        String sourceFileName = files.getOriginalFilename();
+//
+//        String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
+//
+//        FilenameUtils.removeExtension(sourceFileName);
+//
+//        File destinationFile;
+//        String destinationFileName;
+//        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
+//
+//        do {
+//            destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
+//            destinationFile = new File(fileUrl + destinationFileName);
+//        } while (destinationFile.exists());
+//
+//        destinationFile.getParentFile().mkdirs();
+//        files.transferTo(destinationFile);
+//
+//        Image file = new Image(destinationFileName, sourceFileName, fileUrl);
+//        int count = 0;
+//        String temp = sourceFileName.substring(0, count + 1);
+//        while(true) {
+//            count++;
+//            if(sourceFileName.substring(count, count + 1).equals(".")) {
+//                break;
+//            }
+//            temp += sourceFileName.substring(count, count + 1);
+//        }
+//        Long id = Long.valueOf(temp);
+//
+//        Question question1 = questionService.findOne(id);
+//        question1.setImage(file);
+//        question1.setImg(true);
+//
+//        questionService.updateImage(question1);
+//    }
 
 }

@@ -28,6 +28,12 @@ public class QuestionService {
         questionRepository.updateQuestion(question);
     }
 
+    //댓글 수 update
+    @Transactional
+    public void updateCommentCnt(Question question, int temp) {
+        questionRepository.updateCommentCnt(question, temp);
+    }
+
     //이미지 등록
     @Transactional
     public void updateImage(Question question) { questionRepository.updateImage(question); }

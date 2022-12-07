@@ -45,8 +45,8 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
             @Param("plant") MyPlant myPlant, @Param("planType") String planType,
             @Param("inDate") LocalDate date);
 
-    Optional<Plan> findTopByMyPlantAndPlanTypeAndIsDoneAndDateIsBeforeOrderByDateDesc(
+    Optional<Plan> findTopByMyPlantAndPlanTypeAndDateIsBeforeAndIsDoneOrderByDateDesc(
             @Param("plantId") MyPlant myPlant, @Param("planType") String planType,
-            @Param("isDone") boolean isDone, @Param("date") LocalDate inDate);
+            @Param("date") LocalDate inDate, @Param("isDone") boolean isDone);
 
 }

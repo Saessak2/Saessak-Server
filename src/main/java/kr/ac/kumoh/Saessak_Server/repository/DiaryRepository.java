@@ -1,6 +1,7 @@
 package kr.ac.kumoh.Saessak_Server.repository;
 
 import kr.ac.kumoh.Saessak_Server.domain.Diary;
+import kr.ac.kumoh.Saessak_Server.domain.MyPlant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -67,24 +68,23 @@ public class DiaryRepository {
     }
 
     //식물별 일기 조회 (최신 3개)
-    public List<Diary> readDiaryByRecent(Long myplant_id) {
+    public List<Diary> readDiaryByRecent(Long userId, Long myplant_id) {
         if(myplant_id == 0) {
-            List<Diary> diaryList = em.createQuery("select d from Diary d inner join MyPlant m on m.listOrder = (select min(m.listOrder) from MyPlant m where m.user.id = d.user_id) and m.isActive = true order by d.id desc")
+            List<MyPlant> myPlantList = em.createQuery("select m from MyPlant m where m.user.id = :user_id and m.isActive = true order by m.listOrder", MyPlant.class)
+                    .setParameter("user_id", userId)
                     .setFirstResult(0)
-                    .setMaxResults(3)
                     .getResultList();
-
-            return diaryList;
-        } else {
-            List<Diary> diaryList = em.createQuery("select d from Diary d where d.myplant_id = :myplant_id order by d.id desc",
-                            Diary.class)
-                    .setParameter("myplant_id", myplant_id)
-                    .setFirstResult(0) //몇번째부터
-                    .setMaxResults(3) //몇개까지
-                    .getResultList();
-
-            return diaryList;
+            myplant_id = myPlantList.get(0).getId();
         }
+
+        List<Diary> diaryList = em.createQuery("select d from Diary d where d.myplant_id = :myplant_id order by d.id desc", Diary.class)
+                .setParameter("myplant_id", myplant_id)
+                .setFirstResult(0) //몇번째부터
+                .setMaxResults(3) //몇개까지
+                .getResultList();
+
+        return diaryList;
+
     }
 
     //이미지 저장

@@ -60,7 +60,8 @@ public class MyPlantController {
     public ResponseEntity<Long> updateMyPlant(
             @PathVariable("plant-id") Long id,
             @RequestBody MyPlantReqDto myPlantReqDto){
-        Optional<Long> ret = myPlantService.updateMyPlant(id, myPlantReqDto, planService);
+        Optional<Long> ret = myPlantService.updateMyPlant(
+                weatherController, planService, id, myPlantReqDto);
         return ret.map(ResponseEntity::ok).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }

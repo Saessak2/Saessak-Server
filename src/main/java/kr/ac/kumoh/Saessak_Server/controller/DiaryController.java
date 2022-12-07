@@ -115,9 +115,10 @@ public class DiaryController {
     }
 
     //식물별 일기 조회 (최신 3개) //내 식물 id 받기
-    @GetMapping("diaries/readDiaryByRecent/{id}")
-    public @ResponseBody ResponseEntity<List<Diary>> readDiaryByRecent(@PathVariable("id") Long id) {
-        List<Diary> diaryList = diaryService.readDiaryByRecent(id);
+    @GetMapping("diaries/readDiaryByRecent/{user-id}/{id}")
+    public @ResponseBody ResponseEntity<List<Diary>> readDiaryByRecent(
+            @PathVariable("user-id") Long userId, @PathVariable("id") Long id) {
+        List<Diary> diaryList = diaryService.readDiaryByRecent(userId, id);
 
         return ResponseEntity.ok(diaryList);
     }
@@ -139,7 +140,6 @@ public class DiaryController {
 //        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
 //        String fileUrl = System.getProperty("user.dir") + "\\src\\main\\resources\\userImgs\\";
         String fileUrl = "/home/ec2-user/Saessak-Server/src/main/resources/userImgs/";
-        System.out.println(fileUrl);
 
 
         do {
@@ -182,7 +182,6 @@ public class DiaryController {
 //            String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
 //            String path = System.getProperty("user.dir") + "\\src\\main\\resources\\userImgs\\";
             String path = "/home/ec2-user/Saessak-Server/src/main/resources/userImgs/";
-            System.out.println(path);
 
             FileSystemResource resource = new FileSystemResource(path+fileName);
 

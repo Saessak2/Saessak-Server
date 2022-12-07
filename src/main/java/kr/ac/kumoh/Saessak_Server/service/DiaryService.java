@@ -58,8 +58,8 @@ public class DiaryService {
     }
 
     //식물별 일기 조회 (최신 3개)
-    public List<Diary> readDiaryByRecent(Long my_plant_id) {
-        List<Diary> diaryList = diaryRepository.readDiaryByRecent(my_plant_id);
+    public List<Diary> readDiaryByRecent(Long userId, Long my_plant_id) {
+        List<Diary> diaryList = diaryRepository.readDiaryByRecent(userId, my_plant_id);
         return diaryList;
     }
 

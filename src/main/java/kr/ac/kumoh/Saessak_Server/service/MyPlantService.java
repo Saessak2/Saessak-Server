@@ -32,7 +32,9 @@ public class MyPlantService {
         try {
             MyPlant myPlant = new MyPlant(myPlantReqDto);
             setWeatherRecommendation(weatherController, myPlant);
+            myPlant.setListOrder(repository.findLastId().intValue() + 1);
             myPlant = repository.save(myPlant);
+
             ret = myPlant.getId();
             planService.createPlansForNewPlant(myPlant);
         } catch(Exception ignored){ }
@@ -82,22 +84,24 @@ public class MyPlantService {
     }
 
     public Optional<Long> updateMyPlant(
-            Long id, MyPlantReqDto myPlantReqDto, PlanService planService){
-        String[] attrs = new String[4];
+            WeatherController weatherController, PlanService planService,
+            Long id, MyPlantReqDto myPlantReqDto){
         Long ret = null;
         Optional<MyPlant> data = repository.findById(id);
         if(data.isPresent()) {
             MyPlant myPlant = data.get();
-            attrs[0] = String.valueOf(myPlant.getWaterCycle());
-            attrs[1] = myPlant.getLatestWaterDate().toString();
+            String[] attrs = {
+                    String.valueOf(myPlant.getWaterCycle()),
+                    myPlant.getLatestWaterDate().toString(),
+                    myPlant.getPlantedRegion(),
+                    String.valueOf(myPlantReqDto.getWaterCycle()),
+                    myPlantReqDto.getTempDate().replaceAll("\\.", "-"),
+                    myPlantReqDto.getPlantedRegion()};
 
             myPlant.update(myPlantReqDto);
-            MyPlant changedMyPlant = repository.save(myPlant);
-            attrs[2] = String.valueOf(myPlant.getWaterCycle());
-            attrs[3] = changedMyPlant.getLatestWaterDate().toString();
-
-            ret = changedMyPlant.getId();
-            checkUpdatedAttrs(myPlant.getId(), planService, attrs);
+            checkUpdatedAttrs(weatherController, planService, myPlant, attrs);
+            myPlant = repository.save(myPlant);
+            ret = myPlant.getId();
         }
         return Optional.ofNullable(ret);
     }
@@ -157,12 +161,16 @@ public class MyPlantService {
     }
 
     private void checkUpdatedAttrs(
-            Long plantId, PlanService planService, String[] attrs){
-        if(!attrs[0].equals(attrs[2])
-                || !attrs[1].equals(attrs[3]))
+            WeatherController weatherController, PlanService planService,
+            MyPlant myPlant, String[] attrs){
+        if(!attrs[0].equals(attrs[3])
+                || !attrs[1].equals(attrs[4]))
             planService.updateDateOfPlans(
-                    plantId, Integer.parseInt(attrs[2]),
-                    Utility.getLocalDateFromStr(attrs[3]));
+                    myPlant.getId(), Integer.parseInt(attrs[3]),
+                    Utility.getLocalDateFromStr(attrs[4]));
+        if(!attrs[2].equals(attrs[5])){
+            setWeatherRecommendation(weatherController, myPlant);
+        }
     }
 
 }

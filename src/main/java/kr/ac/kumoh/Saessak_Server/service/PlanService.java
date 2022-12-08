@@ -154,8 +154,8 @@ public class PlanService {
 
     private Long checkIfPlanNeedsUpdate(MyPlant myPlant){
         Optional<Plan> data = planRepo
-                .findTopByMyPlantAndPlanTypeAndDateIsBeforeAndIsDoneOrderByDateDesc(
-                        myPlant, "water", LocalDate.now(), false);
+                .findTopByMyPlantAndPlanTypeAndIsDoneAndDateIsBeforeOrderByDateDesc(
+                        myPlant, "water", true, LocalDate.now());
         if(data.isPresent()){
             List<Plan> planList = planRepo.findPlansAfterInDate(
                     myPlant.getId(), myPlant.getLatestWaterDate(), "water");
@@ -253,8 +253,8 @@ public class PlanService {
 
     private LocalDate rollbackLWD(MyPlant myPlant){
         Optional<Plan> passedPlan = planRepo
-                .findTopByMyPlantAndPlanTypeAndDateIsBeforeAndIsDoneOrderByDateDesc(
-                        myPlant, "water", myPlant.getLatestWaterDate(), true);
+                .findTopByMyPlantAndPlanTypeAndIsDoneAndDateIsBeforeOrderByDateDesc(
+                        myPlant, "water", true, myPlant.getLatestWaterDate());
         if(passedPlan.isPresent())
             myPlant.setLatestWaterDate(passedPlan.get().getDate());
         else

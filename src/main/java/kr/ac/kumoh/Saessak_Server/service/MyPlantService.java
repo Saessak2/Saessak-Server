@@ -32,7 +32,9 @@ public class MyPlantService {
         try {
             MyPlant myPlant = new MyPlant(myPlantReqDto);
             setWeatherRecommendation(weatherController, myPlant);
+            myPlant.setListOrder(repository.findLastId().intValue() + 1);
             myPlant = repository.save(myPlant);
+
             ret = myPlant.getId();
             planService.createPlansForNewPlant(myPlant);
         } catch(Exception ignored){ }

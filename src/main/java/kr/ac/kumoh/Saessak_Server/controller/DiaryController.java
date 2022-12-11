@@ -137,8 +137,6 @@ public class DiaryController {
 
         File destinationFile;
         String destinationFileName;
-//        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
-//        String fileUrl = System.getProperty("user.dir") + "\\src\\main\\resources\\userImgs\\";
         String fileUrl = "/home/ec2-user/Saessak-Server/src/main/resources/userImgs/";
 
 
@@ -179,8 +177,6 @@ public class DiaryController {
         try {
             boolean isExist = true;
             String fileName = diary.getImage().getFileName();
-//            String path = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
-//            String path = System.getProperty("user.dir") + "\\src\\main\\resources\\userImgs\\";
             String path = "/home/ec2-user/Saessak-Server/src/main/resources/userImgs/";
 
             FileSystemResource resource = new FileSystemResource(path+fileName);
@@ -195,48 +191,5 @@ public class DiaryController {
             return new ResponseEntity<Resource>((Resource) null, HttpStatus.OK);
         }
     }
-
-    //이미지 수정
-//    @PostMapping("diaries/updateImage")
-//    public void updateFile(@RequestPart(value = "img_path") MultipartFile files) throws IOException {
-//        Diary diary = new Diary();
-//
-//        //
-//        String sourceFileName = files.getOriginalFilename();
-//
-//        String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
-//
-//        FilenameUtils.removeExtension(sourceFileName);
-//
-//        File destinationFile;
-//        String destinationFileName;
-//        String fileUrl = "/Users/seominjeong/Desktop/3학년 2학기/창융/img/";
-//
-//        do {
-//            destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
-//            destinationFile = new File(fileUrl + destinationFileName);
-//        } while (destinationFile.exists());
-//
-//        destinationFile.getParentFile().mkdirs();
-//        files.transferTo(destinationFile);
-//
-//        Image file = new Image(destinationFileName, sourceFileName, fileUrl);
-//        int count = 0;
-//        String temp = sourceFileName.substring(0, count + 1);
-//        while(true) {
-//            count++;
-//            if(sourceFileName.substring(count, count + 1).equals(".")) {
-//                break;
-//            }
-//            temp += sourceFileName.substring(count, count + 1);
-//        }
-//        Long id = Long.valueOf(temp);
-//
-//        Diary diary1 = diaryService.findOne(id);
-//        diary1.setImage(file);
-//        diary1.setImg(true);
-//
-//        diaryService.updateImage(diary1);
-//    }
 
 }

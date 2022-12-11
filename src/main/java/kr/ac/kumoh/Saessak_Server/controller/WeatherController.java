@@ -5,7 +5,6 @@ import kr.ac.kumoh.Saessak_Server.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,8 +50,10 @@ public class WeatherController {
         WeatherDTO weatherDTO = new WeatherDTO();
 
         try {
+            // Deleted api token for security
+            // To use this method, insert api token after "&appid="
             URI uri = new URI("https://api.openweathermap.org/data/2.5/weather?q=" + city
-                    + "&appid=652a889361e23bc999e15881c7659057");
+                    + "&appid=");
             uri = new URIBuilder(uri)
                     .build();
 
@@ -82,8 +82,10 @@ public class WeatherController {
     private WeatherDTO setWeatherDate(String city){
         WeatherDTO weatherDTO = new WeatherDTO();
         try {
+            // Deleted api token for security
+            // To use this method, insert api token after "&appid="
             URI uri = new URI("https://api.openweathermap.org/data/2.5/weather?q=" + city
-                    + "&appid=652a889361e23bc999e15881c7659057");
+                    + "&appid=");
             uri = new URIBuilder(uri)
                     .build();
 
@@ -121,8 +123,10 @@ public class WeatherController {
         WeatherDTO weatherDTO = new WeatherDTO();
 
         try {
+            // Deleted api token for security
+            // To use this method, insert api token after "&appid="
             URI uri = new URI("https://api.openweathermap.org/data/2.5/weather?q=" + city
-                    + "&appid=652a889361e23bc999e15881c7659057");
+                    + "&appid=");
             uri = new URIBuilder(uri)
                     .build();
 

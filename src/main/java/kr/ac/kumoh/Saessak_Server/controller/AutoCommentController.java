@@ -1,7 +1,5 @@
 package kr.ac.kumoh.Saessak_Server.controller;
 
-import kr.ac.kumoh.Saessak_Server.domain.AutoComment;
-import kr.ac.kumoh.Saessak_Server.domain.dto.AutoCommentDTO;
 import kr.ac.kumoh.Saessak_Server.service.AutoCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

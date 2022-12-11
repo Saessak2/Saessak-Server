@@ -1,9 +1,13 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://34.64.194.141:3306/saessac?useSSL=false&useTimezone=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: "saessacki"
-    password: "1234"
+    # Deleted datasource information for security
+    # To use this application, insert database url before "/saessac"
+    # Insert username, password to access database
+    ## "saessac" schema dumps are backed up on https://github.com/Saessak2/Saessak-Database
+    url: jdbc:mysql:///saessac?useSSL=false&useTimezone=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ""
+    password: ""
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false

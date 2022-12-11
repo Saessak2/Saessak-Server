@@ -53,6 +53,7 @@ public class PlanService {
             inDate = inDate.plusDays(cycle);
         }
 
+        // To create enough watering plans, set the standard cycle to 10
         if (cycle <= 10)
             createPlansUntilM(myPlant, user, cycle);
         else
@@ -177,6 +178,7 @@ public class PlanService {
 
     private void createPlansForN(MyPlant myPlant, User user, int cycle){
         LocalDate inDate = myPlant.getLatestWaterDate().plusDays(cycle);
+        // determined that a minimum of 4 is enough
         for(int i = 0; i < 4; i++){
             Plan plan = new Plan(0L, user, inDate, "water", myPlant, false);
             planRepo.save(plan);

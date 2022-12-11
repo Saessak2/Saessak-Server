@@ -23,9 +23,10 @@ public class KakaoUserService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final String REQ_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-    private final String GRANT_TYPE = "authorization_code";
-    private final String CLIENT_ID = "50b725ea03d0368b00c6345db6da213d";
-    private final String REDIRECT_URI = "http://localhost:8000/auth/kakao/callback";
+//    private final String GRANT_TYPE = "authorization_code";
+//    // Deleted api token for security
+//    private final String CLIENT_ID = "";
+//    private final String REDIRECT_URI = "http://localhost:8000/auth/kakao/callback";
     private final String REQ_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
 
     public String getKakaoAccessToken(String code) {
@@ -39,15 +40,15 @@ public class KakaoUserService {
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
 
-            //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-            StringBuilder sb = new StringBuilder();
-            sb.append("grant_type=" + GRANT_TYPE);
-            sb.append("&client_id=" + CLIENT_ID);
-            sb.append("&redirect_uri=" + REDIRECT_URI);
-            sb.append("&code=" + code);
-            bw.write(sb.toString());
-            bw.flush();
+//            //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
+//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+//            StringBuilder sb = new StringBuilder();
+//            sb.append("grant_type=" + GRANT_TYPE);
+//            sb.append("&client_id=" + CLIENT_ID);
+//            sb.append("&redirect_uri=" + REDIRECT_URI);
+//            sb.append("&code=" + code);
+//            bw.write(sb.toString());
+//            bw.flush();
 
             //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
@@ -73,7 +74,7 @@ public class KakaoUserService {
             System.out.println("refresh_token : " + refreshToken);
 
             br.close();
-            bw.close();
+//            bw.close();
 
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
